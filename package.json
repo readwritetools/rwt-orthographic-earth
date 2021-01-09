@@ -1,0 +1,28 @@
+{
+  "name": "rwt-orthographic-earth",
+  "version": "1.0.0",
+  "description": "An orthographic projection of Earth, a standards-based DOM Component",
+  "author": "Read Write Tools",
+  "license": "SEE LICENSE in license.blue",
+  "module": "rwt-orthographic-earth.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readwritetools/rwt-orthographic-earth.git"
+  },
+  "keywords": [
+    "web-component",
+    "custom-element",
+    "html-template",
+    "shadow-dom",
+    "readwritetools"
+  ],
+  "bugs": {
+    "url": "https://github.com/readwritetools/rwt-orthographic-earth/issues"
+  },
+  "homepage": "https://hub.readwritetools.com/components/orthographic-earth.blue",
+  "files": [
+    "rwt-orthographic-earth.blue",
+    "rwt-orthographic-earth.css",
+    "rwt-orthographic-earth.js"
+  ]
+}

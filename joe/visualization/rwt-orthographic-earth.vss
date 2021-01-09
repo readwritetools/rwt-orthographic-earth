@@ -1,0 +1,97 @@
+/*=============================================================================
+
+  File:         /rwt-orthographic-earth/joe/visualization/rwt-orthographic-earth.vss
+  Language:     VSS (Visualization Style Sheet)
+  Copyright:    Read Write Tools © 2020
+  License:      JavaScript Orthographic Earth Software License Agreement
+  Initial date: May 14, 2013
+  Contents:     Styles for the JOE library using CSS syntax, but not CSS grammar.
+
+=============================================================================*/
+@charset "UTF-8";
+
+/*------------------------- predefined grammar ------------------------------*/
+/* earth { stroke-width: 0; } */
+point { dot-radius: 2; stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
+line { stroke-width: 0.5; stroke-color: #AAAAAA; }
+polygon { stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
+
+/*------------------------------- night -------------------------------------*/
+.night { fill-color: #33333377; }
+		
+/*--------------------------- place of interest -----------------------------*/
+.place-of-interest { dot-radius: 5; fill-color: #db9404; stroke-width: 6; stroke-color: #b87c02aa; }
+
+/*------------------------------- space -------------------------------------*/
+.space { deep-space: visible; deep-space-color: #093640; deep-space-star-count: 500; deep-space-star-color: #E0E070; }
+.space { earth-glow: hidden; earth-glow-size: 40; earth-glow-offset: 40; earth-glow-axis: 203.5; earth-glow-inner-color: #107187; earth-glow-outer-color: #093640; }
+.space { sunrise: hidden; sunrise-inner-radius: 5; sunrise-outer-radius: 120; sunrise-inner-color: #107187; sunrise-outer-color: #093640; }
+
+.sphere  { surface: visible;  horizon: hidden; surface-background-color: #148BA6; }
+.horizon { surface: hidden;   horizon: visible; horizon-stroke-color: #093640; horizon-stroke-width: 6; }
+
+#great-circles[primeMeridian],
+#great-circles[antiMeridian] { stroke-width: 1.5; stroke-color: #107187; }
+
+#named-parallels[Equator] { stroke-width: 2.0; stroke-color: #107187; }
+#named-parallels['Arctic Circle'],
+#named-parallels['Tropic of Cancer'],
+#named-parallels['Tropic of Capricorn'],
+#named-parallels['Antarctic Circle'] { stroke-width: 1.0; stroke-color: #107187; }
+
+.graticule-3-by-3{ stroke-color: #107187; stroke-width: 0.25; }
+.graticule-3-by-3['Parallel 9'],
+.graticule-3-by-3['Parallel 18'],
+.graticule-3-by-3['Parallel 27'],
+.graticule-3-by-3['Parallel 36'],
+.graticule-3-by-3['Parallel 54'],
+.graticule-3-by-3['Parallel 63'],
+.graticule-3-by-3['Parallel 72'],
+.graticule-3-by-3['Parallel 81'],
+.graticule-3-by-3['Parallel -9'],
+.graticule-3-by-3['Parallel -18'],
+.graticule-3-by-3['Parallel -27'],
+.graticule-3-by-3['Parallel -36'],
+.graticule-3-by-3['Parallel -54'],
+.graticule-3-by-3['Parallel -63'],
+.graticule-3-by-3['Parallel -72'],
+.graticule-3-by-3['Parallel -81'],
+.graticule-3-by-3['Parallel 90'],
+.graticule-3-by-3['Meridian 9'],
+.graticule-3-by-3['Meridian 18'],
+.graticule-3-by-3['Meridian 27'],
+.graticule-3-by-3['Meridian 36'],
+.graticule-3-by-3['Meridian 54'],
+.graticule-3-by-3['Meridian 63'],
+.graticule-3-by-3['Meridian 72'],
+.graticule-3-by-3['Meridian 81'],
+.graticule-3-by-3['Meridian 90'],
+.graticule-3-by-3['Meridian 99'],
+.graticule-3-by-3['Meridian 108'],
+.graticule-3-by-3['Meridian 117'],
+.graticule-3-by-3['Meridian 126'],
+.graticule-3-by-3['Meridian 135'],
+.graticule-3-by-3['Meridian 144'],
+.graticule-3-by-3['Meridian 153'],
+.graticule-3-by-3['Meridian 162'],
+.graticule-3-by-3['Meridian 171'],
+.graticule-3-by-3['Meridian 180'],
+.graticule-3-by-3['Meridian -9'],
+.graticule-3-by-3['Meridian -18'],
+.graticule-3-by-3['Meridian -27'],
+.graticule-3-by-3['Meridian -36'],
+.graticule-3-by-3['Meridian -54'],
+.graticule-3-by-3['Meridian -63'],
+.graticule-3-by-3['Meridian -72'],
+.graticule-3-by-3['Meridian -81'],
+.graticule-3-by-3['Meridian -90'],
+.graticule-3-by-3['Meridian -99'],
+.graticule-3-by-3['Meridian -108'],
+.graticule-3-by-3['Meridian -117'],
+.graticule-3-by-3['Meridian -126'],
+.graticule-3-by-3['Meridian -135'],
+.graticule-3-by-3['Meridian -144'],
+.graticule-3-by-3['Meridian -153'],
+.graticule-3-by-3['Meridian -162'],
+.graticule-3-by-3['Meridian -171'],
+.graticule-3-by-3['Meridian -180'] { stroke-color: #107187; stroke-width: 0.5; }
