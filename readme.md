@@ -187,11 +187,11 @@ The component issues life-cycle events.
 
 
 <table>
-	<tr><td><img src='/img/48x48/read-write-hub.png' alt='DOM components logo' width=48 /></td>	<td>Documentation</td> 		<td><a href='https://hub.readwritetools.com/components/dockable-panels.blue'>READ WRITE HUB</a></td></tr>
+	<tr><td><img src='/img/48x48/read-write-hub.png' alt='DOM components logo' width=48 /></td>	<td>Documentation</td> 		<td><a href='https://hub.readwritetools.com/components/orthographic-earth.blue'>READ WRITE HUB</a></td></tr>
 	<tr><td><img src='/img/48x48/git.png' alt='git logo' width=48 /></td>	<td>Source code</td> 			<td><a href='https://github.com/readwritetools/rwt-orthographic-earth'>github</a></td></tr>
-	<tr><td><img src='/img/48x48/dom-components.png' alt='DOM components logo' width=48 /></td>	<td>Component catalog</td> 	<td><a href='https://domcomponents.com/components/dockable-panels.blue'>DOM COMPONENTS</a></td></tr>
+	<tr><td><img src='/img/48x48/dom-components.png' alt='DOM components logo' width=48 /></td>	<td>Component catalog</td> 	<td><a href='https://domcomponents.com/components/orthographic-earth.blue'>DOM COMPONENTS</a></td></tr>
 	<tr><td><img src='/img/48x48/npm.png' alt='npm logo' width=48 /></td>	<td>Package installation</td> <td><a href='https://www.npmjs.com/package/rwt-orthographic-earth'>npm</a></td></tr>
-	<tr><td><img src='/img/48x48/read-write-stack.png' alt='Read Write Stack logo' width=48 /></td>	<td>Publication venue</td>	<td><a href='https://readwritestack.com/components/dockable-panels.blue'>READ WRITE STACK</a></td></tr>
+	<tr><td><img src='/img/48x48/read-write-stack.png' alt='Read Write Stack logo' width=48 /></td>	<td>Publication venue</td>	<td><a href='https://readwritestack.com/components/orthographic-earth.blue'>READ WRITE STACK</a></td></tr>
 </table>
 
 ### License
