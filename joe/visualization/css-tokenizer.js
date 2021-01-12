@@ -1,3 +1,4 @@
+// The code in this file (c) 2103, Tab Atkins, Jr. http://www.xanthir.com/blog/b4Ju0. It is licensed under the CC0 license.
 var between = function(e, n, t) {
     return e >= n && e <= t;
 };

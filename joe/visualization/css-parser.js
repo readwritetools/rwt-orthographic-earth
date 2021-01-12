@@ -1,3 +1,4 @@
+// The code in this file (c) 2103, Tab Atkins, Jr. http://www.xanthir.com/blog/b4Ju0. It is licensed under the CC0 license.
 export default function cssParser(e) {
     for (var t, r = 'top-level', n = -1, a = new Stylesheet, o = [ a ], u = o[0], consume = function(r) {
         return void 0 === r && (r = 1), t = (n += r) < e.length ? e[n] : new EOFToken, !0;
