@@ -1,4 +1,3 @@
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 export default function cssParser(e) {
     for (var t, r = 'top-level', n = -1, a = new Stylesheet, o = [ a ], u = o[0], consume = function(r) {
         return void 0 === r && (r = 1), t = (n += r) < e.length ? e[n] : new EOFToken, !0;

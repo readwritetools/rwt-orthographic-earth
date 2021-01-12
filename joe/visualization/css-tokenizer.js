@@ -1,4 +1,3 @@
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 var between = function(e, n, t) {
     return e >= n && e <= t;
 };

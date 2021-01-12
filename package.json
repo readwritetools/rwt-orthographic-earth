@@ -24,5 +24,8 @@
     "rwt-orthographic-earth.js",
     "joe",
     "img"
-  ]
+  ],
+  "dependencies": {
+    "rwt-dockable-panels": "^1.0.5"
+  }
 }
