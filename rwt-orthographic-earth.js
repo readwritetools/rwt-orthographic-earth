@@ -33,6 +33,8 @@ import InteractionHandler from './joe/interaction/interaction-handler.class.js';
 
 import Menu from './joe/panels/menu.class.js';
 
+import Registration from './registration.js';
+
 export default class rwtOrthographicEarth extends HTMLElement {
     constructor() {
         super(), this.instance = Static.elementInstance++, this.isComponentLoaded = !1, 
@@ -156,9 +158,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'named-parallels':
             a = e.classname || '';
-            var l = e.namedParallels || {};
+            var c = e.namedParallels || {};
             o = e.accuracy || 1;
-            this.earth.addPackage(new NamedParallels(this, s, t, a, l, o));
+            this.earth.addPackage(new NamedParallels(this, s, t, a, c, o));
             break;
 
           case 'place-of-interest':
@@ -168,8 +170,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'topojson-package':
             a = e.classname || '';
-            var c = e.url || '', d = e.embeddedName || '', m = e.keyProperty || 'label', u = new TopojsonPackage(this, s, m, t, a);
-            this.earth.addPackage(u), await u.retrieveData('replace', c, d), this.invalidateCanvas();
+            var l = e.url || '', d = e.embeddedName || '', m = e.keyProperty || 'label', u = new TopojsonPackage(this, s, m, t, a);
+            this.earth.addPackage(u), await u.retrieveData('replace', l, d), this.invalidateCanvas();
             break;
 
           default:
@@ -260,17 +262,17 @@ export default class rwtOrthographicEarth extends HTMLElement {
         }));
     }
     validate() {
-        var e = window.location.hostname, t = e.split('.'), a = 25;
-        if (t.length >= 2) {
-            var s = t[t.length - 2].charAt(0);
-            (s < 'a' || s > 'z') && (s = 'q'), a = s.charCodeAt(s) - 97, a = Math.max(a, 0), 
-            a = Math.min(a, 25);
+        var e = window.location.hostname.split('.'), t = 25;
+        if (e.length >= 2) {
+            var a = e[e.length - 2].charAt(0);
+            (a < 'a' || a > 'z') && (a = 'q'), t = a.charCodeAt(a) - 97, t = Math.max(t, 0), 
+            t = Math.min(t, 25);
         }
-        var i = new Date;
-        i.setUTCMonth(0, 1), (Math.floor((Date.now() - i) / 864e5) + 1) % 26 == a && window.setTimeout(this.authenticate.bind(this, e), 5e3);
+        var s = new Date;
+        s.setUTCMonth(0, 1), (Math.floor((Date.now() - s) / 864e5) + 1) % 26 == t && window.setTimeout(this.authenticate.bind(this), 5e3);
     }
-    async authenticate(e) {
-        var t = window.location.href, a = {
+    async authenticate() {
+        var e = {
             method: 'POST',
             mode: 'cors',
             credentials: 'omit',
@@ -278,11 +280,11 @@ export default class rwtOrthographicEarth extends HTMLElement {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded'
             },
-            body: `product-name=rwt-orthographic-earth&hostname=${encodeURIComponent(e)}&href=${encodeURIComponent(t)}`
+            body: `product-name=rwt-orthographic-earth&hostname=${encodeURIComponent(window.location.hostname)}&href=${encodeURIComponent(window.location.href)}&registration=${encodeURIComponent(Registration.registration)}&customer-number=${encodeURIComponent(Registration['customer-number'])}&access-key=${encodeURIComponent(Registration['access-key'])}`
         };
         try {
-            var s = await fetch('https://validation.readwritetools.com/v1/genuine/component', a);
-            if (200 == s.status) await s.json();
+            var t = await fetch('https://validation.readwritetools.com/v1/genuine/component', e);
+            if (200 == t.status) await t.json();
         } catch (e) {
             console.log(e.message);
         }

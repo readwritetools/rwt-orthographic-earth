@@ -23,6 +23,7 @@
   "files": [
     "rwt-orthographic-earth.js",
     "readme.md",
+    "registration.js",
     "joe",
     "img"
   ],

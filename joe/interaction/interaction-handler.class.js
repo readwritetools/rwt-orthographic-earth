@@ -33,8 +33,8 @@ export default class InteractionHandler {
     }
     onMouseMove(e) {
         var t = {
-            x: e.clientX,
-            y: e.clientY
+            x: e.offsetX,
+            y: e.offsetY
         };
         if (1 == e.ctrlKey) var s = new CustomEvent('mouse/hover/ctrlkey', {
             detail: t
