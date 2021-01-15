@@ -70,8 +70,8 @@ export default class vssStyleSheet {
     }
     determineSelectorName(e) {
         for (var t = [], a = '', s = 0; s < e.length; s++) if ('DELIM' == e[s].tokenType && '.' == e[s].value) a += e[s].value; else if ('HASH' == e[s].tokenType) a += '#' + e[s].value; else if ('IDENT' == e[s].tokenType) a += e[s].value; else if ('BLOCK' == e[s].type && '[' == e[s].name) {
-            for (var l = '', r = e[s].value, i = 0; i < r.length; i++) ('IDENT' == r[i].tokenType || 'DELIM' == r[i].tokenType || 'NUMBER' == r[i].tokenType || 'STRING' == r[i].tokenType) && (l += r[i].value);
-            a += '[' + l + ']';
+            for (var l = '', r = e[s].value, i = 0; i < r.length; i++) 'IDENT' == r[i].tokenType || 'DELIM' == r[i].tokenType || 'NUMBER' == r[i].tokenType ? l += r[i].value : 'STRING' == r[i].tokenType && (l += `"${r[i].value}"`);
+            a += `[${l}]`;
         } else 'DELIM' == e[s].tokenType && ',' == e[s].value && (t.push(a), a = '');
         return t.push(a), t;
     }

@@ -4,9 +4,14 @@ export default class vssCanvasParameters {
         this.visibility = 'visible', this.transparency = 1;
     }
     dump() {
-        var i = '';
-        for (property in this) 'function' != typeof this[property] && (i += property + '=>' + this[property] + '\n');
-        return i;
+        var t = '';
+        for (property in this) 'function' != typeof this[property] && (t += property + '=>' + this[property] + '\n');
+        return t;
+    }
+    computeFillPlusTransparency() {
+        var t = this.transparency, i = this['fill-color'];
+        return 1 == t || 9 == i.length ? i : ('#' == i[0] && (i = i.substr(1)), 3 == i.length && (i = `${i[0]}${i[0]}${i[1]}${i[1]}${i[2]}${i[2]}`), 
+        `#${i}${Math.floor(255 * t).toString(16).padStart(2, '0').toUpperCase()}`);
     }
     initializePointFeature() {
         this['stroke-width'] = .5, this['stroke-color'] = '#777777', this['fill-color'] = '#777777', 
@@ -16,9 +21,10 @@ export default class vssCanvasParameters {
         this['stroke-width'] = .5, this['stroke-color'] = '#777777';
     }
     initializePolygonFeature() {
-        this['stroke-width'] = .5, this['stroke-color'] = '#777777', this['fill-color'] = '#777777';
+        this['stroke-width'] = .5, this['stroke-color'] = '#777777', this['fill-color'] = '#777777', 
+        this['fill-type'] = 'source-over';
     }
-    initializeGeneralFeature(i) {
-        for (var t in i) this[t] = i[t];
+    initializeGeneralFeature(t) {
+        for (var i in t) this[i] = t[i];
     }
 }

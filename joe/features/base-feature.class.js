@@ -21,4 +21,4 @@ export default class BaseFeature {
     render(o) {
         console.log('Feature subclass must provide a render() function');
     }
-};
+}

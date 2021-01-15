@@ -14,25 +14,32 @@ export default class vssMediaRule {
     getSelector(e) {
         return this.vssSelectorCollection.getSelector(e);
     }
-    computeMediaRuleStyle(e, s, t, r, l, o, i) {
-        var a = s, c = '.' + t, n = '#' + r, u = '[' + l + ']';
-        if (this.assignPropertyValues(e, a, i), '' != t && this.assignPropertyValues(e, c, i), 
-        '' != r && this.assignPropertyValues(e, n, i), '' != l && this.assignPropertyValues(e, u, i), 
-        '' != t && '' != l && this.assignPropertyValues(e, c + u, i), '' != r && '' != l && this.assignPropertyValues(e, n + u, i), 
-        null != o) for (var h in o) {
-            var p = '[' + h + '=' + o[h] + ']';
-            this.assignPropertyValues(e, p, i);
+    computeMediaRuleStyle(e, s, t, r, l, i, o) {
+        var a = s, c = '.' + t, n = '#' + r, u = `["${l}"]`;
+        if (this.assignPropertyValues(e, a, o), '' != t && this.assignPropertyValues(e, c, o), 
+        '' != r && this.assignPropertyValues(e, n, o), '' != l && this.assignPropertyValues(e, u, o), 
+        '' != t && '' != l && this.assignPropertyValues(e, c + u, o), '' != r && '' != l && this.assignPropertyValues(e, n + u, o), 
+        null != i) for (var h in i) {
+            var p = i[h];
+            if ('' != t) {
+                var v = `${c}[${h}="${p}"]`;
+                this.assignPropertyValues(e, v, o);
+            }
+            if ('' != r) {
+                var S = `${n}[${h}="${p}"]`;
+                this.assignPropertyValues(e, S, o);
+            }
         }
     }
     assignPropertyValues(e, s, t) {
         var r = this.lookupStyle(s);
         if (null != r) for (let s in r.properties) {
-            var l = r.properties[s], o = l.name, i = l.value;
+            var l = r.properties[s], i = l.name, o = l.value;
             l.units;
-            if (Array.isArray(i)) {
-                var a = i[t % i.length];
-                e[o] = a;
-            } else e[o] = i;
+            if (Array.isArray(o)) {
+                var a = o[t % o.length];
+                e[i] = a;
+            } else e[i] = o;
         }
     }
     lookupStyle(e) {

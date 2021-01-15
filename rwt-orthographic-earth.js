@@ -145,21 +145,21 @@ export default class rwtOrthographicEarth extends HTMLElement {
             break;
 
           case 'graticule':
-            a = e.classname || 'graticule-3-by-3';
+            a = e.classname || '';
             var i = null == e.parallelFrequency ? 10 : e.parallelFrequency, n = null == e.meridianFrequency ? 10 : e.meridianFrequency, r = null != e.drawToPoles && e.drawToPoles;
             this.earth.addPackage(new Graticule(this, s, t, a, i, n, r));
             break;
 
           case 'great-circles':
             a = e.classname || '';
-            var h = e.namedCircles || {}, o = e.accuracy || 1;
+            var h = e.namedCircles || {}, o = e.frequency || 1;
             this.earth.addPackage(new GreatCircles(this, s, t, a, h, o));
             break;
 
           case 'named-parallels':
             a = e.classname || '';
             var c = e.namedParallels || {};
-            o = e.accuracy || 1;
+            o = e.frequency || 1;
             this.earth.addPackage(new NamedParallels(this, s, t, a, c, o));
             break;
 
@@ -170,8 +170,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'topojson-package':
             a = e.classname || '';
-            var l = e.url || '', d = e.embeddedName || '', m = e.keyProperty || 'label', u = new TopojsonPackage(this, s, m, t, a);
-            this.earth.addPackage(u), await u.retrieveData('replace', l, d), this.invalidateCanvas();
+            var l = e.url || '', d = e.embeddedName || '', m = e.keyProperty || 'label', u = e.identifiable || 'yes', g = new TopojsonPackage(this, s, m, t, a, u);
+            this.earth.addPackage(g), await g.retrieveData('replace', l, d), this.invalidateCanvas();
             break;
 
           default:
@@ -262,7 +262,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
         }));
     }
     validate() {
-        var e = window.location.hostname.split('.'), t = 25;
+        var e = (i = window.location.hostname).split('.'), t = 25;
         if (e.length >= 2) {
             var a = e[e.length - 2].charAt(0);
             (a < 'a' || a > 'z') && (a = 'q'), t = a.charCodeAt(a) - 97, t = Math.max(t, 0), 
@@ -270,6 +270,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
         }
         var s = new Date;
         s.setUTCMonth(0, 1), (Math.floor((Date.now() - s) / 864e5) + 1) % 26 == t && window.setTimeout(this.authenticate.bind(this), 5e3);
+        var i = window.location.hostname, n = Registration.registration;
+        i == n ? console.info(`rwt-orthographic-earth registered to ${n}`) : console.warn('Unregistered rwt-orthographic-earth component. Register at https://readwritetools.com/registration.blue');
     }
     async authenticate() {
         var e = {

@@ -10,11 +10,11 @@ import PolygonFeature from '../features/polygon-feature.class.js';
 import ProjectedPoint from '../projection/projected-point.class.js';
 
 export default class TopojsonPackage extends BasePackage {
-    constructor(e, t, s, r, o) {
-        super(e, t, r, o), this.featurePolygons = [], this.featureLines = [], this.featurePoints = [], 
-        this.keyProperty = s, this.replaceAppend = '', this.url = '', this.embeddedName = '', 
-        this.topojsonObjects = null, this.topojsonArcs = null, this.scaleX = null, this.scaleY = null, 
-        this.translateX = null, this.translateY = null;
+    constructor(e, t, s, r, o, i) {
+        super(e, t, r, o), this.identifiable = i, this.featurePolygons = [], this.featureLines = [], 
+        this.featurePoints = [], this.keyProperty = s, this.replaceAppend = '', this.url = '', 
+        this.embeddedName = '', this.topojsonObjects = null, this.topojsonArcs = null, this.scaleX = null, 
+        this.scaleY = null, this.translateX = null, this.translateY = null;
     }
     async retrieveData(e, t, s) {
         this.replaceAppend = e, this.embeddedName = s;
