@@ -142,9 +142,10 @@ export default class Menu {
             return;
 
           case 'time-lapse':
-            var l = this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-ratio');
+            var l = this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation');
             return void l.addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/timeLapseRatio', l.value);
+                var t = l.value;
+                this.rwtOrthographicEarth.broadcastMessage('menu/timeLapseRotation', t);
             }));
 
           case 'earth-orbit':
@@ -324,6 +325,11 @@ export default class Menu {
             }));
 
           case 'time-lapse':
+            return void this.rwtOrthographicEarth.addEventListener('animation/rotationDegreesPerSecond', (t => {
+                var e = t.detail;
+                this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation').value = e;
+            }));
+
           case 'earth-orbit':
           case 'telescope':
           case 'flyby':

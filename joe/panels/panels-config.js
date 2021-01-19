@@ -530,7 +530,7 @@ export default {
         },
         panelLines: [ {
             lineType: 'dropdown',
-            id: 'time-lapse-ratio',
+            id: 'time-lapse-rotation',
             labelText: 'Rotation rate',
             tooltip: 'Time lapse speed of Earth\'s rotation about its axis',
             selections: [ {
@@ -540,16 +540,22 @@ export default {
                 v: -.004167,
                 t: 'realtime'
             }, {
-                v: -.1,
+                v: -.24,
+                t: 'very slow'
+            }, {
+                v: -.5,
                 t: 'slow'
             }, {
                 v: -1,
                 t: 'medium'
             }, {
-                v: -6,
+                v: -2,
                 t: 'fast'
             }, {
-                v: -60,
+                v: -4,
+                t: 'very fast'
+            }, {
+                v: -8,
                 t: 'spin'
             } ]
         } ]

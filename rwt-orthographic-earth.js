@@ -152,15 +152,15 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'great-circles':
             a = e.classname || '';
-            var h = e.namedCircles || {}, o = e.frequency || 1;
-            this.earth.addPackage(new GreatCircles(this, s, t, a, h, o));
+            var o = e.namedCircles || {}, h = e.frequency || 1;
+            this.earth.addPackage(new GreatCircles(this, s, t, a, o, h));
             break;
 
           case 'named-parallels':
             a = e.classname || '';
             var c = e.namedParallels || {};
-            o = e.frequency || 1;
-            this.earth.addPackage(new NamedParallels(this, s, t, a, c, o));
+            h = e.frequency || 1;
+            this.earth.addPackage(new NamedParallels(this, s, t, a, c, h));
             break;
 
           case 'place-of-interest':
@@ -217,6 +217,10 @@ export default class rwtOrthographicEarth extends HTMLElement {
     setPlaceOfInterest(e, t) {
         this.earth.setPlaceOfInterest(e, t);
     }
+    setRotationSpeed(e) {
+        this.earth.renderLoop.getAnimationByName('time-lapse-animation').setDeltaPerSecond(e), 
+        this.broadcastMessage('animation/rotationDegreesPerSecond', e);
+    }
     registerMenuListeners() {
         this.addEventListener('menu/seasonDayMonthYearUTC', (e => {
             var t = e.detail;
@@ -233,8 +237,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
             this.earth.setTangentLongitude(e.detail), this.earth.recalculateLongitudeDependants();
         })), this.addEventListener('menu/tangentLatitude', (e => {
             this.earth.setTangentLatitude(e.detail), this.earth.recalculateLatitudeDependants();
-        })), this.addEventListener('menu/timeLapseRatio', (e => {
-            this.earth.renderLoop.getAnimationByName('time-lapse-animation').setDeltaPerSecond(e.detail);
+        })), this.addEventListener('menu/timeLapseRotation', (e => {
+            var t = e.detail;
+            this.earth.renderLoop.getAnimationByName('time-lapse-animation').setDeltaPerSecond(t);
         })), this.addEventListener('menu/mapScale', (e => {
             this.earth.setMapScale(e.detail), this.explicitMapScale = !0;
         })), this.addEventListener('menu/translationEastWest', (e => {

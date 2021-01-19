@@ -75,10 +75,11 @@ The JavaScript Orthographic Earth component has these features:
 
 #### In the wild
 
-To see an example of this component in use, visit the <a href='https://timezone.earth'>timezone.earth</a>
-website. To understand what's going on under the hood, use the browser's
-inspector to view the HTML source code and network activity, and follow along as
-you read this documentation.
+To see examples of this component in use, visit any of these: <a href='https://full.earth'>Hello World!</a>
+, <a href='https://timezone.earth'>Time zones of the world</a>
+, <a href='https://simply.earth'>Simply Earth</a>
+, and the <a href='https://joe.earth'>JavaScript Orthographic Earth</a>
+.
 
 ### Installation
 
