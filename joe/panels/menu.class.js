@@ -148,6 +148,7 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/timeLapseRotation', t);
             }));
 
+          case 'hello-world':
           case 'earth-orbit':
           case 'telescope':
           case 'flyby':
@@ -330,6 +331,7 @@ export default class Menu {
                 this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation').value = e;
             }));
 
+          case 'hello-world':
           case 'earth-orbit':
           case 'telescope':
           case 'flyby':

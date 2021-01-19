@@ -33,8 +33,6 @@ import InteractionHandler from './joe/interaction/interaction-handler.class.js';
 
 import Menu from './joe/panels/menu.class.js';
 
-import Registration from './registration.js';
-
 export default class rwtOrthographicEarth extends HTMLElement {
     constructor() {
         super(), this.instance = Static.elementInstance++, this.isComponentLoaded = !1, 
@@ -125,6 +123,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
     }
     invalidateCanvas() {
         null != this.earth && this.earth.invalidateCanvas();
+    }
+    setMenuTitlebar(e) {
+        this.menu.rwtDockablePanels.setTitlebar(e);
     }
     async addLayer(e) {
         var t = e.id || 'id' + Static.nextId++, a = e.classname || '', s = e.layerName || t;
@@ -266,7 +267,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
             this.earth.reflectDeclination(e.detail), this.earth.recalculateDeclinationDependants();
         }));
     }
-    validate() {
+    async validate() {
         var e = (i = window.location.hostname).split('.'), t = 25;
         if (e.length >= 2) {
             var a = e[e.length - 2].charAt(0);
@@ -275,8 +276,20 @@ export default class rwtOrthographicEarth extends HTMLElement {
         }
         var s = new Date;
         s.setUTCMonth(0, 1), (Math.floor((Date.now() - s) / 864e5) + 1) % 26 == t && window.setTimeout(this.authenticate.bind(this), 5e3);
-        var i = window.location.hostname, n = Registration.registration;
-        i == n ? console.info(`rwt-orthographic-earth registered to ${n}`) : console.warn('Unregistered rwt-orthographic-earth component. Register at https://readwritetools.com/registration.blue');
+        var i = window.location.hostname, n = 'Unregistered rwt-orthographic-earth component.';
+        try {
+            var r = (await import('../../rwt-registration-keys.js')).default;
+            for (let e = 0; e < r.length; e++) {
+                var o = r[e];
+                if (o.hasOwnProperty('product-key') && 'rwt-orthographic-earth' == o['product-key']) {
+                    var h = o.registration;
+                    return void (i == h ? console.info(`rwt-orthographic-earth registered to ${h}`) : console.warn(`${n} Register at https://readwritetools.com/registration.blue`));
+                }
+            }
+            console.warn(`${n} Badly formatted rwt-registration-key.js file.`);
+        } catch (e) {
+            console.error('$msg} Copy rwt-registration-key.js to your website\'s root directory.');
+        }
     }
     async authenticate() {
         var e = {

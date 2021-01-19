@@ -1,3 +1,4 @@
+/* The code in this file (c) 2103, Tab Atkins, Jr. http://www.xanthir.com/blog/b4Ju0. It is licensed under the CC0 license. */
 // The code in this file (c) 2103, Tab Atkins, Jr. http://www.xanthir.com/blog/b4Ju0. It is licensed under the CC0 license.
 export default function cssParser(e) {
     for (var t, r = 'top-level', n = -1, a = new Stylesheet, o = [ a ], u = o[0], consume = function(r) {

@@ -22,8 +22,8 @@
   "homepage": "https://hub.readwritetools.com/components/orthographic-earth.blue",
   "files": [
     "rwt-orthographic-earth.js",
+    "rwt-registration-keys.js",
     "readme.md",
-    "registration.js",
     "joe",
     "img"
   ],

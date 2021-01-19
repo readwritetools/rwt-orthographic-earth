@@ -75,11 +75,12 @@ The JavaScript Orthographic Earth component has these features:
 
 #### In the wild
 
-To see examples of this component in use, visit any of these: <a href='https://full.earth'>Hello World!</a>
-, <a href='https://timezone.earth'>Time zones of the world</a>
-, <a href='https://simply.earth'>Simply Earth</a>
-, and the <a href='https://joe.earth'>JavaScript Orthographic Earth</a>
-.
+To see examples of this component in use, visit any of these:
+
+   * <a href='https://full.earth'>Hello World!</a>
+   * <a href='https://timezone.earth'>Time zones of the world</a>
+   * <a href='https://simply.earth'>Simply Earth</a>
+   * <a href='https://joe.earth'>JavaScript Orthographic Earth</a>
 
 ### Installation
 
@@ -199,8 +200,21 @@ The component issues life-cycle events.
 
 The <span>rwt-orthographic-earth</span> DOM component is not
 freeware. After evaluating it and before using it in a public-facing website,
-eBook, mobile app, or desktop application, you must obtain a license from Read
-Write Tools.
+eBook, mobile app, or desktop application, you must obtain a license from <a href='https://readwritetools.com/licensing.blue'>Read Write Tools</a>
+.
+
+Copy the `rwt-registration-keys.js` file to the *root directory of your website*,
+changing the `customer-number` and `access-key`, and replacing `example.com` with your
+website's hostname.
+
+<pre>
+export default [{
+    "product-key": "rwt-orthographic-earth",
+    "registration": "example.com",
+    "customer-number": "CN-xxx-yyyyy",
+    "access-key": "AK-xxx-yyyyy"
+}]
+</pre>
 
 <img src='/img/blue-seal-premium-software.png' width=80 align=right />
 
