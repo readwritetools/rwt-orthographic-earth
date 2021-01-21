@@ -160,7 +160,7 @@ of it:
         earth1.addLayer({ layerType:'space', id:'space', layerName: 'Space' });
         earth1.addLayer({ layerType:'sphere', id:'sphere', layerName: 'Oceans' });
         earth1.addLayer({ layerType:'graticule', id:'graticule-3-by-3',layerName: 'Graticule',  meridianFrequency:3, parallelFrequency:3, drawToPoles:false });
-        earth1.addLayer({ layerType:'topojson-package', id:'land-50m', layerName: 'Land', url:'https://timezone.earth/topojson3-world-atlas/land-50m.json', embeddedName:'land', keyProperty:'name' });
+        earth1.addLayer({ layerType:'topojson-package', id:'land-50m', layerName: 'Land', url:'https://timezone.earth/topojson3-world-atlas/land-50m.json', embeddedName:'land', featureKey:'name' });
      }
      
      function configure(earth1) {
@@ -203,19 +203,6 @@ freeware. After evaluating it and before using it in a public-facing website,
 eBook, mobile app, or desktop application, you must obtain a license from <a href='https://readwritetools.com/licensing.blue'>Read Write Tools</a>
 .
 
-Copy the `rwt-registration-keys.js` file to the *root directory of your website*,
-changing the `customer-number` and `access-key`, and replacing `example.com` with your
-website's hostname.
-
-<pre>
-export default [{
-    "product-key": "rwt-orthographic-earth",
-    "registration": "example.com",
-    "customer-number": "CN-xxx-yyyyy",
-    "access-key": "AK-xxx-yyyyy"
-}]
-</pre>
-
 <img src='/img/blue-seal-premium-software.png' width=80 align=right />
 
 <details>
@@ -247,4 +234,20 @@ export default [{
 		<li>This Agreement is governed by and interpreted in accordance with the laws of the State of California. If for any reason a court of competent jurisdiction finds any provision of the Agreement to be unenforceable, that provision will be enforced to the maximum extent possible to effectuate the intent of the parties and the remainder of the Agreement shall continue in full force and effect.</li>
 	</ol>
 </details>
+
+#### Activation
+
+To activate your license, copy the `rwt-registration-keys.js` file to the *root
+directory of your website*, providing the `customer-number` and `access-key` sent to
+your email address, and replacing `example.com` with your website's hostname.
+Follow this example:
+
+<pre>
+export default [{
+    "product-key": "rwt-orthographic-earth",
+    "registration": "example.com",
+    "customer-number": "CN-xxx-yyyyy",
+    "access-key": "AK-xxx-yyyyy"
+}]
+</pre>
 

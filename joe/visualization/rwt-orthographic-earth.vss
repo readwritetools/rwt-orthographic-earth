@@ -30,8 +30,8 @@ polygon { stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
 .sphere  { surface: visible;  horizon: hidden; surface-background-color: #148BA6; }
 .horizon { surface: hidden;   horizon: visible; horizon-stroke-color: #093640; horizon-stroke-width: 6; }
 
-#great-circles["primeMeridian"],
-#great-circles["antiMeridian"] { stroke-width: 1.5; stroke-color: #107187; }
+#named-meridians["Prime Meridian"],
+#named-meridians["Intl. Dateline"] { stroke-width: 1.5; stroke-color: #107187; }
 
 #named-parallels["Equator"] { stroke-width: 2.0; stroke-color: #107187; }
 #named-parallels["Arctic Circle"],

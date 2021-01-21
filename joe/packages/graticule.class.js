@@ -7,10 +7,9 @@ import ProjectedPoint from '../projection/projected-point.class.js';
 
 export default class Graticule extends BasePackage {
     constructor(e, a, i, t, s, r, n) {
-        if (super(e, a, i, t), this.identifiable = 'disallow', s = Number(s), r = Number(r), 
-        this.parallel_frequency = Number.isNaN(s) ? 'none' : s, this.meridian_frequency = Number.isNaN(r) ? 'none' : r, 
-        this.draw_to_poles = void 0 !== n && n, this.parallels = [], this.meridians = [], 
-        'none' != this.parallel_frequency && (this.parallel_frequency <= 0 || this.parallel_frequency > 30) && (this.parallel_frequency = 10), 
+        if (super(e, a, i, t), s = Number(s), r = Number(r), this.parallel_frequency = Number.isNaN(s) ? 'none' : s, 
+        this.meridian_frequency = Number.isNaN(r) ? 'none' : r, this.draw_to_poles = void 0 !== n && n, 
+        this.parallels = [], this.meridians = [], 'none' != this.parallel_frequency && (this.parallel_frequency <= 0 || this.parallel_frequency > 30) && (this.parallel_frequency = 10), 
         'none' != this.meridian_frequency && (this.meridian_frequency <= 0 || this.meridian_frequency > 30) && (this.meridian_frequency = 10), 
         'none' != this.parallel_frequency) for (var l = -90 + this.parallel_frequency; l < 90; l += this.parallel_frequency) {
             (h = new LineFeature).featureName = 'Parallel ' + l;

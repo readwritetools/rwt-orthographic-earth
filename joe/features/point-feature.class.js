@@ -26,7 +26,7 @@ export default class PointFeature extends BaseFeature {
         t.toCanvas(this.discretePoint);
     }
     render(t) {
-        if (void 0 != this.canvasParams && 'hidden' != this.canvasParams.visibility) {
+        if (null != this.canvasParams && 'hidden' != this.canvasParams.visibility) {
             var s = t.canvas.getContext('2d');
             s.fillStyle = this.canvasParams['fill-color'], s.strokeStyle = this.canvasParams['stroke-color'];
             var a = this.canvasParams['dot-radius'];
@@ -41,7 +41,9 @@ export default class PointFeature extends BaseFeature {
     }
     isPointerAtPoint(t, s) {
         if (0 == this.discretePoint.visible) return !1;
-        var a = void 0 != this.canvasParams && this.canvasParams.hasOwnProperty('dot-radius') ? this.canvasParams['dot-radius'] : 1, e = this.discretePoint.canvasX, i = this.discretePoint.canvasY;
+        var a = null != this.canvasParams && this.canvasParams.hasOwnProperty('dot-radius') ? this.canvasParams['dot-radius'] : 2;
+        a = Math.min(a, 2);
+        var e = this.discretePoint.canvasX, i = this.discretePoint.canvasY;
         return t - a < e && e < t + a && s - a < i && i < s + a;
     }
-};
+}

@@ -321,8 +321,9 @@ export default class Menu {
           case 'identify':
             return void this.rwtOrthographicEarth.addEventListener('user/identifiedFeatures', (t => {
                 var e = t.detail, a = [];
-                for (let t of e) a.push(`<p>${t.layerName}: <b>${t.featureName}</b></p>`);
-                this.rwtDockablePanels.shadowRoot.getElementById('identify-text').innerHTML = a.join('');
+                a.push('<tr><th class=\'chef-center\'>Data</th><th class=\'chef-center\'>Value</th></tr>');
+                for (let t of e) a.push(t.identifyHTML);
+                this.rwtDockablePanels.shadowRoot.getElementById('identify-table').innerHTML = a.join('');
             }));
 
           case 'time-lapse':

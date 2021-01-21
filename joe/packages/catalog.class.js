@@ -56,12 +56,16 @@ export default class Catalog {
             var i = this.packages[s];
             if (i.isIdentifiable()) {
                 var r = i.discoverFeatures(e, a);
-                null != r && t.push({
-                    layerName: i.layerName,
-                    featureType: r.featureType,
-                    featureName: r.featureName,
-                    featureValues: Object.assign(r.kvPairs)
-                });
+                if (null != r) {
+                    if (i.identifyCallback) c = i.identifyCallback(r.kvPairs); else var c = `<tr><td>${i.layerName}</td><td>${r.featureName}</td></tr>`;
+                    t.push({
+                        layerName: i.layerName,
+                        featureType: r.featureType,
+                        featureName: r.featureName,
+                        featureData: Object.assign(r.kvPairs),
+                        identifyHTML: c
+                    });
+                }
             }
         }
         return t;

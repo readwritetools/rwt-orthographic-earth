@@ -1,9 +1,9 @@
 /* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 export default class BasePackage {
     constructor(e, s, i, a) {
-        this.rwtOrthographicEarth = e, this.identifier = i, this.classname = a, this.layerName = s, 
-        this.visible = !0, this.identifiable = 'yes', this.packageNeedsRestyling = !1, this.packagePointsNeedGeoCoords = !1, 
-        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !1, 
+        this.rwtOrthographicEarth = e, this.layerName = s, this.identifier = i, this.classname = a, 
+        this.visible = !0, this.identifiable = 'disallow', this.packageNeedsRestyling = !1, 
+        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !1, 
         this.packagePointsNeedPlacement = !1, this.packageNeedsHashing = !1;
     }
     isVisible() {

@@ -7,15 +7,15 @@ import ProjectedPoint from '../projection/projected-point.class.js';
 
 export default class NamedParallels extends BasePackage {
     constructor(e, a, t, s, r, i) {
-        for (var l in super(e, a, t, s), this.identifiable = 'disallow', this.parallels = [], 
-        this.frequency = void 0 !== i ? i : 1, this.frequency <= 0 && (this.frequency = 1), 
-        this.frequency > 15 && (this.frequency = 15), r) if (r.hasOwnProperty(l)) {
-            var o = new LineFeature;
-            o.featureName = l;
-            var n = r[l];
+        for (var o in super(e, a, t, s), this.parallels = [], this.frequency = void 0 !== i ? i : 1, 
+        this.frequency <= 0 && (this.frequency = 1), this.frequency > 15 && (this.frequency = 15), 
+        r) if (r.hasOwnProperty(o)) {
+            var l = new LineFeature;
+            l.featureName = o;
+            var n = r[o];
             if (n < -90 || n > 90) continue;
-            for (var h = -180; h <= 180; h += this.frequency) o.addPoint(new ProjectedPoint(n, h));
-            this.parallels.push(o);
+            for (var c = -180; c <= 180; c += this.frequency) l.addPoint(new ProjectedPoint(n, c));
+            this.parallels.push(l);
         }
         this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
         this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 

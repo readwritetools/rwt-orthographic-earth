@@ -517,10 +517,10 @@ export default {
             tooltip: 'Identify feature details'
         },
         panelLines: [ {
-            lineType: 'generic',
-            id: 'identify-text',
-            innerHTML: '',
-            heightInPx: '100px'
+            lineType: 'table',
+            id: 'identify-table',
+            heightInPx: '200px',
+            overflowY: 'auto'
         } ]
     }, {
         options: {
@@ -567,7 +567,7 @@ export default {
         panelLines: [ {
             lineType: 'generic',
             id: 'hello-world-text',
-            innerHTML: '<p>This software open source, but it is not free.</p><p>You must obtain a <a style=\'color:var(--yellow)\' target=\'_blank\' href=\'https://readwritetools.com/licensing.blue\'>Read Write Tools</a> license to use it in any eBook, mobile app, desktop application or website.</p><p>Read the full text of the <a style=\'color:var(--yellow)\' target=\'_blank\' href=\'/node_modules/rwt-orthographic-earth/license.html\'>JavaScript Orthographic Earth Software License Agreement</a> for licensing terms and conditions.</p>',
+            innerHTML: '<p>This software is open source, but it is not free.</p><p>You must obtain a <a style=\'color:var(--yellow)\' target=\'_blank\' href=\'https://readwritetools.com/licensing.blue\'>Read Write Tools</a> license to use it in any eBook, mobile app, desktop application or website.</p><p>Read the full text of the <a style=\'color:var(--yellow)\' target=\'_blank\' href=\'/node_modules/rwt-orthographic-earth/license.html\'>JavaScript Orthographic Earth Software License Agreement</a> for licensing terms and conditions.</p>',
             heightInPx: '200px'
         } ]
     } ]

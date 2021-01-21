@@ -7,7 +7,7 @@ const degreesToRadians = Math.PI / 180;
 
 export default class Space extends BasePackage {
     constructor(e, a, s, r) {
-        super(e, a, s, r), this.identifiable = 'disallow';
+        super(e, a, s, r);
         var t = new Object;
         t['deep-space'] = 'visible', t['deep-space-color'] = '#FFFFFF', t['deep-space-star-count'] = 1e3, 
         t['deep-space-star-color'] = '#FFFFFF', t['earth-glow'] = 'hidden', t['earth-glow-size'] = 0, 

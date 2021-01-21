@@ -36,9 +36,7 @@ export default class EarthProxy {
         this.canvas.addEventListener('gesture/twostationtrack', this.noop.bind(this)), this.canvas.addEventListener('gesture/counterclockwise', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/clockwise', this.noop.bind(this));
     }
-    onGesture(t) {
-        console.log(t.type, JSON.stringify(t.detail, null, 4));
-    }
+    onGesture(t) {}
     captureEarthState() {
         this.initialLatitude = this.earth.getTangentLatitude(), this.initialLongitude = this.earth.getTangentLongitude(), 
         this.initialMapScale = this.earth.getMapScale(), this.initialTranslationEastWest = this.earth.getTranslationEastWest(), 

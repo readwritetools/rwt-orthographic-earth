@@ -19,7 +19,7 @@ import Night from './joe/packages/night.class.js';
 
 import Graticule from './joe/packages/graticule.class.js';
 
-import GreatCircles from './joe/packages/great-circles.class.js';
+import NamedMeridians from './joe/packages/named-meridians.class.js';
 
 import NamedParallels from './joe/packages/named-parallels.class.js';
 
@@ -151,17 +151,17 @@ export default class rwtOrthographicEarth extends HTMLElement {
             this.earth.addPackage(new Graticule(this, s, t, a, i, n, r));
             break;
 
-          case 'great-circles':
+          case 'named-meridians':
             a = e.classname || '';
-            var o = e.namedCircles || {}, h = e.frequency || 1;
-            this.earth.addPackage(new GreatCircles(this, s, t, a, o, h));
+            var o = e.namedMeridians || {}, h = e.frequency || 1;
+            this.earth.addPackage(new NamedMeridians(this, s, t, a, o, h));
             break;
 
           case 'named-parallels':
             a = e.classname || '';
-            var c = e.namedParallels || {};
+            var l = e.namedParallels || {};
             h = e.frequency || 1;
-            this.earth.addPackage(new NamedParallels(this, s, t, a, c, h));
+            this.earth.addPackage(new NamedParallels(this, s, t, a, l, h));
             break;
 
           case 'place-of-interest':
@@ -171,8 +171,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'topojson-package':
             a = e.classname || '';
-            var l = e.url || '', d = e.embeddedName || '', m = e.keyProperty || 'label', u = e.identifiable || 'yes', g = new TopojsonPackage(this, s, m, t, a, u);
-            this.earth.addPackage(g), await g.retrieveData('replace', l, d), this.invalidateCanvas();
+            var c = e.url || '', d = e.embeddedName || '', m = e.featureKey || 'label', u = e.identifiable || 'yes', g = e.identifyCallback || null, p = new TopojsonPackage(this, s, t, a, m, u, g);
+            this.earth.addPackage(p), await p.retrieveData('replace', c, d), this.invalidateCanvas();
             break;
 
           default:
@@ -288,7 +288,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
             }
             console.warn(`${n} Badly formatted rwt-registration-key.js file.`);
         } catch (e) {
-            console.error('$msg} Copy rwt-registration-key.js to your website\'s root directory.');
+            console.error(`${n} Be sure to copy rwt-registration-key.js to your website's root directory.`);
         }
     }
     async authenticate() {

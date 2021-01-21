@@ -1,4 +1,5 @@
-/* Astronomical Algorithms Second Edition by Jean Meeus, ©1998, published by Willmann-Bell. Earth perihelion and aphelion times determined using JPL DE405 by Fred Espenak */export function calcGeomMeanLongSun(a) {
+/* Astronomical Algorithms Second Edition by Jean Meeus, ©1998, published by Willmann-Bell. Earth perihelion and aphelion times determined using JPL DE405 by Fred Espenak */
+export function calcGeomMeanLongSun(a) {
     for (var e = 280.46646 + a * (36000.76983 + 3032e-7 * a); e > 360; ) e -= 360;
     for (;e < 0; ) e += 360;
     return e;

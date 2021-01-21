@@ -5,7 +5,7 @@ import ProjectedPoint from '../projection/projected-point.class.js';
 
 import ECEF from '../projection/earth-centered-earth-fixed.class.js';
 
-export default class CircleFeature extends PolygonFeature {
+export default class HemisphereFeature extends PolygonFeature {
     constructor(t) {
         super();
         for (let i = 0; i < t + 1; i++) {
@@ -14,4 +14,4 @@ export default class CircleFeature extends PolygonFeature {
             this.addPoint(new ProjectedPoint(a, s));
         }
     }
-};
+}

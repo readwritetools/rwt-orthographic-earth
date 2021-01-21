@@ -10,11 +10,11 @@ import PolygonFeature from '../features/polygon-feature.class.js';
 import ProjectedPoint from '../projection/projected-point.class.js';
 
 export default class TopojsonPackage extends BasePackage {
-    constructor(e, t, s, r, o, i) {
-        super(e, t, r, o), this.identifiable = i, this.featurePolygons = [], this.featureLines = [], 
-        this.featurePoints = [], this.keyProperty = s, this.replaceAppend = '', this.url = '', 
-        this.embeddedName = '', this.topojsonObjects = null, this.topojsonArcs = null, this.scaleX = null, 
-        this.scaleY = null, this.translateX = null, this.translateY = null;
+    constructor(e, t, s, r, o, i, n) {
+        super(e, t, s, r), this.featureKey = o, this.identifiable = i, this.identifyCallback = n, 
+        this.featurePolygons = [], this.featureLines = [], this.featurePoints = [], this.replaceAppend = '', 
+        this.url = '', this.embeddedName = '', this.topojsonObjects = null, this.topojsonArcs = null, 
+        this.scaleX = null, this.scaleY = null, this.translateX = null, this.translateY = null;
     }
     async retrieveData(e, t, s) {
         this.replaceAppend = e, this.embeddedName = s;
@@ -43,7 +43,7 @@ export default class TopojsonPackage extends BasePackage {
         if ('GeometryCollection' != t.type) return console.log('Expected GeometryCollection, but found %s', t.type);
         for (var s = 0; s < t.geometries.length; s++) {
             var r = t.geometries[s], o = this.importKeyValuePairs(r), i = '';
-            if (null != o && (i = o.hasOwnProperty(this.keyProperty) ? o[this.keyProperty] : ''), 
+            if (null != o && (i = o.hasOwnProperty(this.featureKey) ? o[this.featureKey] : ''), 
             'type' in r != 0) if ('MultiPolygon' == r.type) this.importMultiPolygon(r, o, i); else if ('Polygon' == r.type) this.importPolygon(r, o, i); else if ('MultiLineString' == r.type) this.importMultiLine(r, o, i); else if ('LineString' == r.type) this.importLine(r, o, i); else if ('MultiPoint' == r.type) this.importMultiPoint(r, o, i); else {
                 if ('Point' != r.type) {
                     console.log('Info: i[%d] Skipping unknown geometry type %s', s, r.type);

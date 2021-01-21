@@ -5,7 +5,7 @@ import LineFeature from '../features/line-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
-export default class GreatCircles extends BasePackage {
+export default class NamedMeridians extends BasePackage {
     constructor(e, i, t, s, a, r) {
         for (var n in super(e, i, t, s), this.meridians = [], this.frequency = void 0 !== r ? r : 1, 
         this.frequency <= 0 && (this.frequency = 1), this.frequency > 30 && (this.frequency = 30), 
@@ -19,7 +19,7 @@ export default class GreatCircles extends BasePackage {
         }
         this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
         this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 
-        this.rwtOrthographicEarth.broadcastMessage('package/greatCircles', null);
+        this.rwtOrthographicEarth.broadcastMessage('package/NamedMeridians', null);
     }
     recomputeStyles(e) {
         for (var i = 0; i < this.meridians.length; i++) this.meridians[i].computeStyle(e, this.classname, this.identifier, i);
