@@ -11,8 +11,8 @@ export default class EarthProxy {
         this.canvas.addEventListener('mouse/hover/ctrlkey', this.noop.bind(this)), this.canvas.addEventListener('mouse/hover/altkey', this.noop.bind(this)), 
         this.canvas.addEventListener('mouse/hover/shiftkey', this.noop.bind(this)), this.canvas.addEventListener('mouse/hover/nokey', this.locateIdentify.bind(this)), 
         this.canvas.addEventListener('gesture/begin/ctrlkey', this.reserved.bind(this)), 
-        this.canvas.addEventListener('gesture/begin/altkey', this.beginPan.bind(this)), 
-        this.canvas.addEventListener('gesture/begin/shiftkey', this.beginZoom.bind(this)), 
+        this.canvas.addEventListener('gesture/begin/altkey', this.beginZoom.bind(this)), 
+        this.canvas.addEventListener('gesture/begin/shiftkey', this.beginPan.bind(this)), 
         this.canvas.addEventListener('gesture/begin/nokey', this.beginChangePlaceOfInterest.bind(this)), 
         this.canvas.addEventListener('gesture/tap/ctrlkey', this.noop.bind(this)), this.canvas.addEventListener('gesture/tap/altkey', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/tap/shiftkey', this.noop.bind(this)), this.canvas.addEventListener('gesture/tap/nokey', this.noop.bind(this)), 
@@ -23,8 +23,8 @@ export default class EarthProxy {
         this.canvas.addEventListener('gesture/press/altkey', this.noop.bind(this)), this.canvas.addEventListener('gesture/press/shiftkey', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/press/nokey', this.changePlaceOfInterest.bind(this)), 
         this.canvas.addEventListener('gesture/track/ctrlkey', this.reserved.bind(this)), 
-        this.canvas.addEventListener('gesture/track/altkey', this.panSpace.bind(this)), 
-        this.canvas.addEventListener('gesture/track/shiftkey', this.zoomScale.bind(this)), 
+        this.canvas.addEventListener('gesture/track/altkey', this.zoomScale.bind(this)), 
+        this.canvas.addEventListener('gesture/track/shiftkey', this.panSpace.bind(this)), 
         this.canvas.addEventListener('gesture/track/nokey', this.rotateTilt.bind(this)), 
         this.canvas.addEventListener('gesture/spread', this.zoomSpreadGesture.bind(this)), 
         this.canvas.addEventListener('gesture/pinch', this.zoomPinchGesture.bind(this)), 
@@ -72,15 +72,15 @@ export default class EarthProxy {
     zoomScale(t) {
         this.canvas.style.cursor = Cursors.zoomScale;
         var e = t.detail.initialY - t.detail.y, s = this.determineScalingFactor(e, 1), i = e < 0 ? Math.max(this.initialMapScale / s, 1) : Math.min(this.initialMapScale * s, 1e3);
-        this.earth.supressCanvasCoords(), this.earth.setMapScale(i);
+        this.earth.supressCanvasCoords(), this.earth.setMapScale(i), this.rwtOrthographicEarth.explicitMapScale = !0;
     }
     zoomSpreadGesture(t) {
         var e = this.determineScalingFactor(t.detail.deltaDistance, 5), s = Math.max(this.initialMapScale / e, 1);
-        this.earth.supressCanvasCoords(), this.earth.setMapScale(s);
+        this.earth.supressCanvasCoords(), this.earth.setMapScale(s), this.rwtOrthographicEarth.explicitMapScale = !0;
     }
     zoomPinchGesture(t) {
         var e = this.determineScalingFactor(t.detail.deltaDistance, 5), s = Math.min(this.initialMapScale * e, 1e3);
-        this.earth.supressCanvasCoords(), this.earth.setMapScale(s);
+        this.earth.supressCanvasCoords(), this.earth.setMapScale(s), this.rwtOrthographicEarth.explicitMapScale = !0;
     }
     determineScalingFactor(t, e) {
         var s = Math.log(1), i = (Math.log(1e3) - s) / (Math.min(this.earth.canvas.width, this.earth.canvas.height) * e - 1);

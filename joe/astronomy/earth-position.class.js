@@ -69,18 +69,18 @@ export default class EarthPosition {
     }
     changeDayMonthYear(t) {
         'Date' == t.constructor.name && (t.setUTCHours(this.UTC.getUTCHours()), t.setUTCMinutes(this.UTC.getUTCMinutes()), 
-        t.setUTCSeconds(this.UTC.getUTCSeconds()), this.UTC = t, this.JD = convertUTCtoJD(t), 
+        t.setUTCSeconds(this.UTC.getUTCSeconds()), this.UTC = t, this.JD = AA.convertUTCtoJD(t), 
         this.determineAll(), this.broadcastDateAndTime(), this.broadcastTimezone(), this.broadcastEquationOfTime(), 
         this.broadcastGeocentricCoords(), this.broadcastTopocentricCoords());
     }
     changeUTC(t) {
-        'Date' == t.constructor.name && (this.UTC = t, this.JD = convertUTCtoJD(t), this.determineAll(), 
+        'Date' == t.constructor.name && (this.UTC = t, this.JD = AA.convertUTCtoJD(t), this.determineAll(), 
         this.broadcastDateAndTime(), this.broadcastTimezone(), this.broadcastEquationOfTime(), 
         this.broadcastGeocentricCoords(), this.broadcastTopocentricCoords());
     }
     changeJD(t) {
-        'Number' == t.constructor.name && (this.JD = t, this.UTC = convertJDtoUTC(t), this.determineAll(), 
-        this.broadcastDateAndTime(), this.broadcastTimezone(), this.broadcastEquationOfTime(), 
+        'Number' == t.constructor.name && (this.JD = t, this.UTC = AA.convertJDtoUTC(t), 
+        this.determineAll(), this.broadcastDateAndTime(), this.broadcastTimezone(), this.broadcastEquationOfTime(), 
         this.broadcastGeocentricCoords(), this.broadcastTopocentricCoords());
     }
     changeDayOfYear(t) {
@@ -197,16 +197,4 @@ export default class EarthPosition {
     static isLeapYear(t) {
         if (t = parseInt(t), !isNaN(t)) return t > 1582 ? t % 4 == 0 && (t % 400 == 0 || t % 100 != 0) : t > 0 ? t % 4 == 0 : 0 == t ? void 0 : t > -46 ? !![ -44, -41, -38, -35, -32, -29, -26, -23, -20, -17, -14, -11, -8 ].includes(t) : void 0;
     }
-}
-
-function convertUTCtoJD(t) {
-    var e = t.getUTCFullYear(), i = t.getUTCMonth(), s = t.getUTCDate(), a = t.getUTCHours(), r = t.getUTCMinutes(), o = t.getUTCSeconds();
-    return AA.getJD(e, i + 1, s) + (3600 * a + 60 * r + o) / 86400;
-}
-
-function convertJDtoUTC(t) {
-    var e = AA.calcDateFromJD(t), i = Math.trunc(e.day), s = e.day - i, a = Math.round(86400 * s), r = Math.floor(a / 3600), o = a - 3600 * r, n = Math.floor(o / 60);
-    o -= 60 * n;
-    var h = Math.trunc(o), c = Date.UTC(e.year, e.month - 1, i, r, n, h);
-    return new Date(c);
 }

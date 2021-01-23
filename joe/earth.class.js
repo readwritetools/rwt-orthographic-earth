@@ -65,7 +65,7 @@ export default class Earth {
         return this.ortho.latitude0;
     }
     setTangentLongitude(t) {
-        t < -180 && (t += 360), t > 210 && (t -= 360), this.ortho.setTangentLongitude(t), 
+        t < -180 && (t += 360), t > 180 && (t -= 360), this.ortho.setTangentLongitude(t), 
         this.invalidateCanvas();
     }
     getTangentLongitude() {
@@ -212,4 +212,4 @@ export default class Earth {
     getVisualizedRadius() {
         return Math.round(this.ortho.radius * this.carte.multiplier);
     }
-};
+}
