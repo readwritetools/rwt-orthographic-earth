@@ -16,7 +16,7 @@ export default class RenderLoop {
     }
     canvasCoordsChanged() {
         var t = this.earth.canvasCoordsToProjectedPoint();
-        t.isOnEarth && this.rwtOrthographicEarth.broadcastMessage('user/latitudeLongitude', t);
+        this.rwtOrthographicEarth.broadcastMessage('user/latitudeLongitude', t);
         var i = this.earth.discoverFeatures();
         this.rwtOrthographicEarth.broadcastMessage('user/identifiedFeatures', i), this.earth.canvasCoordsPending = !1;
     }

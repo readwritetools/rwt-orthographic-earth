@@ -208,7 +208,7 @@ export default class Menu {
           case 'equation-of-time':
             return this.rwtOrthographicEarth.addEventListener('earthPosition/civilDate', (t => {
                 var e = t.detail;
-                this.rwtDockablePanels.shadowRoot.getElementById('equation-of-time-civil-date').innerHTML = CB.formatDateYMD(e);
+                this.rwtDockablePanels.shadowRoot.getElementById('equation-of-time-civil-date').innerHTML = CB.formatDateDMY(e);
             })), void this.rwtOrthographicEarth.addEventListener('earthPosition/equationOfTime', (t => {
                 var e = t.detail, a = CB.formatEquationOfTime(e.equationOfTime);
                 this.rwtDockablePanels.shadowRoot.getElementById('equation-of-time-sundial-correction').innerHTML = `Sundial correction: ${a}`;
@@ -228,7 +228,7 @@ export default class Menu {
           case 'geocentric-coords':
             return this.rwtOrthographicEarth.addEventListener('earthPosition/civilDate', (t => {
                 var e = t.detail;
-                this.rwtDockablePanels.shadowRoot.getElementById('geocentric-civil-date').innerHTML = CB.formatDateYMD(e);
+                this.rwtDockablePanels.shadowRoot.getElementById('geocentric-civil-date').innerHTML = CB.formatDateDMY(e);
             })), this.rwtOrthographicEarth.addEventListener('earthPosition/declination', (t => {
                 var e = CB.toUserDeclination(t.detail);
                 this.rwtDockablePanels.shadowRoot.getElementById('geocentric-declination').innerHTML = `Declination: ${e}`;

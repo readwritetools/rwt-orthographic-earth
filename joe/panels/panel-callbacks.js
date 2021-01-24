@@ -111,13 +111,18 @@ export function formatDateTimeFromJD(t) {
         var o = Math.floor((r - 1867216.25) / 36524.25);
         a = r + 1 + o - Math.floor(o / 4);
     }
-    var n = a + 1524, i = Math.floor((n - 122.1) / 365.25), u = Math.floor(365.25 * i), s = Math.floor((n - u) / 30.6001), f = n - u - Math.floor(30.6001 * s) + e, p = s < 14 ? s - 1 : s - 13, l = p > 2 ? i - 4716 : i - 4715;
-    return `${Math.trunc(f)} ${[ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ][p - 1]} ${l}`;
+    var n = a + 1524, i = Math.floor((n - 122.1) / 365.25), u = Math.floor(365.25 * i), f = Math.floor((n - u) / 30.6001), s = n - u - Math.floor(30.6001 * f) + e, p = f < 14 ? f - 1 : f - 13, l = p > 2 ? i - 4716 : i - 4715;
+    return `${Math.trunc(s)} ${[ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ][p - 1]} ${l}`;
 }
 
 export function formatLocalTime(t, r) {
     var e = t.valueOf();
     return e += 60 * r * 60 * 1e3, new Date(e).toUTCString().replace('GMT', '<br>' + formatTimezone(r));
+}
+
+export function formatLocalTimeWithName(t, r, e) {
+    var a = t.valueOf();
+    return a += 60 * r * 60 * 1e3, new Date(a).toUTCString().replace('GMT', ' ' + e);
 }
 
 export function formatLocalTimeShortform(t, r) {
@@ -127,9 +132,9 @@ export function formatLocalTimeShortform(t, r) {
     return `${a.getUTCHours().toString().padStart(2, '0')}:${a.getUTCMinutes().toString().padStart(2, '0')}:${a.getUTCSeconds().toString().padStart(2, '0')}`;
 }
 
-export function formatDateYMD(t) {
+export function formatDateDMY(t) {
     var r = t.getUTCFullYear(), e = t.getUTCMonth();
-    return `${t.getUTCDate()} ${[ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ][e]} ${r}`;
+    return `${t.getUTCDate()}-${[ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ][e]}-${r}`;
 }
 
 export function formatRightAscensionHMS(t) {
