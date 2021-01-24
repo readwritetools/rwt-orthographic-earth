@@ -209,6 +209,11 @@ export default class Earth {
     discoverFeatures() {
         return this.getCoordinatesFromCanvasXY(this.canvasCoords.x, this.canvasCoords.y).isOnEarth ? this.catalog.discoverFeatures(this.canvasCoords.x, this.canvasCoords.y) : [];
     }
+    renderArbitraryPoint(t, e) {
+        var a = new ProjectedPoint(t, e);
+        return this.coords.toGeoCoords(a), this.ortho.toPlane(a), this.carte.toPixels(a, !0, !0, !0), 
+        this.viewport.toCanvas(a), a;
+    }
     getVisualizedRadius() {
         return Math.round(this.ortho.radius * this.carte.multiplier);
     }
