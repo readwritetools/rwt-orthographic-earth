@@ -17,9 +17,9 @@
 
 ##### Premium DOM Component
 
-# JavaScript Orthographic Earth
+# Orthographic Earth
 
-## An interactive global map of the world
+## A world of possibilities
 
 
 <address>
@@ -29,7 +29,7 @@
 
 <table>
 	<tr><th>Abstract</th></tr>
-	<tr><td><p>The <span class=product>JavaScript Orthographic Earth (JOE)</span> web component renders an interactive map of Earth where an entire hemisphere is visible. Its viewing angle can be rotated and tilted by the user to show Earth from any point of reference.</p> <p>Data can be added to the map using network-friendly TopoJSON layers. Data points can be linked to external databases to allow users to explore spatial-based thematic patterns.</p> <p>Data layers can be styled using a declarative language for visual style sheets.</p> </td></tr>
+	<tr><td><p>The <span class=product>Orthographic Earth</span> DOM component renders an interactive map of Earth where an entire hemisphere is visible. Its viewing angle can be rotated and tilted by the user to show Earth from any point of reference.</p> <p>Data can be added to the map using network-friendly <i>quantized</i> topoJSON layers. Data points can be linked to external databases to allow users to explore spatial-based thematic patterns.</p> <p>Data layers can be styled using a declarative language for visual style sheets.</p> </td></tr>
 </table>
 
 ### Background
@@ -53,18 +53,18 @@ point of perspective, with distortion occuring gradually, and only being
 noticable near the horizons. The primary drawback with orthographic projections
 in the past has been the fact that they only represent one-half of the world.
 
-The <span>JavaScript Orthographic Earth
-(JOE)</span> web component provides an excellent alternative for cartographers who want
-to tell thematic stories on a global scale.
+The <span>Orthographic Earth</span> DOM component provides an
+excellent alternative for cartographers who want to tell thematic stories on a
+global scale.
 
-The JavaScript Orthographic Earth component has these features:
+The Orthographic Earth component has these features:
 
    * The component can be used within any HTML document.
    * The drawing can be resized to fit the device's screen size, allowing it to be
       used on both small cell phones and large mega-pixel monitors.
    * The component is self-contained, which allows for the possibility of having two
       or more Earth drawings appear side-by-side on the same page.
-   * Data can be added to the map using TopoJSON packages having points, lines or
+   * Data can be added to the map using topoJSON packages having points, lines or
       polygons.
    * The user interface supports both touchscreen and mouse gestures for scaling,
       translation, rotation and tilt.
@@ -77,10 +77,13 @@ The JavaScript Orthographic Earth component has these features:
 
 To see examples of this component in use, visit any of these:
 
-   * <a href='https://full.earth'>Hello World!</a>
-   * <a href='https://timezone.earth'>Time zones of the world</a>
-   * <a href='https://simply.earth'>Simply Earth</a>
-   * <a href='https://joe.earth'>JavaScript Orthographic Earth</a>
+
+<table>
+	<tr><td><a href='https://joe.earth'>joe.earth</a></td><td>JavaScript Orthographic Earth</td></tr>
+	<tr><td><a href='https://full.earth'>full.earth</a></td><td>Polar views the world</td></tr>
+	<tr><td><a href='https://timezone.earth'>timezone.earth</a></td><td>Interactive map of world time</td></tr>
+	<tr><td><a href='https://simply.earth'>simply.earth</a></td><td>Political geography of the world</td></tr>
+</table>
 
 ### Installation
 
@@ -156,17 +159,17 @@ of it:
      });
      
      function addLayers(earth1) {
-        earth1.addVisualizationStyleSheet('https://timezone.earth/vss/earth1-styles.vss');
+        earth1.addVisualizationStyleSheet('/vss/earth1-styles.vss');
         earth1.addLayer({ layerType:'space', id:'space', layerName: 'Space' });
         earth1.addLayer({ layerType:'sphere', id:'sphere', layerName: 'Oceans' });
         earth1.addLayer({ layerType:'graticule', id:'graticule-3-by-3',layerName: 'Graticule',  meridianFrequency:3, parallelFrequency:3, drawToPoles:false });
-        earth1.addLayer({ layerType:'topojson-package', id:'land-50m', layerName: 'Land', url:'https://timezone.earth/topojson3-world-atlas/land-50m.json', embeddedName:'land', featureKey:'name' });
+        earth1.addLayer({ layerType:'topojson-package', id:'land-110m', layerName: 'Land', url:'/natural-earth/land-110m.topojson', embeddedName:'land-110m', featureKey:'name' });
      }
      
      function configure(earth1) {
-        earth1.setMapScale(25);
         earth1.setLatitude(12.98);
         earth1.setLongitude(77.58);
+        earth1.setRotationSpeed(-1);
     }
 </script>
         
