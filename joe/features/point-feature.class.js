@@ -41,8 +41,8 @@ export default class PointFeature extends BaseFeature {
     }
     isPointerAtPoint(t, s) {
         if (0 == this.discretePoint.visible) return !1;
-        var a = null != this.canvasParams && this.canvasParams.hasOwnProperty('dot-radius') ? this.canvasParams['dot-radius'] : 2;
-        a = Math.min(a, 2);
+        var a = null != this.canvasParams && this.canvasParams.hasOwnProperty('dot-radius') ? this.canvasParams['dot-radius'] : 4;
+        a = Math.max(a, 4);
         var e = this.discretePoint.canvasX, i = this.discretePoint.canvasY;
         return t - a < e && e < t + a && s - a < i && i < s + a;
     }

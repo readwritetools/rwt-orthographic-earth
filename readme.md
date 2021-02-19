@@ -11,7 +11,7 @@
 
 
 <figure>
-	<img src='/img/components/orthographic-earth/orthographic-earth.png' width='100%' />
+	<img src='/img/components/orthographic-earth/orthographic-earth.jpg' width='100%' />
 	<figcaption></figcaption>
 </figure>
 

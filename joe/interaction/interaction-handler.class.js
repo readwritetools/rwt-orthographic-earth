@@ -12,7 +12,7 @@ export default class InteractionHandler {
         this.canvas.addEventListener('pointerdown', this.onDown.bind(this)), this.canvas.addEventListener('pointermove', this.onMove.bind(this)), 
         this.canvas.addEventListener('pointerup', this.onUp.bind(this)), this.canvas.addEventListener('pointercancel', this.onCancel.bind(this)), 
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this)), this.canvas.addEventListener('pointerover', this.onOver.bind(this)), 
-        this.canvas.addEventListener('pointerenter', this.onEnter.bind(this)), this.canvas.addEventListener('pointerout', this.onOut.bind(this)), 
+        this.canvas.addEventListener('pointerout', this.onOut.bind(this)), this.canvas.addEventListener('pointerenter', this.onEnter.bind(this)), 
         this.canvas.addEventListener('pointerleave', this.onLeave.bind(this)), this.canvas.addEventListener('gotpointercapture', this.onCaptured.bind(this)), 
         this.canvas.addEventListener('lostpointercapture', this.onReleased.bind(this));
     }
