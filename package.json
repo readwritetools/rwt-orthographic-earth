@@ -3,7 +3,7 @@
   "version": "1.0.20",
   "description": "An orthographic projection of Earth, a standards-based DOM Component",
   "author": "Read Write Tools",
-  "license": "SEE LICENSE in license.blue",
+  "license": "see license.blue",
   "module": "rwt-orthographic-earth.js",
   "repository": {
     "type": "git",
@@ -21,11 +21,12 @@
   },
   "homepage": "https://hub.readwritetools.com/components/orthographic-earth.blue",
   "files": [
-    "rwt-orthographic-earth.js",
-    "rwt-registration-keys.js",
-    "readme.md",
+    "img",
     "joe",
-    "img"
+    "license.html",
+    "readme.md",
+    "rwt-orthographic-earth.js",
+    "rwt-registration-keys.js"
   ],
   "dependencies": {
     "rwt-dockable-panels": "^1.0.5"
