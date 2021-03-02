@@ -279,29 +279,30 @@ export default class rwtOrthographicEarth extends HTMLElement {
     }
     async validate() {
         if (1 == this.instance) {
-            var e = (i = window.location.hostname).split('.'), t = 25;
+            var e = (n = window.location.hostname).split('.'), t = 25;
             if (e.length >= 2) {
                 var a = e[e.length - 2].charAt(0);
                 (a < 'a' || a > 'z') && (a = 'q'), t = a.charCodeAt(a) - 97, t = Math.max(t, 0), 
                 t = Math.min(t, 25);
             }
             var s = new Date;
-            s.setUTCMonth(0, 1), (Math.floor((Date.now() - s) / 864e5) + 1) % 26 == t && window.setTimeout(this.authenticate.bind(this), 5e3);
-            var i = window.location.hostname, n = `Unregistered ${Static.componentName} component.`;
+            s.setUTCMonth(0, 1);
+            var i = (Math.floor((Date.now() - s) / 864e5) + 1) % 26, n = window.location.hostname, r = `Unregistered ${Static.componentName} component.`;
             try {
-                var r = (await import('../../rwt-registration-keys.js')).default;
-                for (let e = 0; e < r.length; e++) {
-                    var o = r[e];
-                    if (o.hasOwnProperty('product-key') && o['product-key'] == Static.componentName) return void (i != o.registration && console.warn(`${n} See https://readwritetools.com/licensing.blue to learn more.`));
+                var o = (await import('../../rwt-registration-keys.js')).default;
+                for (let e = 0; e < o.length; e++) {
+                    var h = o[e];
+                    if (h.hasOwnProperty('product-key') && h['product-key'] == Static.componentName) return n != h.registration && console.warn(`${r} See https://readwritetools.com/licensing.blue to learn more.`), 
+                    void (i == t && window.setTimeout(this.authenticate.bind(this, h), 1e3));
                 }
-                console.warn(`${n} rwt-registration-key.js file missing "product-key": "${Static.componentName}"`);
+                console.warn(`${r} rwt-registration-key.js file missing "product-key": "${Static.componentName}"`);
             } catch (e) {
-                console.warn(`${n} rwt-registration-key.js missing from website's root directory.`);
+                console.warn(`${r} rwt-registration-key.js missing from website's root directory.`);
             }
         }
     }
-    async authenticate() {
-        var e = encodeURIComponent(window.location.hostname), t = encodeURIComponent(window.location.href), a = encodeURIComponent(Registration.registration), s = encodeURIComponent(Registration['customer-number']), i = encodeURIComponent(Registration['access-key']), n = {
+    async authenticate(e) {
+        var t = encodeURIComponent(window.location.hostname), a = encodeURIComponent(window.location.href), s = encodeURIComponent(e.registration), i = encodeURIComponent(e['customer-number']), n = encodeURIComponent(e['access-key']), r = {
             method: 'POST',
             mode: 'cors',
             credentials: 'omit',
@@ -309,11 +310,11 @@ export default class rwtOrthographicEarth extends HTMLElement {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded'
             },
-            body: `product-name=${Static.componentName}&hostname=${e}&href=${t}&registration=${a}&customer-number=${s}&access-key=${i}`
+            body: `product-name=${Static.componentName}&hostname=${t}&href=${a}&registration=${s}&customer-number=${i}&access-key=${n}`
         };
         try {
-            var r = await fetch('https://validation.readwritetools.com/v1/genuine/component', n);
-            if (200 == r.status) await r.json();
+            var o = await fetch('https://validation.readwritetools.com/v1/genuine/component', r);
+            if (200 == o.status) await o.json();
         } catch (e) {
             console.info(e.message);
         }
