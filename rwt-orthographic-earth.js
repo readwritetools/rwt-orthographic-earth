@@ -47,7 +47,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
             }), this.createCanvas(), this.createEarth(), this.createInteractionHandler(), this.addVisualizationStyleSheet(Static.vssURL), 
             await this.addDockablePanels(), this.registerMenuListeners(), this.registerUserListeners(), 
             this.registerEarthPositionListeners(), this.registerResizeListener(), this.resizeCanvas(), 
-            this.setupAnimations(), this.initializeEarthValues(), this.reflectValues(), this.sendComponentLoaded();
+            this.setupAnimations(), this.initializeEarthValues(), this.reflectValues(), this.sendComponentLoaded(), 
+            this.validate();
         } catch (e) {
             console.log(e.message);
         }
@@ -91,7 +92,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
     sendComponentLoaded() {
         this.isComponentLoaded = !0, this.dispatchEvent(new Event('component-loaded', {
             bubbles: !0
-        })), this.validate();
+        }));
     }
     waitOnLoading() {
         return new Promise((e => {
@@ -159,9 +160,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'named-parallels':
             a = e.classname || '';
-            var l = e.namedParallels || {};
+            var c = e.namedParallels || {};
             h = e.frequency || 1;
-            this.earth.addPackage(new NamedParallels(this, s, t, a, l, h));
+            this.earth.addPackage(new NamedParallels(this, s, t, a, c, h));
             break;
 
           case 'place-of-interest':
@@ -171,8 +172,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'topojson-package':
             a = e.classname || '';
-            var c = e.url || '', d = e.embeddedName || '', m = e.featureKey || 'label', u = e.identifiable || 'yes', g = e.identifyCallback || null, p = new TopojsonPackage(this, s, t, a, m, u, g);
-            this.earth.addPackage(p), await p.retrieveData('replace', c, d), this.invalidateCanvas();
+            var l = e.url || '', d = e.embeddedName || '', m = e.featureKey || 'label', u = e.identifiable || 'yes', p = e.identifyCallback || null, g = new TopojsonPackage(this, s, t, a, m, u, p);
+            this.earth.addPackage(g), await g.retrieveData('replace', l, d), this.invalidateCanvas();
             break;
 
           default:
@@ -267,48 +268,6 @@ export default class rwtOrthographicEarth extends HTMLElement {
             this.earth.reflectDeclination(e.detail), this.earth.recalculateDeclinationDependants();
         }));
     }
-    async validate() {
-        var e = (i = window.location.hostname).split('.'), t = 25;
-        if (e.length >= 2) {
-            var a = e[e.length - 2].charAt(0);
-            (a < 'a' || a > 'z') && (a = 'q'), t = a.charCodeAt(a) - 97, t = Math.max(t, 0), 
-            t = Math.min(t, 25);
-        }
-        var s = new Date;
-        s.setUTCMonth(0, 1), (Math.floor((Date.now() - s) / 864e5) + 1) % 26 == t && window.setTimeout(this.authenticate.bind(this), 5e3);
-        var i = window.location.hostname, n = 'Unregistered rwt-orthographic-earth component.';
-        try {
-            var r = (await import('../../rwt-registration-keys.js')).default;
-            for (let e = 0; e < r.length; e++) {
-                var o = r[e];
-                if (o.hasOwnProperty('product-key') && 'rwt-orthographic-earth' == o['product-key']) {
-                    var h = o.registration;
-                    return void (i == h ? console.info(`rwt-orthographic-earth registered to ${h}`) : console.warn(`${n} Register at https://readwritetools.com/registration.blue`));
-                }
-            }
-            console.warn(`${n} Badly formatted rwt-registration-key.js file.`);
-        } catch (e) {
-            console.error(`${n} Be sure to copy rwt-registration-key.js to your website's root directory.`);
-        }
-    }
-    async authenticate() {
-        var e = {
-            method: 'POST',
-            mode: 'cors',
-            credentials: 'omit',
-            cache: 'no-cache',
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded'
-            },
-            body: `product-name=rwt-orthographic-earth&hostname=${encodeURIComponent(window.location.hostname)}&href=${encodeURIComponent(window.location.href)}&registration=${encodeURIComponent(Registration.registration)}&customer-number=${encodeURIComponent(Registration['customer-number'])}&access-key=${encodeURIComponent(Registration['access-key'])}`
-        };
-        try {
-            var t = await fetch('https://validation.readwritetools.com/v1/genuine/component', e);
-            if (200 == t.status) await t.json();
-        } catch (e) {
-            console.log(e.message);
-        }
-    }
     setupAnimations() {
         var e = this.earth.getTangentLongitude.bind(this.earth), t = this.earth.setTangentLongitude.bind(this.earth), a = new Animation('time-lapse-animation', this.earth, e, t, {
             deltaPerSecond: 0,
@@ -317,6 +276,47 @@ export default class rwtOrthographicEarth extends HTMLElement {
             thresholdWrap: !0
         });
         this.earth.renderLoop.addAnimation(a);
+    }
+    async validate() {
+        if (1 == this.instance) {
+            var e = (i = window.location.hostname).split('.'), t = 25;
+            if (e.length >= 2) {
+                var a = e[e.length - 2].charAt(0);
+                (a < 'a' || a > 'z') && (a = 'q'), t = a.charCodeAt(a) - 97, t = Math.max(t, 0), 
+                t = Math.min(t, 25);
+            }
+            var s = new Date;
+            s.setUTCMonth(0, 1), (Math.floor((Date.now() - s) / 864e5) + 1) % 26 == t && window.setTimeout(this.authenticate.bind(this), 5e3);
+            var i = window.location.hostname, n = `Unregistered ${Static.componentName} component.`;
+            try {
+                var r = (await import('../../rwt-registration-keys.js')).default;
+                for (let e = 0; e < r.length; e++) {
+                    var o = r[e];
+                    if (o.hasOwnProperty('product-key') && o['product-key'] == Static.componentName) return void (i != o.registration && console.warn(`${n} See https://readwritetools.com/licensing.blue to learn more.`));
+                }
+                console.warn(`${n} rwt-registration-key.js file missing "product-key": "${Static.componentName}"`);
+            } catch (e) {
+                console.warn(`${n} rwt-registration-key.js missing from website's root directory.`);
+            }
+        }
+    }
+    async authenticate() {
+        var e = encodeURIComponent(window.location.hostname), t = encodeURIComponent(window.location.href), a = encodeURIComponent(Registration.registration), s = encodeURIComponent(Registration['customer-number']), i = encodeURIComponent(Registration['access-key']), n = {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'omit',
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded'
+            },
+            body: `product-name=${Static.componentName}&hostname=${e}&href=${t}&registration=${a}&customer-number=${s}&access-key=${i}`
+        };
+        try {
+            var r = await fetch('https://validation.readwritetools.com/v1/genuine/component', n);
+            if (200 == r.status) await r.json();
+        } catch (e) {
+            console.info(e.message);
+        }
     }
 }
 
