@@ -1,3 +1,4 @@
+/* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 /* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 export default class Cursors {
     static rotateTilt='url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFUlEQVRYw91W0RKDMAgznv//y9mD9sbYSlOo5936ZrUlhhDAllt0zxjsd9exZRHwHQsAW7C2D0C6Z9/WLWYOLQFg2XgEQAVEGYDNdQbESg08lwJV8f/LQIWFVQBQOajYKgZmg6wR4aweeiphN9ue/dbsDeyBYdr2CVsNL7teTrNwNCQVOy2IFHtEYzvkwTn3Y6OGZEyT0o4nzsODNMDof+zXvQAozwMBMF8hSDGg6qBnODhfMKOBTdGBaDxIVcENUxCUFH5pwKbBmk8UvFMhVNmAMO0yMwGpzekQcoiIeh/IAcMsAxNVyaxQ17TRqDcYQPcxMNKE2C3zA8nl+x8BM1NReSKqdtFSCp7UQFeIau6XAaje+wLo8I5BQUpGKwAAAABJRU5ErkJggg==\') 16 15, move';

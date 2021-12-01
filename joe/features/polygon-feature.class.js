@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
+/* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
 export default class PolygonFeature extends BaseFeature {
@@ -31,7 +31,7 @@ export default class PolygonFeature extends BaseFeature {
         for (e = 0; e < this.innerRings.length; e++) this.innerRings[e].toCanvas(t);
     }
     render(t) {
-        if (null != this.canvasParams && 'hidden' != this.canvasParams.visibility) {
+        if (null != this.canvasParams && 'hidden' != this.canvasParams.visibility && ('none' != this.canvasParams['fill-color'] || 'none' != this.canvasParams['stroke-width'])) {
             var e = t.canvas.getContext('2d');
             e.beginPath(), this.render_ring(t, e, !1);
             for (var i = 0; i < this.innerRings.length; i++) {
@@ -44,54 +44,57 @@ export default class PolygonFeature extends BaseFeature {
         }
     }
     render_ring(t, e, i) {
-        for (var n = t.carte.translate.a * t.carte.multiplier, a = t.carte.translate.b * t.carte.multiplier, r = t.viewport.centerPoint.x + n, s = t.viewport.centerPoint.y + a, o = t.getVisualizedRadius(), l = !1, h = !1, g = !0, u = null, c = null, v = null, R = 0; R < this.outerRing.length; R++) {
-            var f = this.outerRing[R], P = this.outerRing[R - 1];
-            if (h = f.visible, 1 == g) 1 == h && (e.moveTo(f.canvasX, f.canvasY), R > 0 && (u = f.projectedTheta), 
-            g = !1); else if (1 == h && 1 == l) e.lineTo(f.canvasX, f.canvasY); else if (0 == h && 1 == l) {
+        for (var n = t.carte.translate.a * t.carte.multiplier, s = t.carte.translate.b * t.carte.multiplier, r = t.viewport.centerPoint.x + n, a = t.viewport.centerPoint.y + s, o = t.getVisualizedRadius(), l = !1, h = !1, g = !0, u = null, c = null, v = null, f = 0; f < this.outerRing.length; f++) {
+            var R = this.outerRing[f], P = this.outerRing[f - 1];
+            if (h = R.visible, 1 == g) 1 == h && (e.moveTo(R.canvasX, R.canvasY), f > 0 && (u = R.projectedTheta), 
+            g = !1); else if (1 == h && 1 == l) e.lineTo(R.canvasX, R.canvasY); else if (0 == h && 1 == l) {
                 c = P.projectedTheta;
-                let t = r + o * Math.cos(c), i = s + o * Math.sin(c);
+                let t = r + o * Math.cos(c), i = a + o * Math.sin(c);
                 e.lineTo(t, i);
             } else if (1 == h && 0 == l) {
-                if (c != (v = f.projectedTheta)) {
-                    var d = c, m = v, p = Math.abs(m - d) > Math.PI;
-                    'night' == this.featureName ? e.arc(r, s, o, d, m, !0) : p ? d > m ? e.arc(r, s, o, d, m, !1) : e.arc(r, s, o, d, m, !0) : d < m ? e.arc(r, s, o, d, m, !1) : e.arc(r, s, o, d, m, !0);
-                    let t = r + o * Math.cos(v), i = s + o * Math.sin(v);
-                    e.lineTo(t, i);
+                if (c != (v = R.projectedTheta)) {
+                    var d = c, m = v;
+                    'night' == this.featureName ? e.arc(r, a, o, d, m, !0) : this.drawArc(e, r, a, o, d, m, i);
+                    let t = r + o * Math.cos(v), n = a + o * Math.sin(v);
+                    e.lineTo(t, n);
                 }
                 c = null, v = null;
             }
-            l = f.visible;
+            l = R.visible;
         }
         if (null != c && null != u) {
             if (c != u) {
-                d = c, m = u, p = Math.abs(m - d) > Math.PI;
-                'night' == this.featureName ? e.arc(r, s, o, d, m, !0) : p ? d > m ? e.arc(r, s, o, d, m, !1) : e.arc(r, s, o, d, m, !0) : d < m ? e.arc(r, s, o, d, m, !1) : e.arc(r, s, o, d, m, !0);
-                let t = r + o * Math.cos(u), i = s + o * Math.sin(u);
-                e.lineTo(t, i);
+                d = c, m = u;
+                'night' == this.featureName ? e.arc(r, a, o, d, m, !0) : this.drawArc(e, r, a, o, d, m, i);
+                let t = r + o * Math.cos(u), n = a + o * Math.sin(u);
+                e.lineTo(t, n);
             }
             c = null, u = null;
         }
     }
+    drawArc(t, e, i, n, s, r, a) {
+        1 != a ? Math.abs(r - s) > Math.PI ? s > r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0) : s < r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0) : t.arc(e, i, n, s, r, !0);
+    }
     isPointerInsidePolygon(t, e) {
-        var i = this.outerRing.length, n = !1, a = 0;
-        for (let t = 0; t < i && a < 3; t++) 1 == this.outerRing[t].visible && a++;
-        if (a < 3) return !1;
+        var i = this.outerRing.length, n = !1, s = 0;
+        for (let t = 0; t < i && s < 3; t++) 1 == this.outerRing[t].visible && s++;
+        if (s < 3) return !1;
         var r = null;
         for (let t = 0; t < i; t++) if (1 == this.outerRing[t].visible) {
             r = t;
             break;
         }
-        var s = r;
-        for (let a = s + 1; a < i; a++) {
-            if (0 == this.outerRing[a].visible) continue;
-            let i = s;
-            var o = this.outerRing[a].canvasX, l = this.outerRing[a].canvasY, h = this.outerRing[i].canvasX;
+        var a = r;
+        for (let s = a + 1; s < i; s++) {
+            if (0 == this.outerRing[s].visible) continue;
+            let i = a;
+            var o = this.outerRing[s].canvasX, l = this.outerRing[s].canvasY, h = this.outerRing[i].canvasX;
             if (l > e != (g = this.outerRing[i].canvasY) > e) t < (h - o) * (e - l) / (g - l) + o && (n = !n);
-            s = a;
+            a = s;
         }
         var g;
-        o = this.outerRing[r].canvasX, l = this.outerRing[r].canvasY, h = this.outerRing[s].canvasX;
-        l > e != (g = this.outerRing[s].canvasY) > e && (t < (h - o) * (e - l) / (g - l) + o && (n = !n));
+        o = this.outerRing[r].canvasX, l = this.outerRing[r].canvasY, h = this.outerRing[a].canvasX;
+        l > e != (g = this.outerRing[a].canvasY) > e && (t < (h - o) * (e - l) / (g - l) + o && (n = !n));
         return n;
     }
 }

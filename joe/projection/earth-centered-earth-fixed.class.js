@@ -1,3 +1,4 @@
+/* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 /* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 const degreesToRadians = Math.PI / 180, radiansToDegrees = 180 / Math.PI;
 
