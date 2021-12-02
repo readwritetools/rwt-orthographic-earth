@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 const Static = {
     rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js'
 };
@@ -24,7 +23,7 @@ export default class Menu {
     }
     initializeCSS() {
         var t = document.createElement('style');
-        t.innerHTML = '\n\t\t\trwt-dockable-panels {\n\t\t\t    --top:  3px;\n\t\t\t    --right: 3px;\n\t\t\t}', 
+        t.innerHTML = '\n\t\trwt-dockable-panels {\n\t\t    --top:  3px;\n\t\t    --right: 3px;\n\t\t\t--pure-white: #fff;\n\t\t\t--surfie-green: #107187;\n\t\t\t--coral-atoll: #0E6073;\n\t\t\t--tiber: #093640;\n\t\t\t--eden: #0D4A56;\n\t\t\t--color: var(--menu-color, var(--pure-white));\n\t\t\t--border-color: var(--menu-border-color, var(--pure-white));\n\t\t\t--background-color1: var(--menu-background-color1, var(--surfie-green));\n\t\t\t--background-color2: var(--menu-background-color2, var(--coral-atoll));\n\t\t\t--background-color3: var(--menu-background-color3, var(--tiber));\n\t\t\t--background-color4: var(--menu-background-color4, var(--eden));\n\t\t}', 
         this.rwtOrthographicEarth.shadowRoot.appendChild(t);
     }
     async instantiateComponent() {
@@ -58,10 +57,10 @@ export default class Menu {
                 o.value = e, this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayMonthYearUTC', t);
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('season-special-day')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/seasonSpecialDay', s.value);
-            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayOfYear', i.value);
-            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year-slider')).addEventListener('input', (() => {
+            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayOfYear', n.value);
+            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year-slider')).addEventListener('input', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayOfYear', i.value);
             }));
 
           case 'time-of-day':
@@ -71,8 +70,8 @@ export default class Menu {
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('time-of-day-hms-slider')).addEventListener('input', (() => {
                 var t = CB.fromSliderTimeOfDay(s.value), e = CB.toUserTimeOfDay(t);
                 this.rwtOrthographicEarth.broadcastMessage('menu/timeOfDayHMS', e);
-            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('timezone-offset')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/timezoneOffset', i.value);
+            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('timezone-offset')).addEventListener('change', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/timezoneOffset', n.value);
             }));
 
           case 'point-of-reference':
@@ -82,11 +81,11 @@ export default class Menu {
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('longitude-pov')).addEventListener('change', (() => {
                 var t = CB.fromUserLongitude(s.value);
                 this.rwtOrthographicEarth.broadcastMessage('menu/tangentLongitude', t);
-            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('longitude-pov-slider')).addEventListener('input', (() => {
-                var t = i.value;
-                this.rwtOrthographicEarth.broadcastMessage('menu/tangentLongitude', t);
-            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('named-latitude')).addEventListener('change', (() => {
+            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('longitude-pov-slider')).addEventListener('input', (() => {
                 var t = n.value;
+                this.rwtOrthographicEarth.broadcastMessage('menu/tangentLongitude', t);
+            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('named-latitude')).addEventListener('change', (() => {
+                var t = i.value;
                 this.rwtOrthographicEarth.broadcastMessage('menu/tangentLatitude', t);
             }));
             var e = this.rwtDockablePanels.shadowRoot.getElementById('latitude-pov');
@@ -119,22 +118,22 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/translationEastWest', o.value);
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider')).addEventListener('input', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/translationEastWest', s.value);
-            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/translationNorthSouth', i.value);
-            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider')).addEventListener('input', (() => {
+            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/translationNorthSouth', n.value);
+            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider')).addEventListener('input', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/translationNorthSouth', i.value);
             }));
 
           case 'canvas':
-            var o, s, i, n;
+            var o, s, n, i;
             return (o = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-x')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointX', o.value);
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-x-slider')).addEventListener('input', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointX', s.value);
-            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', i.value);
-            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y-slider')).addEventListener('input', (() => {
+            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', n.value);
+            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y-slider')).addEventListener('input', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', i.value);
             }));
 
           case 'locate':
@@ -149,6 +148,7 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/timeLapseRotation', t);
             }));
 
+          case 'interaction':
           case 'hello-world':
           case 'earth-orbit':
           case 'telescope':
@@ -263,8 +263,8 @@ export default class Menu {
                 e > 100 && (e = 10 * Math.round(e / 10)), e > 200 && (e = 20 * Math.round(e / 20)), 
                 e > 500 && (e = 50 * Math.round(e / 50)), e = e.toFixed(0)), this.rwtDockablePanels.shadowRoot.getElementById('map-scale').value = e, 
                 this.rwtDockablePanels.shadowRoot.getElementById('map-scale-slider').value = this.valueToSliderPosition(1, 100, 1, 1e3, t.detail);
-                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), d = Math.round(2 * n / 100), h = Math.round(2 * l / 100);
-                null != a && null != r && (a.setAttribute('min', -1 * n), a.setAttribute('max', n), 
+                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, n = this.rwtOrthographicEarth.earth.getVisualizedRadius(), i = Math.round(e * (o + n) / 2), l = Math.round(e * (s + n) / 2), d = Math.round(2 * i / 100), h = Math.round(2 * l / 100);
+                null != a && null != r && (a.setAttribute('min', -1 * i), a.setAttribute('max', i), 
                 a.setAttribute('step', d), r.setAttribute('min', -1 * l), r.setAttribute('max', l), 
                 r.setAttribute('step', h));
             }));
@@ -300,9 +300,9 @@ export default class Menu {
             return this.rwtOrthographicEarth.addEventListener('catalog/packageAdded', (t => {
                 var e = t.detail, a = e.id, r = e.identifiable;
                 if ('disallow' == r) var o = ''; else o = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == r ? 'checked' : ''} />`;
-                var s = e.layerName, i = this.rwtDockablePanels.shadowRoot.getElementById('layers-table'), n = document.createElement('tr');
-                n.id = `layers-${a}`, n.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${o}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${s}</td>`, 
-                i.insertBefore(n, i.childNodes[1]), this.rwtOrthographicEarth.invalidateCanvas(), 
+                var s = e.layerName, n = this.rwtDockablePanels.shadowRoot.getElementById('layers-table'), i = document.createElement('tr');
+                i.id = `layers-${a}`, i.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${o}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${s}</td>`, 
+                n.insertBefore(i, n.childNodes[1]), this.rwtOrthographicEarth.invalidateCanvas(), 
                 this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
                     this.rwtOrthographicEarth.getLayer(e).changeVisibility(t.currentTarget.checked);
@@ -333,6 +333,7 @@ export default class Menu {
                 this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation').value = e;
             }));
 
+          case 'interaction':
           case 'hello-world':
           case 'earth-orbit':
           case 'telescope':

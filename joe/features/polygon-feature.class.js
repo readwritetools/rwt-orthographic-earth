@@ -73,7 +73,7 @@ export default class PolygonFeature extends BaseFeature {
         }
     }
     drawArc(t, e, i, n, s, r, a) {
-        1 != a ? Math.abs(r - s) > Math.PI ? s > r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0) : s < r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0) : t.arc(e, i, n, s, r, !0);
+        1 != a && (Math.abs(r - s) > Math.PI ? s > r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0) : s < r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0));
     }
     isPointerInsidePolygon(t, e) {
         var i = this.outerRing.length, n = !1, s = 0;

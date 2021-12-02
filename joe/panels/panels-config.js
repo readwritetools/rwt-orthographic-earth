@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import * as CB from './panel-callbacks.js';
 
 export default {
@@ -559,6 +558,17 @@ export default {
                 v: -8,
                 t: 'spin'
             } ]
+        } ]
+    }, {
+        options: {
+            id: 'interaction',
+            titlebar: 'Pointer Interaction'
+        },
+        panelLines: [ {
+            lineType: 'table',
+            id: 'interaction-table',
+            innerHTML: '<tr><th class=\'chef-center\'>Keys</th><th class=\'chef-center\'>Action</th></tr><tr><td>Hover</td><td>Identify features</td></tr><tr><td>Press click</td><td>Set place of interest</td></tr><tr><td>Press Move</td><td>Change point of reference</td></tr><tr><td>Alt Move</td><td>Zoom in / out</td></tr><tr><td>Shift Move</td><td>Change position in space</td></tr>',
+            maxHeightInPx: '320px'
         } ]
     }, {
         options: {
