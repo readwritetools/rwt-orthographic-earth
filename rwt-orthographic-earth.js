@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 const Static = {
     componentName: 'rwt-orthographic-earth',
     elementInstance: 1,
@@ -77,15 +76,20 @@ export default class rwtOrthographicEarth extends HTMLElement {
     initializeEarthValues() {
         var e = new Date;
         this.earth.earthPosition.changeUTC(e);
-        var t = e.getTimezoneOffset() / 60 * -1;
-        this.earth.changeTimezoneOffset(t);
-        var a = 15 * t;
-        this.earth.setTangentLongitude(a), this.setPlaceOfInterest(this.earth.getTangentLongitude(), this.earth.getTangentLatitude()), 
-        'geolocation' in navigator && navigator.geolocation.getCurrentPosition((e => {
-            this.earth.setTangentLongitude(e.coords.longitude), this.earth.setTangentLatitude(e.coords.latitude), 
-            this.setPlaceOfInterest(e.coords.longitude, e.coords.latitude), this.earth.recalculateLongitudeDependants(), 
-            this.earth.recalculateLatitudeDependants();
-        }));
+        var t = this.getAttribute('geolocation');
+        if (null != t && '' != t) {
+            if ('timezone' == t || 'auto' == t) {
+                var a = e.getTimezoneOffset() / 60 * -1;
+                this.earth.changeTimezoneOffset(a);
+                var s = 15 * a;
+                this.earth.setTangentLongitude(s), this.setPlaceOfInterest(this.earth.getTangentLongitude(), this.earth.getTangentLatitude());
+            }
+            'auto' == t && 'geolocation' in navigator && navigator.geolocation.getCurrentPosition((e => {
+                this.earth.setTangentLongitude(e.coords.longitude), this.earth.setTangentLatitude(e.coords.latitude), 
+                this.setPlaceOfInterest(e.coords.longitude, e.coords.latitude), this.earth.recalculateLongitudeDependants(), 
+                this.earth.recalculateLatitudeDependants();
+            }));
+        }
     }
     reflectValues() {
         this.earth.reflectValues(this.menu);
@@ -173,7 +177,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'topojson-package':
             a = e.classname || '';
-            var l = e.url || '', d = e.embeddedName || '', m = e.featureKey || 'label', u = e.identifiable || 'yes', p = e.identifyCallback || null, g = new TopojsonPackage(this, s, t, a, m, u, p);
+            var l = e.url || '', d = e.embeddedName || '', m = e.featureKey || '', u = e.identifiable || 'yes', p = e.identifyCallback || null, g = new TopojsonPackage(this, s, t, a, m, u, p);
             this.earth.addPackage(g), await g.retrieveData('replace', l, d), this.invalidateCanvas();
             break;
 
@@ -186,9 +190,6 @@ export default class rwtOrthographicEarth extends HTMLElement {
     }
     getLayer(e) {
         return this.earth.getPackage(e);
-    }
-    setDeclination(e) {
-        this.earth.setDeclination(e);
     }
     setTangentLongitude(e) {
         this.earth.setTangentLongitude(e);
