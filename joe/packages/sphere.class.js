@@ -1,15 +1,14 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BasePackage from './base-package.class.js';
 
 import GeneralFeature from '../features/general-feature.class.js';
 
 export default class Sphere extends BasePackage {
-    constructor(e, t, a, s) {
-        super(e, t, a, s);
-        var r = new Object;
-        r['stroke-width'] = 'none', r['stroke-color'] = '#777777', r['fill-color'] = '#777777', 
-        r['fill-type'] = 'source-over', this.properties = new GeneralFeature(r), this.packageNeedsRestyling = !0, 
+    constructor(e, t, a, s, r) {
+        super(e, t, a, s, r);
+        var i = new Object;
+        i['stroke-width'] = 'none', i['stroke-color'] = '#777777', i['fill-color'] = '#777777', 
+        i['fill-type'] = 'source-over', this.properties = new GeneralFeature(i), this.packageNeedsRestyling = !0, 
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/sphere', null);
     }

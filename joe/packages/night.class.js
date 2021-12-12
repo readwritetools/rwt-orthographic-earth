@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BasePackage from './base-package.class.js';
 
 import HemisphereFeature from '../features/hemisphere-feature.class.js';
@@ -9,8 +8,8 @@ import * as CB from '../panels/panel-callbacks.js';
 const degreesToRadians = Math.PI / 180;
 
 export default class Night extends BasePackage {
-    constructor(t, e, i, s) {
-        super(t, e, i, s);
+    constructor(t, e, i, s, a) {
+        super(t, e, i, s, a);
         this.identityPoints = new HemisphereFeature(90), this.identityPoints.featureName = 'night', 
         this.registerEventListeners(), this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, 
         this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 

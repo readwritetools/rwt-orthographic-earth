@@ -298,19 +298,23 @@ export default class Menu {
 
           case 'layers':
             return this.rwtOrthographicEarth.addEventListener('catalog/packageAdded', (t => {
-                var e = t.detail, a = e.id, r = e.identifiable;
-                if ('disallow' == r) var o = ''; else o = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == r ? 'checked' : ''} />`;
-                var s = e.layerName, n = this.rwtDockablePanels.shadowRoot.getElementById('layers-table'), i = document.createElement('tr');
-                i.id = `layers-${a}`, i.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${o}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${s}</td>`, 
-                n.insertBefore(i, n.childNodes[1]), this.rwtOrthographicEarth.invalidateCanvas(), 
-                this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
+                var e = t.detail, a = e.zOrder, r = e.id, o = e.identifiable;
+                if ('disallow' == o) var s = ''; else s = `<input id=layers-${r}-identifiable type=checkbox data-layer-id=${r} ${'yes' == o ? 'checked' : ''} />`;
+                var n = e.layerName, i = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
+                l.id = `layers-${r}`, l.rowOrder = a, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${r}-visible type=checkbox data-layer-id=${r} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${s}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${n}</td>`;
+                let d = !1;
+                for (let t = 0; t < i.childNodes.length; t++) if (i.childNodes[t].rowOrder < a) {
+                    i.insertBefore(l, i.childNodes[t]), d = !0;
+                    break;
+                }
+                d || i.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${r}-visible`).addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
                     this.rwtOrthographicEarth.getLayer(e).changeVisibility(t.currentTarget.checked);
-                    var r = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
-                    null != r && (r.disabled = !t.currentTarget.checked);
+                    var a = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${r}-identifiable`);
+                    null != a && (a.disabled = !t.currentTarget.checked);
                 }));
-                var l = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
-                null != l && l.addEventListener('change', (t => {
+                var h = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${r}-identifiable`);
+                null != h && h.addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
                     this.rwtOrthographicEarth.getLayer(e).changeIdentifiability(t.currentTarget.checked);
                 }));

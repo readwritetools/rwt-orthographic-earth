@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BasePackage from './base-package.class.js';
 
 import LineFeature from '../features/line-feature.class.js';
@@ -7,16 +6,16 @@ import LineFeature from '../features/line-feature.class.js';
 import ProjectedPoint from '../projection/projected-point.class.js';
 
 export default class NamedMeridians extends BasePackage {
-    constructor(e, i, t, s, a, r) {
-        for (var n in super(e, i, t, s), this.meridians = [], this.frequency = void 0 !== r ? r : 1, 
+    constructor(e, i, t, s, a, r, n) {
+        for (var o in super(e, i, t, s, a), this.meridians = [], this.frequency = void 0 !== n ? n : 1, 
         this.frequency <= 0 && (this.frequency = 1), this.frequency > 30 && (this.frequency = 30), 
-        a) if (a.hasOwnProperty(n)) {
-            var o = new LineFeature;
-            o.featureName = n;
-            var c = a[n];
-            if (c < -180 || c > 180) continue;
-            for (var h = -90; h <= 90; h += this.frequency) o.addPoint(new ProjectedPoint(h, c));
-            this.meridians.push(o);
+        r) if (r.hasOwnProperty(o)) {
+            var c = new LineFeature;
+            c.featureName = o;
+            var h = r[o];
+            if (h < -180 || h > 180) continue;
+            for (var d = -90; d <= 90; d += this.frequency) c.addPoint(new ProjectedPoint(d, h));
+            this.meridians.push(c);
         }
         this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
         this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 

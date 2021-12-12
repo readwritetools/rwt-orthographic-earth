@@ -4,7 +4,8 @@ const Static = {
     elementInstance: 1,
     vssURL: '/node_modules/rwt-orthographic-earth/joe/visualization/rwt-orthographic-earth.vss',
     rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js',
-    nextId: 1
+    nextId: 0,
+    zOrder: 0
 };
 
 Object.seal(Static);
@@ -134,51 +135,51 @@ export default class rwtOrthographicEarth extends HTMLElement {
         this.menu.rwtDockablePanels.setTitlebar(e);
     }
     async addLayer(e) {
-        var t = e.id || 'id' + Static.nextId++, a = e.classname || '', s = e.layerName || t;
+        var t = e.zOrder || Static.zOrder++, a = e.layerName || s, s = e.id || 'id' + Static.nextId++, i = e.classname || '';
         switch (e.layerType) {
           case 'space':
-            a = e.classname || '';
-            this.earth.addPackage(new Space(this, s, t, a));
+            i = e.classname || '';
+            this.earth.addPackage(new Space(this, t, a, s, i));
             break;
 
           case 'sphere':
-            a = e.classname || 'sphere';
-            this.earth.addPackage(new Sphere(this, s, t, a));
+            i = e.classname || 'sphere';
+            this.earth.addPackage(new Sphere(this, t, a, s, i));
             break;
 
           case 'night':
-            a = e.classname || 'night';
-            this.earth.addPackage(new Night(this, s, t, a));
+            i = e.classname || 'night';
+            this.earth.addPackage(new Night(this, t, a, s, i));
             break;
 
           case 'graticule':
-            a = e.classname || '';
-            var i = null == e.parallelFrequency ? 10 : e.parallelFrequency, n = null == e.meridianFrequency ? 10 : e.meridianFrequency, r = null != e.drawToPoles && e.drawToPoles;
-            this.earth.addPackage(new Graticule(this, s, t, a, i, n, r));
+            i = e.classname || '';
+            var n = null == e.parallelFrequency ? 10 : e.parallelFrequency, r = null == e.meridianFrequency ? 10 : e.meridianFrequency, o = null != e.drawToPoles && e.drawToPoles;
+            this.earth.addPackage(new Graticule(this, t, a, s, i, n, r, o));
             break;
 
           case 'named-meridians':
-            a = e.classname || '';
-            var o = e.namedMeridians || {}, h = e.frequency || 1;
-            this.earth.addPackage(new NamedMeridians(this, s, t, a, o, h));
+            i = e.classname || '';
+            var h = e.namedMeridians || {}, c = e.frequency || 1;
+            this.earth.addPackage(new NamedMeridians(this, t, a, s, i, h, c));
             break;
 
           case 'named-parallels':
-            a = e.classname || '';
-            var c = e.namedParallels || {};
-            h = e.frequency || 1;
-            this.earth.addPackage(new NamedParallels(this, s, t, a, c, h));
+            i = e.classname || '';
+            var l = e.namedParallels || {};
+            c = e.frequency || 1;
+            this.earth.addPackage(new NamedParallels(this, t, a, s, i, l, c));
             break;
 
           case 'place-of-interest':
-            a = e.classname || 'place-of-interest';
-            this.earth.addPackage(new PlaceOfInterest(this, s, t, a));
+            i = e.classname || 'place-of-interest';
+            this.earth.addPackage(new PlaceOfInterest(this, t, a, s, i));
             break;
 
           case 'topojson-package':
-            a = e.classname || '';
-            var l = e.url || '', d = e.embeddedName || '', m = e.featureKey || '', u = e.identifiable || 'yes', p = e.identifyCallback || null, g = new TopojsonPackage(this, s, t, a, m, u, p);
-            this.earth.addPackage(g), await g.retrieveData('replace', l, d), this.invalidateCanvas();
+            i = e.classname || '';
+            var d = e.url || '', m = e.embeddedName || '', u = e.featureKey || '', p = e.identifiable || 'yes', g = e.identifyCallback || null, v = new TopojsonPackage(this, t, a, s, i, u, p, g);
+            this.earth.addPackage(v), await v.retrieveData('replace', d, m), this.invalidateCanvas();
             break;
 
           default:

@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BasePackage from './base-package.class.js';
 
 import GeneralFeature from '../features/general-feature.class.js';
@@ -7,15 +6,15 @@ import GeneralFeature from '../features/general-feature.class.js';
 const degreesToRadians = Math.PI / 180;
 
 export default class Space extends BasePackage {
-    constructor(e, a, s, r) {
-        super(e, a, s, r);
-        var t = new Object;
-        t['deep-space'] = 'visible', t['deep-space-color'] = '#FFFFFF', t['deep-space-star-count'] = 1e3, 
-        t['deep-space-star-color'] = '#FFFFFF', t['earth-glow'] = 'hidden', t['earth-glow-size'] = 0, 
-        t['earth-glow-offset'] = null, t['earth-glow-axis'] = 0, t['earth-glow-inner-color'] = '#FFFFFF', 
-        t['earth-glow-outer-color'] = '#FFFFFF', t.sunrise = 'hidden', t['sunrise-inner-radius'] = 0, 
-        t['sunrise-outer-radius'] = null, t['sunrise-inner-color'] = '#FFFFFF', t['sunrise-outer-color'] = '#FFFFFF', 
-        this.properties = new GeneralFeature(t), this.stars = new Array, this.packageNeedsRestyling = !0, 
+    constructor(e, a, s, r, t) {
+        super(e, a, s, r, t);
+        var i = new Object;
+        i['deep-space'] = 'visible', i['deep-space-color'] = '#FFFFFF', i['deep-space-star-count'] = 1e3, 
+        i['deep-space-star-color'] = '#FFFFFF', i['earth-glow'] = 'hidden', i['earth-glow-size'] = 0, 
+        i['earth-glow-offset'] = null, i['earth-glow-axis'] = 0, i['earth-glow-inner-color'] = '#FFFFFF', 
+        i['earth-glow-outer-color'] = '#FFFFFF', i.sunrise = 'hidden', i['sunrise-inner-radius'] = 0, 
+        i['sunrise-outer-radius'] = null, i['sunrise-inner-color'] = '#FFFFFF', i['sunrise-outer-color'] = '#FFFFFF', 
+        this.properties = new GeneralFeature(i), this.stars = new Array, this.packageNeedsRestyling = !0, 
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/space', null);
     }

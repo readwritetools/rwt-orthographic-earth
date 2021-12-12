@@ -1,11 +1,16 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
+import expect from '../joezone/expect.js';
+
 export default class Catalog {
     constructor(e) {
         this.rwtOrthographicEarth = e, this.packages = [];
     }
     addPackage(e) {
-        this.packages.push(e), this.rwtOrthographicEarth.broadcastMessage('catalog/packageAdded', {
+        expect(e.zOrder, 'Number');
+        let a = 0;
+        for (let t = 0; t < this.packages.length && !(this.packages[t].zOrder > e.zOrder); t++) a++;
+        this.packages.splice(a, 0, e), this.rwtOrthographicEarth.broadcastMessage('catalog/packageAdded', {
+            zOrder: e.zOrder,
             id: e.identifier,
             layerName: e.layerName,
             identifiable: e.identifiable

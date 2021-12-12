@@ -1,12 +1,11 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BasePackage from './base-package.class.js';
 
 import PointFeature from '../features/point-feature.class.js';
 
 export default class PlaceOfInterest extends BasePackage {
-    constructor(e, t, a, i) {
-        super(e, t, a, i), this.pointFeature = new PointFeature, this.pointFeature.featureName = 'place-of-interest', 
+    constructor(e, t, a, i, s) {
+        super(e, t, a, i, s), this.pointFeature = new PointFeature, this.pointFeature.featureName = 'place-of-interest', 
         this.registerEventListeners(), this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, 
         this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/place-of-interest', null);

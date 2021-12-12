@@ -1,11 +1,14 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
+import expect from '../joezone/expect.js';
+
 export default class BasePackage {
-    constructor(e, s, i, a) {
-        this.rwtOrthographicEarth = e, this.layerName = s, this.identifier = i, this.classname = a, 
-        this.visible = !0, this.identifiable = 'disallow', this.packageNeedsRestyling = !1, 
-        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !1, 
-        this.packagePointsNeedPlacement = !1, this.packageNeedsHashing = !1;
+    constructor(e, t, s, i, a) {
+        expect(e, 'rwtOrthographicEarth'), expect(t, 'Number'), expect(s, 'String'), expect(i, 'String'), 
+        expect(a, 'String'), this.rwtOrthographicEarth = e, this.zOrder = t, this.layerName = s, 
+        this.identifier = i, this.classname = a, this.visible = !0, this.identifiable = 'disallow', 
+        this.packageNeedsRestyling = !1, this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !1, 
+        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !1, 
+        this.packageNeedsHashing = !1;
     }
     isVisible() {
         return this.visible;
@@ -40,7 +43,7 @@ export default class BasePackage {
     render(e) {
         console.log('Package subclass must provide a render() function');
     }
-    discoverFeatures(e, s) {
+    discoverFeatures(e, t) {
         return null;
     }
 }

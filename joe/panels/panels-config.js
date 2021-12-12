@@ -507,7 +507,7 @@ export default {
         panelLines: [ {
             lineType: 'table',
             id: 'layers-table',
-            innerHTML: '<tr><th class=\'chef-center\'>Show</th><th class=\'chef-center\'>Identify</th><th class=\'chef-center\'>Layer</th></tr>',
+            innerHTML: '<thead><tr><th class=\'chef-center\'>Show</th><th class=\'chef-center\'>Identify</th><th class=\'chef-center\'>Layer</th></tr></thead><tbody id=\'layers-table-body\'></tbody>',
             maxHeightInPx: '320px'
         } ]
     }, {
