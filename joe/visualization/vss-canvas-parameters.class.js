@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 export default class vssCanvasParameters {
     constructor() {
         this.visibility = 'visible', this.transparency = 1;
@@ -19,11 +18,11 @@ export default class vssCanvasParameters {
         this['dot-radius'] = 1;
     }
     initializeLineFeature() {
-        this['stroke-width'] = .5, this['stroke-color'] = '#777777';
+        this['stroke-width'] = .5, this['stroke-color'] = '#777777', this['stroke-type'] = 'solid';
     }
     initializePolygonFeature() {
-        this['stroke-width'] = .5, this['stroke-color'] = '#777777', this['fill-color'] = '#777777', 
-        this['fill-type'] = 'source-over';
+        this['stroke-width'] = .5, this['stroke-color'] = '#777777', this['stroke-type'] = 'solid', 
+        this['fill-color'] = '#777777', this['fill-type'] = 'source-over';
     }
     initializeGeneralFeature(t) {
         for (var i in t) this[i] = t[i];

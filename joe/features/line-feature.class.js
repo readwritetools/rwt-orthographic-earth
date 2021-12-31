@@ -1,10 +1,11 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
+
+import expect from '../joezone/expect.js';
 
 export default class LineFeature extends BaseFeature {
     constructor() {
-        super(), this.lineSegment = [];
+        super(), this.lineSegment = [], this.mouseEpsilon = 1;
     }
     get featureType() {
         return 'boundary';
@@ -12,8 +13,13 @@ export default class LineFeature extends BaseFeature {
     addPoint(e) {
         this.lineSegment.push(e);
     }
-    computeStyle(e, t, a, s) {
-        this.canvasParams = e.computeStyle('line', t, a, this.featureName, this.kvPairs, s);
+    computeFeatureStyle(e, t, s, a, n) {
+        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(s, 'String'), expect(a, 'Number'), 
+        expect(n, 'Number');
+        let i = e.computeStyle('line', t, s, this.featureName, this.kvPairs, a);
+        expect(i, 'vssCanvasParameters'), this.canvasParams.set(n, i);
+        let r = Number(i['stroke-width']);
+        isNaN(r) || (this.mouseEpsilon = Math.max(this.mouseEpsilon, r));
     }
     toGeoCoords(e) {
         for (var t = 0; t < this.lineSegment.length; t++) e.toGeoCoords(this.lineSegment[t]);
@@ -27,30 +33,74 @@ export default class LineFeature extends BaseFeature {
     toCanvas(e) {
         for (var t = 0; t < this.lineSegment.length; t++) e.toCanvas(this.lineSegment[t]);
     }
-    render(e) {
-        if (void 0 != this.canvasParams && 'hidden' != this.canvasParams.visibility) {
-            var t = e.canvas.getContext('2d');
-            t.strokeStyle = this.canvasParams['stroke-color'], t.lineWidth = this.canvasParams['stroke-width'], 
-            this.renderArc(t);
+    renderFeature(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number');
+        let s = this.canvasParams.get(t);
+        if (expect(s, 'vssCanvasParameters'), 'hidden' != s.visibility) {
+            var a = e.canvas.getContext('2d');
+            switch (a.strokeStyle = s['stroke-color'], a.lineWidth = s['stroke-width'], s['stroke-type']) {
+              case 'solid':
+                a.setLineDash([]);
+                break;
+
+              case 'dotted':
+                a.setLineDash([ 3, 3 ]);
+                break;
+
+              case 'short-dash':
+                a.setLineDash([ 10, 10 ]);
+                break;
+
+              case 'long-dash':
+                a.setLineDash([ 20, 5 ]);
+                break;
+
+              case 'dot-dash':
+                a.setLineDash([ 15, 3, 3, 3 ]);
+                break;
+
+              case 'dot-dot-dash':
+                a.setLineDash([ 15, 3, 3, 3, 3, 3 ]);
+                break;
+
+              case 'dot-dot-dot-dash':
+                a.setLineDash([ 15, 3, 3, 3, 3, 3, 3, 3 ]);
+                break;
+
+              case 'dot-dash-dot':
+                a.setLineDash([ 3, 3, 12, 3, 3, 12 ]);
+                break;
+
+              default:
+                a.setLineDash([]);
+            }
+            this.renderArc(a);
         }
     }
     renderArc(e) {
-        var t = !1, a = !1;
+        var t = !1, s = !1;
         e.beginPath();
-        for (var s = 0; s < this.lineSegment.length; s++) {
-            var n = this.lineSegment[s];
-            1 == (a = n.visible) && 0 == t ? e.moveTo(n.canvasX, n.canvasY) : 1 == a && 1 == t && e.lineTo(n.canvasX, n.canvasY), 
+        for (var a = 0; a < this.lineSegment.length; a++) {
+            var n = this.lineSegment[a];
+            1 == (s = n.visible) && 0 == t ? e.moveTo(n.canvasX, n.canvasY) : 1 == s && 1 == t && e.lineTo(n.canvasX, n.canvasY), 
             t = n.visible;
         }
         e.stroke();
     }
     isPointerOnLine(e, t) {
         if (this.lineSegment.length <= 1) return !1;
-        for (var a = void 0 != this.canvasParams && this.canvasParams.hasOwnProperty('stroke-width') ? this.canvasParams['stroke-width'] : 1, s = this.lineSegment[0], n = 1; n < this.lineSegment.length; n++) {
-            var i = this.lineSegment[n];
-            if (s.visible && i.visible && s.canvasX - a <= e && e <= i.canvasX + a && s.canvasY - a <= t && t <= i.canvasY + a) return !0;
-            s = i;
+        let s = this.lineSegment[0];
+        for (let a = 1; a < this.lineSegment.length; a++) {
+            let n = this.lineSegment[a];
+            if (s.visible && n.visible) {
+                let a = this.distance(s.canvasX, s.canvasY, n.canvasX, n.canvasY), i = this.distance(s.canvasX, s.canvasY, e, t), r = this.distance(n.canvasX, n.canvasY, e, t);
+                if (Math.abs(a - (i + r)) < this.mouseEpsilon) return !0;
+            }
+            s = n;
         }
         return !1;
     }
-};
+    distance(e, t, s, a) {
+        return Math.sqrt(Math.pow(e - s, 2) + Math.pow(t - a, 2));
+    }
+}

@@ -1,6 +1,8 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
+import expect from '../joezone/expect.js';
+
 export default class PolygonFeature extends BaseFeature {
     constructor() {
         super(), this.outerRing = [], this.innerRings = [];
@@ -8,93 +10,133 @@ export default class PolygonFeature extends BaseFeature {
     get featureType() {
         return 'region';
     }
-    addPoint(t) {
-        this.outerRing.push(t);
+    addPoint(e) {
+        this.outerRing.push(e);
     }
-    computeStyle(t, e, i, n) {
-        this.canvasParams = t.computeStyle('polygon', e, i, this.featureName, this.kvPairs, n);
+    computeFeatureStyle(e, t, i, s, r) {
+        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(i, 'String'), expect(s, 'Number'), 
+        expect(r, 'Number');
+        let n = e.computeStyle('polygon', t, i, this.featureName, this.kvPairs, s);
+        expect(n, 'vssCanvasParameters'), this.canvasParams.set(r, n);
     }
-    toGeoCoords(t) {
-        for (var e = 0; e < this.outerRing.length; e++) t.toGeoCoords(this.outerRing[e]);
-        for (e = 0; e < this.innerRings.length; e++) this.innerRings[e].toGeoCoords(t);
+    toGeoCoords(e) {
+        for (var t = 0; t < this.outerRing.length; t++) e.toGeoCoords(this.outerRing[t]);
+        for (t = 0; t < this.innerRings.length; t++) this.innerRings[t].toGeoCoords(e);
     }
-    toPlane(t) {
-        for (var e = 0; e < this.outerRing.length; e++) t.toPlane(this.outerRing[e]);
-        for (e = 0; e < this.innerRings.length; e++) this.innerRings[e].toPlane(t);
+    toPlane(e) {
+        for (var t = 0; t < this.outerRing.length; t++) e.toPlane(this.outerRing[t]);
+        for (t = 0; t < this.innerRings.length; t++) this.innerRings[t].toPlane(e);
     }
-    toPixels(t) {
-        for (var e = 0; e < this.outerRing.length; e++) t.toPixels(this.outerRing[e], !0, !0, !0);
-        for (e = 0; e < this.innerRings.length; e++) this.innerRings[e].toPixels(t);
+    toPixels(e) {
+        for (var t = 0; t < this.outerRing.length; t++) e.toPixels(this.outerRing[t], !0, !0, !0);
+        for (t = 0; t < this.innerRings.length; t++) this.innerRings[t].toPixels(e);
     }
-    toCanvas(t) {
-        for (var e = 0; e < this.outerRing.length; e++) t.toCanvas(this.outerRing[e]);
-        for (e = 0; e < this.innerRings.length; e++) this.innerRings[e].toCanvas(t);
+    toCanvas(e) {
+        for (var t = 0; t < this.outerRing.length; t++) e.toCanvas(this.outerRing[t]);
+        for (t = 0; t < this.innerRings.length; t++) this.innerRings[t].toCanvas(e);
     }
-    render(t) {
-        if (null != this.canvasParams && 'hidden' != this.canvasParams.visibility && ('none' != this.canvasParams['fill-color'] || 'none' != this.canvasParams['stroke-width'])) {
-            var e = t.canvas.getContext('2d');
-            e.beginPath(), this.render_ring(t, e, !1);
-            for (var i = 0; i < this.innerRings.length; i++) {
-                this.innerRings[i].render_ring(t, e, !0);
+    renderFeature(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number');
+        let i = this.canvasParams.get(t);
+        if (expect(i, 'vssCanvasParameters'), 'hidden' != i.visibility && ('none' != i['fill-color'] || 'none' != i['stroke-width'])) {
+            var s = e.canvas.getContext('2d');
+            s.beginPath(), this.render_ring(e, s, !1);
+            for (var r = 0; r < this.innerRings.length; r++) {
+                this.innerRings[r].render_ring(e, s, !0);
             }
-            e.closePath(), e.fillStyle = this.canvasParams.computeFillPlusTransparency(), e.strokeStyle = this.canvasParams['stroke-color'], 
-            e.lineWidth = this.canvasParams['stroke-width'], 'none' != this.canvasParams['stroke-width'] && e.stroke(), 
-            e.globalCompositeOperation = this.canvasParams['fill-type'], 'none' != this.canvasParams['fill-color'] && e.fill(), 
-            e.globalCompositeOperation = 'source-over';
+            switch (s.closePath(), s.fillStyle = i.computeFillPlusTransparency(), s.strokeStyle = i['stroke-color'], 
+            s.lineWidth = i['stroke-width'], i['stroke-type']) {
+              case 'solid':
+                s.setLineDash([]);
+                break;
+
+              case 'dotted':
+                s.setLineDash([ 3, 3 ]);
+                break;
+
+              case 'short-dash':
+                s.setLineDash([ 10, 10 ]);
+                break;
+
+              case 'long-dash':
+                s.setLineDash([ 20, 5 ]);
+                break;
+
+              case 'dot-dash':
+                s.setLineDash([ 15, 3, 3, 3 ]);
+                break;
+
+              case 'dot-dot-dash':
+                s.setLineDash([ 15, 3, 3, 3, 3, 3 ]);
+                break;
+
+              case 'dot-dot-dot-dash':
+                s.setLineDash([ 15, 3, 3, 3, 3, 3, 3, 3 ]);
+                break;
+
+              case 'dot-dash-dot':
+                s.setLineDash([ 3, 3, 12, 3, 3, 12 ]);
+                break;
+
+              default:
+                s.setLineDash([]);
+            }
+            'none' != i['stroke-width'] && s.stroke(), s.globalCompositeOperation = i['fill-type'], 
+            'none' != i['fill-color'] && s.fill(), s.globalCompositeOperation = 'source-over';
         }
     }
-    render_ring(t, e, i) {
-        for (var n = t.carte.translate.a * t.carte.multiplier, s = t.carte.translate.b * t.carte.multiplier, r = t.viewport.centerPoint.x + n, a = t.viewport.centerPoint.y + s, o = t.getVisualizedRadius(), l = !1, h = !1, g = !0, u = null, c = null, v = null, f = 0; f < this.outerRing.length; f++) {
-            var R = this.outerRing[f], P = this.outerRing[f - 1];
-            if (h = R.visible, 1 == g) 1 == h && (e.moveTo(R.canvasX, R.canvasY), f > 0 && (u = R.projectedTheta), 
-            g = !1); else if (1 == h && 1 == l) e.lineTo(R.canvasX, R.canvasY); else if (0 == h && 1 == l) {
-                c = P.projectedTheta;
-                let t = r + o * Math.cos(c), i = a + o * Math.sin(c);
-                e.lineTo(t, i);
+    render_ring(e, t, i) {
+        for (var s = e.carte.translate.a * e.carte.multiplier, r = e.carte.translate.b * e.carte.multiplier, n = e.viewport.centerPoint.x + s, a = e.viewport.centerPoint.y + r, o = e.getVisualizedRadius(), l = !1, h = !1, c = !0, g = null, u = null, v = null, d = 0; d < this.outerRing.length; d++) {
+            var f = this.outerRing[d], R = this.outerRing[d - 1];
+            if (h = f.visible, 1 == c) 1 == h && (t.moveTo(f.canvasX, f.canvasY), d > 0 && (g = f.projectedTheta), 
+            c = !1); else if (1 == h && 1 == l) t.lineTo(f.canvasX, f.canvasY); else if (0 == h && 1 == l) {
+                u = R.projectedTheta;
+                let e = n + o * Math.cos(u), i = a + o * Math.sin(u);
+                t.lineTo(e, i);
             } else if (1 == h && 0 == l) {
-                if (c != (v = R.projectedTheta)) {
-                    var d = c, m = v;
-                    'night' == this.featureName ? e.arc(r, a, o, d, m, !0) : this.drawArc(e, r, a, o, d, m, i);
-                    let t = r + o * Math.cos(v), n = a + o * Math.sin(v);
-                    e.lineTo(t, n);
+                if (u != (v = f.projectedTheta)) {
+                    var p = u, b = v;
+                    'night' == this.featureName ? t.arc(n, a, o, p, b, !0) : this.drawArc(t, n, a, o, p, b, i);
+                    let e = n + o * Math.cos(v), s = a + o * Math.sin(v);
+                    t.lineTo(e, s);
                 }
-                c = null, v = null;
+                u = null, v = null;
             }
-            l = R.visible;
+            l = f.visible;
         }
-        if (null != c && null != u) {
-            if (c != u) {
-                d = c, m = u;
-                'night' == this.featureName ? e.arc(r, a, o, d, m, !0) : this.drawArc(e, r, a, o, d, m, i);
-                let t = r + o * Math.cos(u), n = a + o * Math.sin(u);
-                e.lineTo(t, n);
+        if (null != u && null != g) {
+            if (u != g) {
+                p = u, b = g;
+                'night' == this.featureName ? t.arc(n, a, o, p, b, !0) : this.drawArc(t, n, a, o, p, b, i);
+                let e = n + o * Math.cos(g), s = a + o * Math.sin(g);
+                t.lineTo(e, s);
             }
-            c = null, u = null;
+            u = null, g = null;
         }
     }
-    drawArc(t, e, i, n, s, r, a) {
-        1 != a && (Math.abs(r - s) > Math.PI ? s > r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0) : s < r ? t.arc(e, i, n, s, r, !1) : t.arc(e, i, n, s, r, !0));
+    drawArc(e, t, i, s, r, n, a) {
+        1 != a && (Math.abs(n - r) > Math.PI ? r > n ? e.arc(t, i, s, r, n, !1) : e.arc(t, i, s, r, n, !0) : r < n ? e.arc(t, i, s, r, n, !1) : e.arc(t, i, s, r, n, !0));
     }
-    isPointerInsidePolygon(t, e) {
-        var i = this.outerRing.length, n = !1, s = 0;
-        for (let t = 0; t < i && s < 3; t++) 1 == this.outerRing[t].visible && s++;
-        if (s < 3) return !1;
-        var r = null;
-        for (let t = 0; t < i; t++) if (1 == this.outerRing[t].visible) {
-            r = t;
+    isPointerInsidePolygon(e, t) {
+        var i = this.outerRing.length, s = !1, r = 0;
+        for (let e = 0; e < i && r < 3; e++) 1 == this.outerRing[e].visible && r++;
+        if (r < 3) return !1;
+        var n = null;
+        for (let e = 0; e < i; e++) if (1 == this.outerRing[e].visible) {
+            n = e;
             break;
         }
-        var a = r;
-        for (let s = a + 1; s < i; s++) {
-            if (0 == this.outerRing[s].visible) continue;
+        var a = n;
+        for (let r = a + 1; r < i; r++) {
+            if (0 == this.outerRing[r].visible) continue;
             let i = a;
-            var o = this.outerRing[s].canvasX, l = this.outerRing[s].canvasY, h = this.outerRing[i].canvasX;
-            if (l > e != (g = this.outerRing[i].canvasY) > e) t < (h - o) * (e - l) / (g - l) + o && (n = !n);
-            a = s;
+            var o = this.outerRing[r].canvasX, l = this.outerRing[r].canvasY, h = this.outerRing[i].canvasX;
+            if (l > t != (c = this.outerRing[i].canvasY) > t) e < (h - o) * (t - l) / (c - l) + o && (s = !s);
+            a = r;
         }
-        var g;
-        o = this.outerRing[r].canvasX, l = this.outerRing[r].canvasY, h = this.outerRing[a].canvasX;
-        l > e != (g = this.outerRing[a].canvasY) > e && (t < (h - o) * (e - l) / (g - l) + o && (n = !n));
-        return n;
+        var c;
+        o = this.outerRing[n].canvasX, l = this.outerRing[n].canvasY, h = this.outerRing[a].canvasX;
+        l > t != (c = this.outerRing[a].canvasY) > t && (e < (h - o) * (t - l) / (c - l) + o && (s = !s));
+        return s;
     }
 }

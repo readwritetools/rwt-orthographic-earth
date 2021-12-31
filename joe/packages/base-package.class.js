@@ -1,31 +1,20 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
+import Layer from '../layers/layer.class.js';
+
 import expect from '../joezone/expect.js';
 
 export default class BasePackage {
-    constructor(e, t, s, i, a) {
-        expect(e, 'rwtOrthographicEarth'), expect(t, 'Number'), expect(s, 'String'), expect(i, 'String'), 
-        expect(a, 'String'), this.rwtOrthographicEarth = e, this.zOrder = t, this.layerName = s, 
-        this.identifier = i, this.classname = a, this.visible = !0, this.identifiable = 'disallow', 
-        this.packageNeedsRestyling = !1, this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !1, 
-        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !1, 
-        this.packageNeedsHashing = !1;
-    }
-    isVisible() {
-        return this.visible;
+    constructor(e) {
+        this.rwtOrthographicEarth = e, this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !1, 
+        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !1;
     }
     changeVisibility(e) {
-        this.visible = e, 1 == e && (this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, 
-        this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.packageNeedsHashing = !0), this.rwtOrthographicEarth.earth.invalidateCanvas();
+        1 == e && (this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
+        this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0), 
+        this.rwtOrthographicEarth.earth.invalidateCanvas();
     }
-    isIdentifiable() {
-        return 1 == this.visible && 'yes' == this.identifiable;
-    }
-    changeIdentifiability(e) {
-        this.identifiable = 1 == e ? 'yes' : 'no';
-    }
-    recomputeStyles(e) {
-        console.log('BasePackage subclass must provide a recomputeStyles() function');
+    recomputeStyles(e, a, t) {
+        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), console.log('BasePackage subclass must provide a recomputeStyles() function');
     }
     rotation(e) {
         console.log('BasePackage subclass must provide a rotation() function');
@@ -36,14 +25,13 @@ export default class BasePackage {
     transformation(e) {
         console.log('BasePackage subclass must provide a transformation() function');
     }
-    hash(e) {}
     placement(e) {
-        console.log('Package subclass must provide a placement() function');
+        console.log('BasePackage subclass must provide a placement() function');
     }
-    render(e) {
-        console.log('Package subclass must provide a render() function');
+    renderLayer(e, a) {
+        expect(e, 'Earth'), expect(a, 'Number'), console.log('BasePackage subclass must provide a renderLayer() function');
     }
-    discoverFeatures(e, t) {
+    discoverFeatures(e, a) {
         return null;
     }
 }

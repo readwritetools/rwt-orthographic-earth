@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import vssMediaCollection from './vss-media-collection.class.js';
 
 import vssProperty from './vss-property.class.js';
@@ -11,7 +10,7 @@ import cssParser from './css-parser.js';
 export default class vssStyleSheet {
     constructor(e, t) {
         this.rwtOrthographicEarth = e, this.vssMediaCollection = new vssMediaCollection, 
-        this.mapScale = t, this.allFeaturesNeedRestyling = !1;
+        this.mapScale = t, this.allFeaturesNeedRestyling = !1, Object.seal(this);
     }
     setMapScale(e) {
         this.mapScale = e, this.allFeaturesNeedRestyling = !0;
@@ -33,7 +32,7 @@ export default class vssStyleSheet {
         var t = cssTokenizer(e), a = cssParser(t);
         if ('STYLESHEET' != a.type) return console.log('Expected \'STYLESHEET\', but found %s', a.type);
         var s = this.vssMediaCollection.getAllMediaRule();
-        this.decodeSheet(s, a), this.allFeaturesNeedRestyling = !0, this.rwtOrthographicEarth.broadcastMessage('styleSheet/add', null);
+        this.decodeSheet(s, a), this.allFeaturesNeedRestyling = !0, this.rwtOrthographicEarth.broadcastMessage('visualization/styleSheetAdded', null);
     }
     decodeSheet(e, t) {
         for (var a = 0; a < t.value.length; a++) {

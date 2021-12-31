@@ -1,25 +1,27 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
+import expect from '../joezone/expect.js';
+
 export default class BaseFeature {
     constructor() {
-        this.featureName = '', this.kvPairs = {}, this.canvasParams = null;
+        this.featureName = '', this.kvPairs = {}, this.canvasParams = new Map;
     }
-    computeStyle(o, e, s, t) {
-        console.log('Feature subclass must provide a computeStyle() function');
+    computeFeatureStyle(e, t, o, s, a) {
+        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(o, 'String'), expect(s, 'Number'), 
+        expect(a, 'Number'), console.log('Feature subclass must provide a computeFeatureStyle() function');
     }
-    toGeoCoords(o) {
+    toGeoCoords(e) {
         console.log('Feature subclass must provide a toGeoCoords() function');
     }
-    toPlane(o) {
+    toPlane(e) {
         console.log('Feature subclass must provide a toPlane() function');
     }
-    toPixels(o) {
+    toPixels(e) {
         console.log('Feature subclass must provide a toPixels() function');
     }
-    toCanvas(o) {
+    toCanvas(e) {
         console.log('Feature subclass must provide a toCanvas() function');
     }
-    render(o) {
-        console.log('Feature subclass must provide a render() function');
+    renderFeature(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number'), console.log('Feature subclass must provide a renderFeature() function');
     }
 }

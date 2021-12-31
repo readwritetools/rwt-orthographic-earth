@@ -1,15 +1,17 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-const Static = {
-    rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js'
-};
-
-Object.seal(Static);
-
 import PanelsConfig from './panels-config.js';
 
 import * as CB from './panel-callbacks.js';
 
 import EarthPosition from '../astronomy/earth-position.class.js';
+
+import expect from '../joezone/expect.js';
+
+const Static = {
+    rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js'
+};
+
+Object.seal(Static);
 
 export default class Menu {
     constructor(t) {
@@ -297,36 +299,40 @@ export default class Menu {
             }));
 
           case 'layers':
-            return this.rwtOrthographicEarth.addEventListener('catalog/packageAdded', (t => {
-                var e = t.detail, a = e.zOrder, r = e.id, o = e.identifiable;
-                if ('disallow' == o) var s = ''; else s = `<input id=layers-${r}-identifiable type=checkbox data-layer-id=${r} ${'yes' == o ? 'checked' : ''} />`;
-                var n = e.layerName, i = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
-                l.id = `layers-${r}`, l.rowOrder = a, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${r}-visible type=checkbox data-layer-id=${r} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${s}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${n}</td>`;
+            return void this.rwtOrthographicEarth.addEventListener('catalog/layerAdded', (t => {
+                var e = t.detail, a = e.layerId, r = e.layerName, o = e.identifiable, s = e.zOrder;
+                if ('disallow' == o) var n = ''; else n = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == o ? 'checked' : ''} />`;
+                var i = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
+                l.id = `layers-${a}`, l['data-z-order'] = s, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${n}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${r}</td>`;
                 let d = !1;
-                for (let t = 0; t < i.childNodes.length; t++) if (i.childNodes[t].rowOrder < a) {
+                for (let t = 0; t < i.childNodes.length; t++) if (i.childNodes[t]['data-z-order'] < s) {
                     i.insertBefore(l, i.childNodes[t]), d = !0;
                     break;
                 }
-                d || i.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${r}-visible`).addEventListener('change', (t => {
+                d || i.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
-                    this.rwtOrthographicEarth.getLayer(e).changeVisibility(t.currentTarget.checked);
-                    var a = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${r}-identifiable`);
-                    null != a && (a.disabled = !t.currentTarget.checked);
+                    e = parseInt(e, 10);
+                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
+                    expect(r, 'Layer'), r.changeVisibility(a);
+                    var o = this.rwtOrthographicEarth.getPackage(r.packageId);
+                    expect(o, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage' ]), 
+                    o.changeVisibility(a);
+                    var s = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${e}-identifiable`);
+                    null != s && (s.disabled = !a);
                 }));
-                var h = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${r}-identifiable`);
+                var h = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
                 null != h && h.addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
-                    this.rwtOrthographicEarth.getLayer(e).changeIdentifiability(t.currentTarget.checked);
+                    e = parseInt(e, 10);
+                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
+                    expect(r, 'Layer'), r.changeIdentifiability(a);
                 }));
-            })), void this.rwtOrthographicEarth.addEventListener('catalog/packageRemoved', (t => {
-                var e = t.detail, a = this.rwtDockablePanels.shadowRoot.getElementById('layers-table'), r = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${e}`);
-                a.removeChild(r), this.rwtOrthographicEarth.invalidateCanvas();
             }));
 
           case 'identify':
             return void this.rwtOrthographicEarth.addEventListener('user/identifiedFeatures', (t => {
                 var e = t.detail, a = [];
-                a.push('<tr><th class=\'chef-center\'>Data</th><th class=\'chef-center\'>Value</th></tr>');
+                a.push('<tr><th class=\'chef-center\'>Feature</th><th class=\'chef-center\'>Value</th></tr>');
                 for (let t of e) a.push(t.identifyHTML);
                 this.rwtDockablePanels.shadowRoot.getElementById('identify-table').innerHTML = a.join('');
             }));

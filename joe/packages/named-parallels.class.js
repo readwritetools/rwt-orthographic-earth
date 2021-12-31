@@ -5,25 +5,28 @@ import LineFeature from '../features/line-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
+import expect from '../joezone/expect.js';
+
 export default class NamedParallels extends BasePackage {
-    constructor(e, a, t, s, r, i, o) {
-        for (var l in super(e, a, t, s, r), this.parallels = [], this.frequency = void 0 !== o ? o : 1, 
+    constructor(e, a, t) {
+        for (var s in super(e), this.parallels = [], this.frequency = void 0 !== t ? t : 1, 
         this.frequency <= 0 && (this.frequency = 1), this.frequency > 15 && (this.frequency = 15), 
-        i) if (i.hasOwnProperty(l)) {
-            var n = new LineFeature;
-            n.featureName = l;
-            var c = i[l];
-            if (c < -90 || c > 90) continue;
-            for (var h = -180; h <= 180; h += this.frequency) n.addPoint(new ProjectedPoint(c, h));
-            this.parallels.push(n);
+        a) if (a.hasOwnProperty(s)) {
+            var r = new LineFeature;
+            r.featureName = s;
+            var o = a[s];
+            if (o < -90 || o > 90) continue;
+            for (var i = -180; i <= 180; i += this.frequency) r.addPoint(new ProjectedPoint(o, i));
+            this.parallels.push(r);
         }
-        this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
-        this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 
-        this.rwtOrthographicEarth.broadcastMessage('package/namedParallels', null);
+        this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
+        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/namedParallels', null), 
+        Object.seal(this);
     }
-    recomputeStyles(e) {
-        for (var a = 0; a < this.parallels.length; a++) this.parallels[a].computeStyle(e, this.classname, this.identifier, a);
-        this.packageNeedsRestyling = !1;
+    recomputeStyles(e, a, t) {
+        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
+        for (var s = 0; s < this.parallels.length; s++) this.parallels[s].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, s, t);
+        a.layerNeedsRestyling = !1;
     }
     rotation(e) {
         for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toGeoCoords(e);
@@ -41,7 +44,8 @@ export default class NamedParallels extends BasePackage {
         for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toCanvas(e);
         this.packagePointsNeedPlacement = !1;
     }
-    render(e) {
-        for (var a = 0; a < this.parallels.length; a++) this.parallels[a].render(e);
+    renderLayer(e, a) {
+        expect(e, 'Earth'), expect(a, 'Number');
+        for (var t = 0; t < this.parallels.length; t++) this.parallels[t].renderFeature(e, a);
     }
 }

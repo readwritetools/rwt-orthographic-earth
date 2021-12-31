@@ -3,12 +3,14 @@ import BasePackage from './base-package.class.js';
 
 import PointFeature from '../features/point-feature.class.js';
 
+import expect from '../joezone/expect.js';
+
 export default class PlaceOfInterest extends BasePackage {
-    constructor(e, t, a, i, s) {
-        super(e, t, a, i, s), this.pointFeature = new PointFeature, this.pointFeature.featureName = 'place-of-interest', 
-        this.registerEventListeners(), this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, 
-        this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/place-of-interest', null);
+    constructor(e, t, a, s, i) {
+        super(e, t, a, s, i), this.pointFeature = new PointFeature, this.pointFeature.featureName = 'place-of-interest', 
+        this.registerEventListeners(), this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
+        this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 
+        this.rwtOrthographicEarth.broadcastMessage('package/place-of-interest', null), Object.seal(this);
     }
     registerEventListeners() {
         this.rwtOrthographicEarth.addEventListener('earthPosition/placeOfInterest', (e => {
@@ -18,8 +20,9 @@ export default class PlaceOfInterest extends BasePackage {
             this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.invalidateCanvas();
         }));
     }
-    recomputeStyles(e) {
-        this.pointFeature.computeStyle(e, this.classname, this.identifier, 0), this.packageNeedsRestyling = !1;
+    recomputeStyles(e, t, a) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.pointFeature.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, a), 
+        t.layerNeedsRestyling = !1;
     }
     rotation(e) {
         this.pointFeature.toGeoCoords(e), this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
@@ -33,7 +36,7 @@ export default class PlaceOfInterest extends BasePackage {
     placement(e) {
         this.pointFeature.toCanvas(e), this.packagePointsNeedPlacement = !1;
     }
-    render(e) {
-        this.pointFeature.render(e);
+    renderLayer(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number'), this.pointFeature.renderFeature(e, t);
     }
 }

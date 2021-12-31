@@ -5,44 +5,49 @@ import HemisphereFeature from '../features/hemisphere-feature.class.js';
 
 import * as CB from '../panels/panel-callbacks.js';
 
+import expect from '../joezone/expect.js';
+
 const degreesToRadians = Math.PI / 180;
 
 export default class Night extends BasePackage {
-    constructor(t, e, i, s, a) {
-        super(t, e, i, s, a);
+    constructor(e) {
+        super(e);
         this.identityPoints = new HemisphereFeature(90), this.identityPoints.featureName = 'night', 
-        this.registerEventListeners(), this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, 
-        this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/night', null);
+        this.registerEventListeners(), this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
+        this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 
+        this.rwtOrthographicEarth.broadcastMessage('package/night', null), Object.seal(this);
     }
     registerEventListeners() {
-        this.rwtOrthographicEarth.addEventListener('carte/solarDeclination', (t => {
+        this.rwtOrthographicEarth.addEventListener('carte/solarDeclination', (e => {
             this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0;
-        })), this.rwtOrthographicEarth.addEventListener('earthPosition/timeOfDayHMS', (t => {
+        })), this.rwtOrthographicEarth.addEventListener('earthPosition/timeOfDayHMS', (e => {
             this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0;
         }));
     }
-    recomputeStyles(t) {
-        this.identityPoints.computeStyle(t, this.classname, this.identifier, 0), this.packageNeedsRestyling = !1;
+    recomputeStyles(e, t, i) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number'), this.identityPoints.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, i), 
+        t.layerNeedsRestyling = !1;
     }
-    rotation(t) {
-        for (var e = 0; e < this.identityPoints.outerRing.length; e++) t.toNightCoords(this.identityPoints.outerRing[e]);
+    rotation(e) {
+        for (var t = 0; t < this.identityPoints.outerRing.length; t++) e.toNightCoords(this.identityPoints.outerRing[t]);
         this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
     }
-    projection(t) {
-        var e = CB.numSecondsSinceMidnightUTC(this.rwtOrthographicEarth.earth.earthPosition.UTC) + 64800;
-        e >= 86400 && (e -= 86400);
-        for (var i = 2 * (e / 86400) * Math.PI, s = 0; s < this.identityPoints.outerRing.length; s++) t.toNightPlane(this.identityPoints.outerRing[s], i);
+    projection(e) {
+        var t = CB.numSecondsSinceMidnightUTC(this.rwtOrthographicEarth.earth.earthPosition.UTC) + 64800;
+        t >= 86400 && (t -= 86400);
+        for (var i = 2 * (t / 86400) * Math.PI, s = 0; s < this.identityPoints.outerRing.length; s++) e.toNightPlane(this.identityPoints.outerRing[s], i);
         this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
     }
-    transformation(t) {
-        for (var e = 0; e < this.identityPoints.outerRing.length; e++) t.toPixels(this.identityPoints.outerRing[e], !0, !0, !0);
+    transformation(e) {
+        for (var t = 0; t < this.identityPoints.outerRing.length; t++) e.toPixels(this.identityPoints.outerRing[t], !0, !0, !0);
         this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
     }
-    placement(t) {
-        this.identityPoints.toCanvas(t), this.packagePointsNeedPlacement = !1;
+    placement(e) {
+        this.identityPoints.toCanvas(e), this.packagePointsNeedPlacement = !1;
     }
-    render(t) {
-        'hidden' != this.identityPoints.canvasParams.visibility && this.identityPoints.render(t);
+    renderLayer(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number');
+        let i = this.identityPoints.canvasParams.get(t);
+        expect(i, 'vssCanvasParameters'), 'hidden' != i.visibility && this.identityPoints.renderFeature(e, t);
     }
 }

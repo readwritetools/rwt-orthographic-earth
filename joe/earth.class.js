@@ -17,6 +17,8 @@ import vssStyleSheet from './visualization/vss-style-sheet.class.js';
 
 import EarthPosition from './astronomy/earth-position.class.js';
 
+import expect from './joezone/expect.js';
+
 export default class Earth {
     constructor(t) {
         this.rwtOrthographicEarth = t, this.canvas = t.canvas;
@@ -38,7 +40,7 @@ export default class Earth {
         this.viewport.reflectValues(), this.earthPosition.reflectValues();
     }
     addVisualizationStyleSheet(t) {
-        this.visual.addVisualizationStyleSheet(t), this.invalidateCanvas();
+        this.visual.addVisualizationStyleSheet(t);
     }
     addVisualizationRule(t) {
         this.visual.addVisualizationRule(t);
@@ -169,13 +171,17 @@ export default class Earth {
         this.earthPosition.changeTimezoneOffset(t);
     }
     addPackage(t) {
+        return expect(t, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage' ]), 
         this.catalog.addPackage(t);
     }
-    removePackage(t) {
-        this.catalog.removePackage(t);
+    addLayer(t) {
+        return expect(t, 'Layer'), this.catalog.addLayer(t);
     }
     getPackage(t) {
-        return this.catalog.getPackage(t);
+        return expect(t, 'Number'), this.catalog.getPackage(t);
+    }
+    getLayer(t) {
+        return expect(t, 'Number'), this.catalog.getLayer(t);
     }
     invalidateCanvas() {
         this.pendingUpdates = !0;

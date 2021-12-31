@@ -1,16 +1,7 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-const Static = {
-    componentName: 'rwt-orthographic-earth',
-    elementInstance: 1,
-    vssURL: '/node_modules/rwt-orthographic-earth/joe/visualization/rwt-orthographic-earth.vss',
-    rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js',
-    nextId: 0,
-    zOrder: 0
-};
-
-Object.seal(Static);
-
 import Earth from './joe/earth.class.js';
+
+import Layer from './joe/layers/layer.class.js';
 
 import Space from './joe/packages/space.class.js';
 
@@ -34,6 +25,18 @@ import InteractionHandler from './joe/interaction/interaction-handler.class.js';
 
 import Menu from './joe/panels/menu.class.js';
 
+import expect from './joe/joezone/expect.js';
+
+const Static = {
+    componentName: 'rwt-orthographic-earth',
+    elementInstance: 1,
+    vssURL: '/node_modules/rwt-orthographic-earth/joe/visualization/rwt-orthographic-earth.vss',
+    rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js',
+    zOrder: 1
+};
+
+Object.seal(Static);
+
 export default class rwtOrthographicEarth extends HTMLElement {
     constructor() {
         super(), this.instance = Static.elementInstance++, this.isComponentLoaded = !1, 
@@ -47,9 +50,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
                 mode: 'open'
             }), this.createCanvas(), this.createEarth(), this.createInteractionHandler(), this.addVisualizationStyleSheet(Static.vssURL), 
             await this.addDockablePanels(), this.registerMenuListeners(), this.registerUserListeners(), 
-            this.registerEarthPositionListeners(), this.registerResizeListener(), this.resizeCanvas(), 
-            this.setupAnimations(), this.initializeEarthValues(), this.reflectValues(), this.sendComponentLoaded(), 
-            this.validate();
+            this.registerVisualizationListeners(), this.registerEarthPositionListeners(), this.registerResizeListener(), 
+            this.resizeCanvas(), this.setupAnimations(), this.initializeEarthValues(), this.reflectValues(), 
+            this.sendComponentLoaded(), this.validate();
         } catch (e) {
             console.log(e.message);
         }
@@ -134,63 +137,76 @@ export default class rwtOrthographicEarth extends HTMLElement {
     setMenuTitlebar(e) {
         this.menu.rwtDockablePanels.setTitlebar(e);
     }
-    async addLayer(e) {
-        var t = e.zOrder || Static.zOrder++, a = e.layerName || s, s = e.id || 'id' + Static.nextId++, i = e.classname || '';
+    async addMapItem(e) {
+        e.zOrder = e.zOrder || Static.zOrder++;
+        var t = await this.addPackage(e);
+        return {
+            layerId: this.addLayer(t, e),
+            packageId: t
+        };
+    }
+    async addPackage(e) {
+        expect(e.layerType, 'String');
+        var t = null;
         switch (e.layerType) {
           case 'space':
-            i = e.classname || '';
-            this.earth.addPackage(new Space(this, t, a, s, i));
+            e.vssClassname = e.vssClassname || 'space', t = this.earth.addPackage(new Space(this));
             break;
 
           case 'sphere':
-            i = e.classname || 'sphere';
-            this.earth.addPackage(new Sphere(this, t, a, s, i));
+            e.vssClassname = e.vssClassname || 'sphere', t = this.earth.addPackage(new Sphere(this));
             break;
 
           case 'night':
-            i = e.classname || 'night';
-            this.earth.addPackage(new Night(this, t, a, s, i));
+            e.vssClassname = e.vssClassname || 'night', t = this.earth.addPackage(new Night(this));
             break;
 
           case 'graticule':
-            i = e.classname || '';
-            var n = null == e.parallelFrequency ? 10 : e.parallelFrequency, r = null == e.meridianFrequency ? 10 : e.meridianFrequency, o = null != e.drawToPoles && e.drawToPoles;
-            this.earth.addPackage(new Graticule(this, t, a, s, i, n, r, o));
+            e.vssClassname = e.vssClassname || 'graticule';
+            var a = null == e.parallelFrequency ? 10 : e.parallelFrequency, s = null == e.meridianFrequency ? 10 : e.meridianFrequency, i = null != e.drawToPoles && e.drawToPoles;
+            t = this.earth.addPackage(new Graticule(this, a, s, i));
             break;
 
           case 'named-meridians':
-            i = e.classname || '';
-            var h = e.namedMeridians || {}, c = e.frequency || 1;
-            this.earth.addPackage(new NamedMeridians(this, t, a, s, i, h, c));
+            e.vssClassname = e.vssClassname || 'named-meridians';
+            var n = e.namedMeridians || {}, r = e.frequency || 1;
+            t = this.earth.addPackage(new NamedMeridians(this, n, r));
             break;
 
           case 'named-parallels':
-            i = e.classname || '';
-            var l = e.namedParallels || {};
-            c = e.frequency || 1;
-            this.earth.addPackage(new NamedParallels(this, t, a, s, i, l, c));
+            e.vssClassname = e.vssClassname || 'named-parallels';
+            var o = e.namedParallels || {};
+            r = e.frequency || 1;
+            t = this.earth.addPackage(new NamedParallels(this, o, r));
             break;
 
           case 'place-of-interest':
-            i = e.classname || 'place-of-interest';
-            this.earth.addPackage(new PlaceOfInterest(this, t, a, s, i));
+            e.vssClassname;
+            t = this.earth.addPackage(new PlaceOfInterest(this));
             break;
 
           case 'topojson-package':
-            i = e.classname || '';
-            var d = e.url || '', m = e.embeddedName || '', u = e.featureKey || '', p = e.identifiable || 'yes', g = e.identifyCallback || null, v = new TopojsonPackage(this, t, a, s, i, u, p, g);
-            this.earth.addPackage(v), await v.retrieveData('replace', d, m), this.invalidateCanvas();
+            var h = new TopojsonPackage(this);
+            t = this.earth.addPackage(h);
+            var l = e.url || '', c = e.embeddedName || '';
+            await h.retrieveData('replace', l, c), this.invalidateCanvas();
             break;
 
           default:
             console.log(`Unrecognized layerType ${e.layerType}`);
         }
+        return t;
     }
-    removeLayer(e) {
-        this.earth.removePackage(e);
+    addLayer(e, t) {
+        expect(e, 'Number');
+        var a = t.zOrder || Static.zOrder++, s = t.layerName || '', i = t.vssIdentifier || '', n = t.vssClassname || '', r = t.featureKey || '', o = t.identifiable || 'disallow', h = t.identifyCallback || null;
+        return this.earth.addLayer(new Layer(this, e, a, s, i, n, r, o, h));
+    }
+    getPackage(e) {
+        return expect(e, 'Number'), this.earth.getPackage(e);
     }
     getLayer(e) {
-        return this.earth.getPackage(e);
+        return expect(e, 'Number'), this.earth.getLayer(e);
     }
     setTangentLongitude(e) {
         this.earth.setTangentLongitude(e);
@@ -264,6 +280,11 @@ export default class rwtOrthographicEarth extends HTMLElement {
         })), this.addEventListener('user/changePlaceOfInterest', (e => {
             var t = e.detail;
             this.earth.changePlaceOfInterest(t.x, t.y), this.earth.recalculatePlaceOfInterestDependants();
+        }));
+    }
+    registerVisualizationListeners() {
+        this.addEventListener('visualization/styleSheetAdded', (e => {
+            this.earth.visual.allFeaturesNeedRestyling = !0, this.invalidateCanvas();
         }));
     }
     registerEarthPositionListeners() {

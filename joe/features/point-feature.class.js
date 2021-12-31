@@ -1,50 +1,58 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
+import expect from '../joezone/expect.js';
+
 export default class PointFeature extends BaseFeature {
     constructor() {
-        super(), this.discretePoint = new ProjectedPoint(0, 0);
+        super(), this.discretePoint = new ProjectedPoint(0, 0), this.mouseEpsilon = 2;
     }
     get featureType() {
         return 'place';
     }
-    computeStyle(t, s, a, e) {
-        this.canvasParams = t.computeStyle('point', s, a, this.featureName, this.kvPairs, e);
+    computeFeatureStyle(e, t, s, i, o) {
+        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(s, 'String'), expect(i, 'Number'), 
+        expect(o, 'Number');
+        let r = e.computeStyle('point', t, s, this.featureName, this.kvPairs, i);
+        expect(r, 'vssCanvasParameters'), this.canvasParams.set(o, r);
+        let a = 0, n = Number(r['dot-radius']);
+        isNaN(n) || (a += n);
+        let c = Number(r['stroke-width']);
+        isNaN(c) || (a += c), this.mouseEpsilon = Math.max(this.mouseEpsilon, a);
     }
-    toGeoCoords(t) {
-        t.toGeoCoords(this.discretePoint);
+    toGeoCoords(e) {
+        e.toGeoCoords(this.discretePoint);
     }
-    toPlane(t) {
-        t.toPlane(this.discretePoint);
+    toPlane(e) {
+        e.toPlane(this.discretePoint);
     }
-    toPixels(t) {
-        t.toPixels(this.discretePoint, !0, !0, !0);
+    toPixels(e) {
+        e.toPixels(this.discretePoint, !0, !0, !0);
     }
-    toCanvas(t) {
-        t.toCanvas(this.discretePoint);
+    toCanvas(e) {
+        e.toCanvas(this.discretePoint);
     }
-    render(t) {
-        if (null != this.canvasParams && 'hidden' != this.canvasParams.visibility) {
-            var s = t.canvas.getContext('2d');
-            s.fillStyle = this.canvasParams['fill-color'], s.strokeStyle = this.canvasParams['stroke-color'];
-            var a = this.canvasParams['dot-radius'];
-            'none' == this.canvasParams['stroke-width'] ? s.lineWidth = 0 : s.lineWidth = this.canvasParams['stroke-width'];
-            var e = this.discretePoint;
-            1 == e.visible && this.drawDot(s, e.canvasX, e.canvasY, a, this.canvasParams['stroke-width']);
+    renderFeature(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number');
+        let s = this.canvasParams.get(t);
+        if (expect(s, 'vssCanvasParameters'), 'hidden' != s.visibility) {
+            var i = e.canvas.getContext('2d');
+            i.fillStyle = s['fill-color'], i.strokeStyle = s['stroke-color'];
+            var o = s['dot-radius'];
+            'none' == s['stroke-width'] ? i.lineWidth = 0 : i.lineWidth = s['stroke-width'];
+            var r = this.discretePoint;
+            1 == r.visible && this.drawDot(i, r.canvasX, r.canvasY, o, s['stroke-width']);
         }
     }
-    drawDot(t, s, a, e, i) {
-        t.beginPath(), t.arc(s, a, e, 0, 2 * Math.PI, !1), t.closePath(), 'none' != i && i > 0 && t.stroke(), 
-        t.fill();
+    drawDot(e, t, s, i, o) {
+        e.beginPath(), e.arc(t, s, i, 0, 2 * Math.PI, !1), e.closePath(), 'none' != o && o > 0 && e.stroke(), 
+        e.fill();
     }
-    isPointerAtPoint(t, s) {
+    isPointerAtPoint(e, t) {
         if (0 == this.discretePoint.visible) return !1;
-        var a = null != this.canvasParams && this.canvasParams.hasOwnProperty('dot-radius') ? this.canvasParams['dot-radius'] : 4;
-        a = Math.max(a, 4);
-        var e = this.discretePoint.canvasX, i = this.discretePoint.canvasY;
-        return t - a < e && e < t + a && s - a < i && i < s + a;
+        var s = this.discretePoint.canvasX, i = this.discretePoint.canvasY;
+        return e - this.mouseEpsilon < s && s < e + this.mouseEpsilon && t - this.mouseEpsilon < i && i < t + this.mouseEpsilon;
     }
 }

@@ -5,43 +5,47 @@ import LineFeature from '../features/line-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
+import expect from '../joezone/expect.js';
+
 export default class NamedMeridians extends BasePackage {
-    constructor(e, i, t, s, a, r, n) {
-        for (var o in super(e, i, t, s, a), this.meridians = [], this.frequency = void 0 !== n ? n : 1, 
+    constructor(e, t, i) {
+        for (var s in super(e), this.meridians = [], this.frequency = void 0 !== i ? i : 1, 
         this.frequency <= 0 && (this.frequency = 1), this.frequency > 30 && (this.frequency = 30), 
-        r) if (r.hasOwnProperty(o)) {
-            var c = new LineFeature;
-            c.featureName = o;
-            var h = r[o];
-            if (h < -180 || h > 180) continue;
-            for (var d = -90; d <= 90; d += this.frequency) c.addPoint(new ProjectedPoint(d, h));
-            this.meridians.push(c);
+        t) if (t.hasOwnProperty(s)) {
+            var a = new LineFeature;
+            a.featureName = s;
+            var r = t[s];
+            if (r < -180 || r > 180) continue;
+            for (var n = -90; n <= 90; n += this.frequency) a.addPoint(new ProjectedPoint(n, r));
+            this.meridians.push(a);
         }
-        this.packageNeedsRestyling = !0, this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
-        this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 
-        this.rwtOrthographicEarth.broadcastMessage('package/NamedMeridians', null);
+        this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
+        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/NamedMeridians', null), 
+        Object.seal(this);
     }
-    recomputeStyles(e) {
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].computeStyle(e, this.classname, this.identifier, i);
-        this.packageNeedsRestyling = !1;
+    recomputeStyles(e, t, i) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number');
+        for (var s = 0; s < this.meridians.length; s++) this.meridians[s].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, s, i);
+        t.layerNeedsRestyling = !1;
     }
     rotation(e) {
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].toGeoCoords(e);
+        for (var t = 0; t < this.meridians.length; t++) this.meridians[t].toGeoCoords(e);
         this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
     }
     projection(e) {
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].toPlane(e);
+        for (var t = 0; t < this.meridians.length; t++) this.meridians[t].toPlane(e);
         this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
     }
     transformation(e) {
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].toPixels(e);
+        for (var t = 0; t < this.meridians.length; t++) this.meridians[t].toPixels(e);
         this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
     }
     placement(e) {
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].toCanvas(e);
+        for (var t = 0; t < this.meridians.length; t++) this.meridians[t].toCanvas(e);
         this.packagePointsNeedPlacement = !1;
     }
-    render(e) {
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].render(e);
+    renderLayer(e, t) {
+        expect(e, 'Earth'), expect(t, 'Number');
+        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].renderFeature(e, t);
     }
 }
