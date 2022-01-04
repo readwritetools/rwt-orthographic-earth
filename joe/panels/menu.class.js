@@ -28,7 +28,7 @@ export default class Menu {
     }
     initializeCSS() {
         var t = document.createElement('style');
-        t.innerHTML = '\n\t\trwt-dockable-panels {\n\t\t    --top:  3px;\n\t\t    --right: 3px;\n\t\t\t--pure-white: #fff;\n\t\t\t--surfie-green: #107187;\n\t\t\t--coral-atoll: #0E6073;\n\t\t\t--tiber: #093640;\n\t\t\t--eden: #0D4A56;\n\t\t\t--color: var(--menu-color, var(--pure-white));\n\t\t\t--border-color: var(--menu-border-color, var(--pure-white));\n\t\t\t--background-color1: var(--menu-background-color1, var(--surfie-green));\n\t\t\t--background-color2: var(--menu-background-color2, var(--coral-atoll));\n\t\t\t--background-color3: var(--menu-background-color3, var(--tiber));\n\t\t\t--background-color4: var(--menu-background-color4, var(--eden));\n\t\t}', 
+        t.innerHTML = '\n\t\trwt-dockable-panels {\n\t\t    --top:  3px;\n\t\t    --left: 3px;\n\t\t    --bottom:  3px;\n\t\t    --right: 3px;\n\t\t\t--pure-white: #fff;\n\t\t\t--surfie-green: #107187;\n\t\t\t--coral-atoll: #0E6073;\n\t\t\t--tiber: #093640;\n\t\t\t--eden: #0D4A56;\n\t\t\t--color: var(--menu-color, var(--pure-white));\n\t\t\t--border-color: var(--menu-border-color, var(--pure-white));\n\t\t\t--background-color1: var(--menu-background-color1, var(--surfie-green));\n\t\t\t--background-color2: var(--menu-background-color2, var(--coral-atoll));\n\t\t\t--background-color3: var(--menu-background-color3, var(--tiber));\n\t\t\t--background-color4: var(--menu-background-color4, var(--eden));\n\t\t}', 
         this.rwtOrthographicEarth.shadowRoot.appendChild(t);
     }
     async instantiateComponent() {
