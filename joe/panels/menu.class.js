@@ -19,8 +19,11 @@ export default class Menu {
     }
     async initialize() {
         this.initializeCSS(), await this.instantiateComponent(), await this.rwtDockablePanels.waitOnLoading().then((() => {
-            this.configureDockablePanels(), this.rwtDockablePanels.setTitlebar(PanelsConfig.toolbar.titlebar), 
-            this.rwtDockablePanels.closeToolbar(), this.rwtDockablePanels.style.display = 'block';
+            this.configureDockablePanels(), this.rwtDockablePanels.setTitlebar(PanelsConfig.toolbar.titlebar);
+            var t = 'open';
+            this.rwtOrthographicEarth.hasAttribute('menu-state') && (t = this.rwtOrthographicEarth.getAttribute('menu-state')), 
+            'open' == t ? this.rwtDockablePanels.openToolbar() : this.rwtDockablePanels.closeToolbar(), 
+            this.rwtDockablePanels.style.display = 'block';
         }));
     }
     initializeCSS() {
@@ -30,9 +33,11 @@ export default class Menu {
     }
     async instantiateComponent() {
         await import(Static.rwtDockablePanels), this.rwtDockablePanels = document.createElement('rwt-dockable-panels'), 
-        this.rwtDockablePanels.setAttribute('id', 'dockable-panels'), this.rwtDockablePanels.setAttribute('corner', 'top-right'), 
-        this.rwtDockablePanels.setAttribute('role', 'contentinfo'), this.rwtDockablePanels.setAttribute('opened', 'opened'), 
-        this.rwtDockablePanels.style.display = 'none', this.rwtOrthographicEarth.shadowRoot.appendChild(this.rwtDockablePanels);
+        this.rwtDockablePanels.setAttribute('id', 'dockable-panels'), this.rwtDockablePanels.setAttribute('role', 'contentinfo'), 
+        this.rwtDockablePanels.style.display = 'none';
+        var t = 'top-right';
+        this.rwtOrthographicEarth.hasAttribute('menu-corner') && (t = this.rwtOrthographicEarth.getAttribute('menu-corner')), 
+        this.rwtDockablePanels.setAttribute('corner', t), this.rwtOrthographicEarth.shadowRoot.appendChild(this.rwtDockablePanels);
     }
     configureDockablePanels() {
         if (0 != this.rwtOrthographicEarth.hasAttribute('panels')) {
@@ -59,10 +64,10 @@ export default class Menu {
                 o.value = e, this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayMonthYearUTC', t);
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('season-special-day')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/seasonSpecialDay', s.value);
-            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayOfYear', n.value);
-            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year-slider')).addEventListener('input', (() => {
+            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayOfYear', i.value);
+            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('season-day-of-year-slider')).addEventListener('input', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/seasonDayOfYear', n.value);
             }));
 
           case 'time-of-day':
@@ -72,8 +77,8 @@ export default class Menu {
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('time-of-day-hms-slider')).addEventListener('input', (() => {
                 var t = CB.fromSliderTimeOfDay(s.value), e = CB.toUserTimeOfDay(t);
                 this.rwtOrthographicEarth.broadcastMessage('menu/timeOfDayHMS', e);
-            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('timezone-offset')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/timezoneOffset', n.value);
+            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('timezone-offset')).addEventListener('change', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/timezoneOffset', i.value);
             }));
 
           case 'point-of-reference':
@@ -83,11 +88,11 @@ export default class Menu {
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('longitude-pov')).addEventListener('change', (() => {
                 var t = CB.fromUserLongitude(s.value);
                 this.rwtOrthographicEarth.broadcastMessage('menu/tangentLongitude', t);
-            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('longitude-pov-slider')).addEventListener('input', (() => {
-                var t = n.value;
-                this.rwtOrthographicEarth.broadcastMessage('menu/tangentLongitude', t);
-            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('named-latitude')).addEventListener('change', (() => {
+            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('longitude-pov-slider')).addEventListener('input', (() => {
                 var t = i.value;
+                this.rwtOrthographicEarth.broadcastMessage('menu/tangentLongitude', t);
+            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('named-latitude')).addEventListener('change', (() => {
+                var t = n.value;
                 this.rwtOrthographicEarth.broadcastMessage('menu/tangentLatitude', t);
             }));
             var e = this.rwtDockablePanels.shadowRoot.getElementById('latitude-pov');
@@ -120,22 +125,22 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/translationEastWest', o.value);
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider')).addEventListener('input', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/translationEastWest', s.value);
-            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/translationNorthSouth', n.value);
-            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider')).addEventListener('input', (() => {
+            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/translationNorthSouth', i.value);
+            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider')).addEventListener('input', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/translationNorthSouth', n.value);
             }));
 
           case 'canvas':
-            var o, s, n, i;
+            var o, s, i, n;
             return (o = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-x')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointX', o.value);
             })), (s = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-x-slider')).addEventListener('input', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointX', s.value);
-            })), (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y')).addEventListener('change', (() => {
-                this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', n.value);
-            })), void (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y-slider')).addEventListener('input', (() => {
+            })), (i = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y')).addEventListener('change', (() => {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', i.value);
+            })), void (n = this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y-slider')).addEventListener('input', (() => {
+                this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', n.value);
             }));
 
           case 'locate':
@@ -265,8 +270,8 @@ export default class Menu {
                 e > 100 && (e = 10 * Math.round(e / 10)), e > 200 && (e = 20 * Math.round(e / 20)), 
                 e > 500 && (e = 50 * Math.round(e / 50)), e = e.toFixed(0)), this.rwtDockablePanels.shadowRoot.getElementById('map-scale').value = e, 
                 this.rwtDockablePanels.shadowRoot.getElementById('map-scale-slider').value = this.valueToSliderPosition(1, 100, 1, 1e3, t.detail);
-                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, n = this.rwtOrthographicEarth.earth.getVisualizedRadius(), i = Math.round(e * (o + n) / 2), l = Math.round(e * (s + n) / 2), d = Math.round(2 * i / 100), h = Math.round(2 * l / 100);
-                null != a && null != r && (a.setAttribute('min', -1 * i), a.setAttribute('max', i), 
+                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), d = Math.round(2 * n / 100), h = Math.round(2 * l / 100);
+                null != a && null != r && (a.setAttribute('min', -1 * n), a.setAttribute('max', n), 
                 a.setAttribute('step', d), r.setAttribute('min', -1 * l), r.setAttribute('max', l), 
                 r.setAttribute('step', h));
             }));
@@ -301,15 +306,15 @@ export default class Menu {
           case 'layers':
             return void this.rwtOrthographicEarth.addEventListener('catalog/layerAdded', (t => {
                 var e = t.detail, a = e.layerId, r = e.layerName, o = e.identifiable, s = e.zOrder;
-                if ('disallow' == o) var n = ''; else n = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == o ? 'checked' : ''} />`;
-                var i = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
-                l.id = `layers-${a}`, l['data-z-order'] = s, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${n}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${r}</td>`;
+                if ('disallow' == o) var i = ''; else i = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == o ? 'checked' : ''} />`;
+                var n = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
+                l.id = `layers-${a}`, l['data-z-order'] = s, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${i}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${r}</td>`;
                 let d = !1;
-                for (let t = 0; t < i.childNodes.length; t++) if (i.childNodes[t]['data-z-order'] < s) {
-                    i.insertBefore(l, i.childNodes[t]), d = !0;
+                for (let t = 0; t < n.childNodes.length; t++) if (n.childNodes[t]['data-z-order'] < s) {
+                    n.insertBefore(l, n.childNodes[t]), d = !0;
                     break;
                 }
-                d || i.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
+                d || n.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
                     e = parseInt(e, 10);
                     var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);

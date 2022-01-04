@@ -159,10 +159,10 @@ of it:
      
      function addLayers(earth1) {
         earth1.addVisualizationStyleSheet('/vss/earth1-styles.vss');
-        earth1.addLayer({ layerType:'space', id:'space', layerName: 'Space' });
-        earth1.addLayer({ layerType:'sphere', id:'sphere', layerName: 'Oceans' });
-        earth1.addLayer({ layerType:'graticule', id:'graticule-3-by-3',layerName: 'Graticule',  meridianFrequency:3, parallelFrequency:3, drawToPoles:false });
-        earth1.addLayer({ layerType:'topojson-package', id:'land-110m', layerName: 'Land', url:'/natural-earth/land-110m.topojson', embeddedName:'land-110m', featureKey:'name' });
+        earth1.addMapItem({ layerType:'space', vssIdentifier'space', layerName: 'Space' });
+        earth1.addMapItem({ layerType:'sphere', vssIdentifier'sphere', layerName: 'Oceans' });
+        earth1.addMapItem({ layerType:'graticule', vssIdentifier'graticule-3-by-3',layerName: 'Graticule',  meridianFrequency:3, parallelFrequency:3, drawToPoles:false });
+        earth1.addMapItem({ layerType:'topojson-package', vssIdentifier'land-110m', layerName: 'Land', url:'/natural-earth/land-110m.topojson', embeddedName:'land-110m', featureKey:'name' });
      }
      
      function configure(earth1) {
@@ -170,10 +170,75 @@ of it:
         earth1.setLongitude(77.58);
         earth1.setRotationSpeed(-1);
     }
-</script>
-        
+</script>        
 ```
 
+
+### Configure the Component
+
+The component can be configured by adding any of these optional attributes to
+the `<rwt-orthographic-earth>` element tag.
+
+
+<dl>
+	<dt><code>geolocation</code> Used to set the initial latitude, longitude and place of interest.</dt>
+	<dd>
+		<ul>
+			<li><code>''</code> [default] set initial longitude, latitude and place of interest to (0.0, 0.0) and honor explicit setTangentLongitude(), setTangentLatitude(), setPlaceOfInterest().</li>
+			<li><code>'timezone'</code> use the browser's current time to determine the map's initial longitude.</li>
+			<li><code>'auto'</code> use the browser's geolocation beacon to set initial longitude, latitude and place of interest.</li>
+		</ul>
+	</dd>
+</dl>
+
+
+<dl>
+	<dt><code>menu-state</code> Used to set the initial state of the toolbar</dt>
+	<dd>
+		<ul>
+			<li><code>closed</code> [default] The toolbar menu should initially be collapsed.</li>
+			<li><code>open</code> The toolbar menu should initially be expanded.</li>
+		</ul>
+	</dd>
+</dl>
+
+
+<dl>
+	<dt><code>menu-corner</code> Used to position the toolbar's location relative to the component's canvas area.</dt>
+	<dd>
+		<ul>
+			<li><code>top-right</code> [default]</li>
+			<li><code>top-left</code></li>
+			<li><code>bottom-right</code></li>
+			<li><code>bottom-left</code></li>
+		</ul>
+	</dd>
+</dl>
+
+
+<dl>
+	<dt><code>panels</code> Declares the presence and order of menu panels.</dt>
+	<dd>
+		<ul>
+			<li><code>season</code> Change the reference date.</li>
+			<li><code>time-of-day</code> Change the time of day.</li>
+			<li><code>point-of-reference</code> Change the longitude/latitude of the observation point.</li>
+			<li><code>equation-of-time</code> The variance between mean solar noon and actual solar noon.</li>
+			<li><code>solar-events</code> The time of sunrise, solar noon, and sunset.</li>
+			<li><code>geocentric-coords</code> The Earth's declination and right ascension for the current date and time.</li>
+			<li><code>topocentric-coords</code> The position of the sun for the current location and time.</li>
+			<li><code>zoom</code> Change the map's scale.</li>
+			<li><code>space</code> Shift the space point of view.</li>
+			<li><code>canvas</code> Shift the canvas origin.</li>
+			<li><code>locate</code> Display longitude and latitude of mouse position.</li>
+			<li><code>layers</code> Choose which layers to display.</li>
+			<li><code>identify</code> Identify feature details.</li>
+			<li><code>time-lapse</code> Rotate the Earth.</li>
+			<li><code>interaction</code> Mouse gestures for manipulation and interaction.</li>
+			<li><code>hello-world</code> Licensing information.</li>
+		</ul>
+	</dd>
+</dl>
 
 ### Life-cycle events
 
