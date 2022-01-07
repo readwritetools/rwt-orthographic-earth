@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import Cursors from './cursors.js';
 
 export default class EarthProxy {
@@ -72,7 +71,7 @@ export default class EarthProxy {
     }
     zoomScale(t) {
         this.canvas.style.cursor = Cursors.zoomScale;
-        var e = t.detail.initialY - t.detail.y, s = this.determineScalingFactor(e, 1), i = e < 0 ? Math.max(this.initialMapScale / s, 1) : Math.min(this.initialMapScale * s, 1e3);
+        var e = t.detail.initialY - t.detail.y, s = this.determineScalingFactor(e, 1), i = e < 0 ? Math.max(this.initialMapScale / s, .025) : Math.min(this.initialMapScale * s, 1e3);
         this.earth.supressCanvasCoords(), this.earth.setMapScale(i), this.rwtOrthographicEarth.explicitMapScale = !0;
     }
     zoomSpreadGesture(t) {
