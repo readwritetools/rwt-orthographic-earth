@@ -214,7 +214,7 @@ export default {
     }, {
         options: {
             id: 'point-of-reference',
-            titlebar: 'Point of reference',
+            titlebar: 'Point of observation',
             tooltip: 'Change the longitude/latitude of the observation point'
         },
         panelLines: [ {
@@ -416,13 +416,14 @@ export default {
             id: 'map-scale',
             labelText: 'Map Scale',
             textAfter: 'km / pixel',
-            minPosition: '1',
+            minPosition: '0',
             maxPosition: '100',
-            stepPosition: '1',
-            minValue: '1',
+            stepPosition: '0.25',
+            minValue: '0.025',
             maxValue: '1000',
             curve: 'log',
-            tooltip: 'Map scale (1px:1km - 1px:1000km)'
+            numDecimals: 3,
+            tooltip: 'Map scale (1:100,000 - 1:10,000,000)'
         } ]
     }, {
         options: {

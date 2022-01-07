@@ -266,9 +266,9 @@ export default class Menu {
           case 'zoom':
             return void this.rwtOrthographicEarth.addEventListener('carte/mapScale', (t => {
                 var e = parseFloat(t.detail);
-                e <= 10 ? e = e.toFixed(1) : (e > 20 && (e = 2 * Math.round(e / 2)), e > 40 && (e = 5 * Math.round(e / 5)), 
-                e > 100 && (e = 10 * Math.round(e / 10)), e > 200 && (e = 20 * Math.round(e / 20)), 
-                e > 500 && (e = 50 * Math.round(e / 50)), e = e.toFixed(0)), this.rwtDockablePanels.shadowRoot.getElementById('map-scale').value = e, 
+                e <= .1 ? e = (.025 * Math.round(e / .025)).toFixed(3) : e <= 1 ? e = (.01 * Math.round(e / .01)).toFixed(2) : e <= 10 ? e = (.1 * Math.round(e / .1)).toFixed(1) : (e > 20 && (e = 2 * Math.round(e / 2)), 
+                e > 40 && (e = 5 * Math.round(e / 5)), e > 100 && (e = 10 * Math.round(e / 10)), 
+                e = e.toFixed(0)), this.rwtDockablePanels.shadowRoot.getElementById('map-scale').value = e, 
                 this.rwtDockablePanels.shadowRoot.getElementById('map-scale-slider').value = this.valueToSliderPosition(1, 100, 1, 1e3, t.detail);
                 var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), d = Math.round(2 * n / 100), h = Math.round(2 * l / 100);
                 null != a && null != r && (a.setAttribute('min', -1 * n), a.setAttribute('max', n), 
