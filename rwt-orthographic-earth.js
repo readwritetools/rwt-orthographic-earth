@@ -221,7 +221,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
         this.earth.setTranslationNorthSouth(e);
     }
     setMapScale(e) {
-        this.earth.setMapScale(e);
+        this.earth.setMapScale(e), this.explicitMapScale = !0;
     }
     setCenterPoint(e) {
         this.earth.setCenterPoint(e);
