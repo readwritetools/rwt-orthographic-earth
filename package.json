@@ -1,6 +1,6 @@
 {
   "name": "rwt-orthographic-earth",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "An orthographic projection of Earth, a standards-based DOM Component",
   "author": "Read Write Tools",
   "license": "see license.blue",
