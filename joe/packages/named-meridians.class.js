@@ -8,13 +8,13 @@ import ProjectedPoint from '../projection/projected-point.class.js';
 import expect from '../joezone/expect.js';
 
 export default class NamedMeridians extends BasePackage {
-    constructor(e, t, i) {
-        for (var s in super(e), this.meridians = [], this.frequency = void 0 !== i ? i : 1, 
+    constructor(e, t, s) {
+        for (var i in super(e), this.meridians = [], this.frequency = void 0 !== s ? s : 1, 
         this.frequency <= 0 && (this.frequency = 1), this.frequency > 30 && (this.frequency = 30), 
-        t) if (t.hasOwnProperty(s)) {
+        t) if (t.hasOwnProperty(i)) {
             var a = new LineFeature;
-            a.featureName = s;
-            var r = t[s];
+            a.featureName = i;
+            var r = t[i];
             if (r < -180 || r > 180) continue;
             for (var n = -90; n <= 90; n += this.frequency) a.addPoint(new ProjectedPoint(n, r));
             this.meridians.push(a);
@@ -23,10 +23,14 @@ export default class NamedMeridians extends BasePackage {
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/NamedMeridians', null), 
         Object.seal(this);
     }
-    recomputeStyles(e, t, i) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number');
-        for (var s = 0; s < this.meridians.length; s++) this.meridians[s].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, s, i);
+    recomputeStyles(e, t, s) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(s, 'Number');
+        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, i, s);
         t.layerNeedsRestyling = !1;
+    }
+    runCourtesyValidator(e, t, s) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(s, 'Number');
+        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, i, s);
     }
     rotation(e) {
         for (var t = 0; t < this.meridians.length; t++) this.meridians[t].toGeoCoords(e);
@@ -46,6 +50,6 @@ export default class NamedMeridians extends BasePackage {
     }
     renderLayer(e, t) {
         expect(e, 'Earth'), expect(t, 'Number');
-        for (var i = 0; i < this.meridians.length; i++) this.meridians[i].renderFeature(e, t);
+        for (var s = 0; s < this.meridians.length; s++) this.meridians[s].renderFeature(e, t);
     }
 }

@@ -13,11 +13,30 @@ export default class PolygonFeature extends BaseFeature {
     addPoint(e) {
         this.outerRing.push(e);
     }
-    computeFeatureStyle(e, t, i, s, r) {
-        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(i, 'String'), expect(s, 'Number'), 
+    computeFeatureStyle(e, t, s, i, r) {
+        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(s, 'String'), expect(i, 'Number'), 
         expect(r, 'Number');
-        let n = e.computeStyle('polygon', t, i, this.featureName, this.kvPairs, s);
-        expect(n, 'vssCanvasParameters'), this.canvasParams.set(r, n);
+        let a = e.computeStyle('polygon', t, s, this.featureName, this.kvPairs, i);
+        expect(a, 'vssCanvasParameters'), this.canvasParams.set(r, a);
+    }
+    runCourtesyValidator(e, t, s, i, r) {
+        e.runCourtesyValidator('polygon', t, s, this.featureName, this.kvPairs, i);
+    }
+    static courtesyValidator(e) {
+        switch (e) {
+          case 'visibility':
+          case 'transparency':
+          case 'scale':
+          case 'stroke-width':
+          case 'stroke-color':
+          case 'stroke-type':
+          case 'fill-color':
+          case 'fill-type':
+            return !0;
+
+          default:
+            return !1;
+        }
     }
     toGeoCoords(e) {
         for (var t = 0; t < this.outerRing.length; t++) e.toGeoCoords(this.outerRing[t]);
@@ -37,106 +56,112 @@ export default class PolygonFeature extends BaseFeature {
     }
     renderFeature(e, t) {
         expect(e, 'Earth'), expect(t, 'Number');
-        let i = this.canvasParams.get(t);
-        if (expect(i, 'vssCanvasParameters'), 'hidden' != i.visibility && ('none' != i['fill-color'] || 'none' != i['stroke-width'])) {
-            var s = e.canvas.getContext('2d');
-            s.beginPath(), this.render_ring(e, s, !1);
+        let s = this.canvasParams.get(t);
+        if (expect(s, 'vssCanvasParameters'), 'hidden' != s.visibility && ('none' != s['fill-color'] || 'none' != s['stroke-width'])) {
+            var i = e.canvas.getContext('2d');
+            i.beginPath(), this.render_ring(e, i, !1);
             for (var r = 0; r < this.innerRings.length; r++) {
-                this.innerRings[r].render_ring(e, s, !0);
+                this.innerRings[r].render_ring(e, i, !0);
             }
-            switch (s.closePath(), s.fillStyle = i.computeFillPlusTransparency(), s.strokeStyle = i['stroke-color'], 
-            s.lineWidth = i['stroke-width'], i['stroke-type']) {
+            switch (i.closePath(), i.fillStyle = s.computeFillPlusTransparency(), i.strokeStyle = s['stroke-color'], 
+            s['stroke-type']) {
               case 'solid':
-                s.setLineDash([]);
+                i.setLineDash([]);
                 break;
 
               case 'dotted':
-                s.setLineDash([ 3, 3 ]);
+                i.setLineDash([ 3, 3 ]);
                 break;
 
               case 'short-dash':
-                s.setLineDash([ 10, 10 ]);
+                i.setLineDash([ 10, 10 ]);
                 break;
 
               case 'long-dash':
-                s.setLineDash([ 20, 5 ]);
+                i.setLineDash([ 20, 5 ]);
                 break;
 
               case 'dot-dash':
-                s.setLineDash([ 15, 3, 3, 3 ]);
+                i.setLineDash([ 15, 3, 3, 3 ]);
                 break;
 
               case 'dot-dot-dash':
-                s.setLineDash([ 15, 3, 3, 3, 3, 3 ]);
+                i.setLineDash([ 15, 3, 3, 3, 3, 3 ]);
                 break;
 
               case 'dot-dot-dot-dash':
-                s.setLineDash([ 15, 3, 3, 3, 3, 3, 3, 3 ]);
+                i.setLineDash([ 15, 3, 3, 3, 3, 3, 3, 3 ]);
                 break;
 
               case 'dot-dash-dot':
-                s.setLineDash([ 3, 3, 12, 3, 3, 12 ]);
+                i.setLineDash([ 3, 3, 12, 3, 3, 12 ]);
                 break;
 
               default:
-                s.setLineDash([]);
+                i.setLineDash([]);
             }
-            'none' != i['stroke-width'] && s.stroke(), s.globalCompositeOperation = i['fill-type'], 
-            'none' != i['fill-color'] && s.fill(), s.globalCompositeOperation = 'source-over';
+            if (null != s['stroke-width'] && 'none' != s['stroke-width']) {
+                var a = Number(s.scale);
+                isNaN(a) && (a = 1);
+                var n = Number(s['stroke-width']);
+                i.lineWidth = n * a, i.stroke();
+            }
+            i.setLineDash([]), i.globalCompositeOperation = s['fill-type'], 'none' != s['fill-color'] && i.fill(), 
+            i.globalCompositeOperation = 'source-over';
         }
     }
-    render_ring(e, t, i) {
-        for (var s = e.carte.translate.a * e.carte.multiplier, r = e.carte.translate.b * e.carte.multiplier, n = e.viewport.centerPoint.x + s, a = e.viewport.centerPoint.y + r, o = e.getVisualizedRadius(), l = !1, h = !1, c = !0, g = null, u = null, v = null, d = 0; d < this.outerRing.length; d++) {
-            var f = this.outerRing[d], R = this.outerRing[d - 1];
-            if (h = f.visible, 1 == c) 1 == h && (t.moveTo(f.canvasX, f.canvasY), d > 0 && (g = f.projectedTheta), 
+    render_ring(e, t, s) {
+        for (var i = e.carte.translate.a * e.carte.multiplier, r = e.carte.translate.b * e.carte.multiplier, a = e.viewport.centerPoint.x + i, n = e.viewport.centerPoint.y + r, o = e.getVisualizedRadius(), l = !1, h = !1, c = !0, u = null, g = null, v = null, d = 0; d < this.outerRing.length; d++) {
+            var f = this.outerRing[d], p = this.outerRing[d - 1];
+            if (h = f.visible, 1 == c) 1 == h && (t.moveTo(f.canvasX, f.canvasY), d > 0 && (u = f.projectedTheta), 
             c = !1); else if (1 == h && 1 == l) t.lineTo(f.canvasX, f.canvasY); else if (0 == h && 1 == l) {
-                u = R.projectedTheta;
-                let e = n + o * Math.cos(u), i = a + o * Math.sin(u);
-                t.lineTo(e, i);
+                g = p.projectedTheta;
+                let e = a + o * Math.cos(g), s = n + o * Math.sin(g);
+                t.lineTo(e, s);
             } else if (1 == h && 0 == l) {
-                if (u != (v = f.projectedTheta)) {
-                    var p = u, b = v;
-                    'night' == this.featureName ? t.arc(n, a, o, p, b, !0) : this.drawArc(t, n, a, o, p, b, i);
-                    let e = n + o * Math.cos(v), s = a + o * Math.sin(v);
-                    t.lineTo(e, s);
+                if (g != (v = f.projectedTheta)) {
+                    var R = g, b = v;
+                    'night' == this.featureName ? t.arc(a, n, o, R, b, !0) : this.drawArc(t, a, n, o, R, b, s);
+                    let e = a + o * Math.cos(v), i = n + o * Math.sin(v);
+                    t.lineTo(e, i);
                 }
-                u = null, v = null;
+                g = null, v = null;
             }
             l = f.visible;
         }
-        if (null != u && null != g) {
-            if (u != g) {
-                p = u, b = g;
-                'night' == this.featureName ? t.arc(n, a, o, p, b, !0) : this.drawArc(t, n, a, o, p, b, i);
-                let e = n + o * Math.cos(g), s = a + o * Math.sin(g);
-                t.lineTo(e, s);
+        if (null != g && null != u) {
+            if (g != u) {
+                R = g, b = u;
+                'night' == this.featureName ? t.arc(a, n, o, R, b, !0) : this.drawArc(t, a, n, o, R, b, s);
+                let e = a + o * Math.cos(u), i = n + o * Math.sin(u);
+                t.lineTo(e, i);
             }
-            u = null, g = null;
+            g = null, u = null;
         }
     }
-    drawArc(e, t, i, s, r, n, a) {
-        1 != a && (Math.abs(n - r) > Math.PI ? r > n ? e.arc(t, i, s, r, n, !1) : e.arc(t, i, s, r, n, !0) : r < n ? e.arc(t, i, s, r, n, !1) : e.arc(t, i, s, r, n, !0));
+    drawArc(e, t, s, i, r, a, n) {
+        1 != n && (Math.abs(a - r) > Math.PI ? r > a ? e.arc(t, s, i, r, a, !1) : e.arc(t, s, i, r, a, !0) : r < a ? e.arc(t, s, i, r, a, !1) : e.arc(t, s, i, r, a, !0));
     }
     isPointerInsidePolygon(e, t) {
-        var i = this.outerRing.length, s = !1, r = 0;
-        for (let e = 0; e < i && r < 3; e++) 1 == this.outerRing[e].visible && r++;
+        var s = this.outerRing.length, i = !1, r = 0;
+        for (let e = 0; e < s && r < 3; e++) 1 == this.outerRing[e].visible && r++;
         if (r < 3) return !1;
-        var n = null;
-        for (let e = 0; e < i; e++) if (1 == this.outerRing[e].visible) {
-            n = e;
+        var a = null;
+        for (let e = 0; e < s; e++) if (1 == this.outerRing[e].visible) {
+            a = e;
             break;
         }
-        var a = n;
-        for (let r = a + 1; r < i; r++) {
+        var n = a;
+        for (let r = n + 1; r < s; r++) {
             if (0 == this.outerRing[r].visible) continue;
-            let i = a;
-            var o = this.outerRing[r].canvasX, l = this.outerRing[r].canvasY, h = this.outerRing[i].canvasX;
-            if (l > t != (c = this.outerRing[i].canvasY) > t) e < (h - o) * (t - l) / (c - l) + o && (s = !s);
-            a = r;
+            let s = n;
+            var o = this.outerRing[r].canvasX, l = this.outerRing[r].canvasY, h = this.outerRing[s].canvasX;
+            if (l > t != (c = this.outerRing[s].canvasY) > t) e < (h - o) * (t - l) / (c - l) + o && (i = !i);
+            n = r;
         }
         var c;
-        o = this.outerRing[n].canvasX, l = this.outerRing[n].canvasY, h = this.outerRing[a].canvasX;
-        l > t != (c = this.outerRing[a].canvasY) > t && (e < (h - o) * (t - l) / (c - l) + o && (s = !s));
-        return s;
+        o = this.outerRing[a].canvasX, l = this.outerRing[a].canvasY, h = this.outerRing[n].canvasX;
+        l > t != (c = this.outerRing[n].canvasY) > t && (e < (h - o) * (t - l) / (c - l) + o && (i = !i));
+        return i;
     }
 }

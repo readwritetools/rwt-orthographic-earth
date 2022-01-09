@@ -24,6 +24,9 @@ export default class PlaceOfInterest extends BasePackage {
         expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.pointFeature.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, a), 
         t.layerNeedsRestyling = !1;
     }
+    runCourtesyValidator(e, t, a) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.pointFeature.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, a);
+    }
     rotation(e) {
         this.pointFeature.toGeoCoords(e), this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
     }

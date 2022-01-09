@@ -137,13 +137,13 @@ export default class TopojsonPackage extends BasePackage {
     }
     addArcToFeature(e, t, r) {
         for (var s = 0, o = 0, i = t.length, n = [], a = 0; a < i; a++) {
-            s += t[c = a][0], o += t[c][1];
+            s += t[f = a][0], o += t[f][1];
             var l = s * this.scaleX + this.translateX, h = o * this.scaleY + this.translateY, u = new ProjectedPoint(h, l);
             n.push(u);
         }
         for (a = 0; a < i; a++) {
-            var c = 1 == r ? i - a - 1 : a;
-            e.push(n[c]);
+            var f = 1 == r ? i - a - 1 : a;
+            e.push(n[f]);
         }
     }
     recomputeStyles(e, t, r) {
@@ -152,6 +152,12 @@ export default class TopojsonPackage extends BasePackage {
         for (s = 0; s < this.featureLines.length; s++) this.featureLines[s].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, s, r);
         for (s = 0; s < this.featurePoints.length; s++) this.featurePoints[s].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, s, r);
         t.layerNeedsRestyling = !1;
+    }
+    runCourtesyValidator(e, t, r) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(r, 'Number');
+        for (var s = 0; s < this.featurePolygons.length; s++) this.featurePolygons[s].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, s, r);
+        for (s = 0; s < this.featureLines.length; s++) this.featureLines[s].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, s, r);
+        for (s = 0; s < this.featurePoints.length; s++) this.featurePoints[s].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, s, r);
     }
     rotation(e) {
         for (var t = 0; t < this.featurePolygons.length; t++) this.featurePolygons[t].toGeoCoords(e);

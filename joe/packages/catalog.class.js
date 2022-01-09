@@ -45,6 +45,14 @@ export default class Catalog {
         }
         e.allFeaturesNeedRestyling = !1;
     }
+    runCourtesyValidator(e) {
+        expect(e, 'vssStyleSheet');
+        for (let [a, r] of this.layers) if (r.isVisible()) {
+            var t = this.packages.get(r.packageId);
+            expect(t, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage' ]), 
+            t.runCourtesyValidator(e, r, a);
+        }
+    }
     rotation(e) {
         for (let [a, r] of this.layers) if (r.isVisible()) {
             var t = this.packages.get(r.packageId);
@@ -87,8 +95,8 @@ export default class Catalog {
             if (expect(r, 'Layer'), 'Space' == this.packages.get(r.packageId).constructor.name && 1 == (t = r.isVisible())) break;
         }
         if (0 == t) {
-            var i = window.getComputedStyle(this.rwtOrthographicEarth).getPropertyValue('background-color'), s = this.rgbaHexFromCSS(i), n = e.canvas.getContext('2d');
-            n.fillStyle = s, n.fillRect(0, 0, e.canvas.width, e.canvas.height);
+            var i = window.getComputedStyle(this.rwtOrthographicEarth).getPropertyValue('background-color'), s = this.rgbaHexFromCSS(i), l = e.canvas.getContext('2d');
+            l.fillStyle = s, l.fillRect(0, 0, e.canvas.width, e.canvas.height);
         }
     }
     discoverFeatures(e, t) {
@@ -98,14 +106,14 @@ export default class Catalog {
             if (i.isIdentifiable()) {
                 var s = this.packages.get(i.packageId).discoverFeatures(e, t);
                 if (null != s) {
-                    var n = i.featureKey, l = s.kvPairs.hasOwnProperty(n) ? s.kvPairs[n] : '';
-                    if (i.identifyCallback) o = i.identifyCallback(s.kvPairs); else var o = `<tr><td>${i.layerName}</td><td>${l}</td></tr>`;
+                    var l = i.featureKey, n = s.kvPairs.hasOwnProperty(l) ? s.kvPairs[l] : '';
+                    if (i.identifyCallback) o = i.identifyCallback(s.kvPairs); else var o = `<tr><td>${i.layerName}</td><td>${n}</td></tr>`;
                     a.push({
                         layerName: i.layerName,
                         featureType: s.featureType,
                         featureName: s.featureName,
-                        featureKey: n,
-                        featureValue: l,
+                        featureKey: l,
+                        featureValue: n,
                         featureData: Object.assign(s.kvPairs),
                         identifyHTML: o
                     });

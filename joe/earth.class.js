@@ -48,6 +48,9 @@ export default class Earth {
     visualization() {
         this.catalog.recomputeStyles(this.visual);
     }
+    runCourtesyValidator() {
+        this.catalog.runCourtesyValidator(this.visual);
+    }
     getDeclination() {
         return this.coords.getDeclination();
     }

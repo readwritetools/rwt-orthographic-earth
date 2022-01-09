@@ -14,9 +14,9 @@ export default class NamedParallels extends BasePackage {
         a) if (a.hasOwnProperty(s)) {
             var r = new LineFeature;
             r.featureName = s;
-            var o = a[s];
-            if (o < -90 || o > 90) continue;
-            for (var i = -180; i <= 180; i += this.frequency) r.addPoint(new ProjectedPoint(o, i));
+            var l = a[s];
+            if (l < -90 || l > 90) continue;
+            for (var o = -180; o <= 180; o += this.frequency) r.addPoint(new ProjectedPoint(l, o));
             this.parallels.push(r);
         }
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
@@ -27,6 +27,10 @@ export default class NamedParallels extends BasePackage {
         expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
         for (var s = 0; s < this.parallels.length; s++) this.parallels[s].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, s, t);
         a.layerNeedsRestyling = !1;
+    }
+    runCourtesyValidator(e, a, t) {
+        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
+        for (var s = 0; s < this.parallels.length; s++) this.parallels[s].runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, s, t);
     }
     rotation(e) {
         for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toGeoCoords(e);

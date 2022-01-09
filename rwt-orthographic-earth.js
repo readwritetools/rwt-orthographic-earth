@@ -71,6 +71,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
     addVisualizationStyleSheet(e) {
         this.earth.addVisualizationStyleSheet(e);
     }
+    runCourtesyValidator() {
+        this.earth.runCourtesyValidator();
+    }
     async addDockablePanels() {
         this.style.position = 'relative', this.menu = new Menu(this), await this.menu.initialize();
     }

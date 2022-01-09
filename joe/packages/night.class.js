@@ -28,6 +28,9 @@ export default class Night extends BasePackage {
         expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number'), this.identityPoints.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, i), 
         t.layerNeedsRestyling = !1;
     }
+    runCourtesyValidator(e, t, i) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number'), this.identityPoints.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, i);
+    }
     rotation(e) {
         for (var t = 0; t < this.identityPoints.outerRing.length; t++) e.toNightCoords(this.identityPoints.outerRing[t]);
         this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;

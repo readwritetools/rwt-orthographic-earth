@@ -16,6 +16,9 @@ export default class BasePackage {
     recomputeStyles(e, a, t) {
         expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), console.log('BasePackage subclass must provide a recomputeStyles() function');
     }
+    runCourtesyValidator(e, a, t) {
+        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), console.log('BasePackage subclass must provide a runCourtesyValidator() function');
+    }
     rotation(e) {
         console.log('BasePackage subclass must provide a rotation() function');
     }

@@ -12,7 +12,7 @@
 
 /*------------------------- predefined grammar ------------------------------*/
 /* earth { stroke-width: 0; } */
-point { dot-radius: 2; stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
+point { symbol-type: circle; size: 3; stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; node-count: 3; inner-size: 1; }
 line { stroke-width: 0.5; stroke-color: #AAAAAA; }
 polygon { stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
 
@@ -20,15 +20,14 @@ polygon { stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
 .night { fill-color: #33333377; }
 		
 /*--------------------------- place of interest -----------------------------*/
-.place-of-interest { dot-radius: 5; fill-color: #db9404; stroke-width: 6; stroke-color: #b87c02aa; }
+.place-of-interest { radius: 5; fill-color: #db9404; stroke-width: 6; stroke-color: #b87c02aa; }
 
 /*------------------------------- space -------------------------------------*/
 .space { deep-space: visible; deep-space-color: #093640; deep-space-star-count: 500; deep-space-star-color: #E0E070; }
 .space { earth-glow: hidden; earth-glow-size: 40; earth-glow-offset: 40; earth-glow-axis: 203.5; earth-glow-inner-color: #107187; earth-glow-outer-color: #093640; }
 .space { sunrise: hidden; sunrise-inner-radius: 5; sunrise-outer-radius: 120; sunrise-inner-color: #107187; sunrise-outer-color: #093640; }
 
-.sphere  { surface: visible;  horizon: hidden; surface-background-color: #148BA6; }
-.horizon { surface: hidden;   horizon: visible; horizon-stroke-color: #093640; horizon-stroke-width: 6; }
+.sphere  { fill-color: #148BA6; }
 
 #named-meridians["Prime Meridian"],
 #named-meridians["Intl. Dateline"] { stroke-width: 1.5; stroke-color: #107187; }

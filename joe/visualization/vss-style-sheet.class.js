@@ -88,7 +88,7 @@ export default class vssStyleSheet {
                 continue;
 
               case 'DIMENSION':
-                a.value = l.num, a.units = l.unit;
+                a.value = l.num;
                 break;
 
               case 'HASH':
@@ -108,5 +108,8 @@ export default class vssStyleSheet {
     }
     computeStyle(e, t, a, s, l, r) {
         return this.vssMediaCollection.computeStyle(this.mapScale, e, t, a, s, l, r);
+    }
+    runCourtesyValidator(e, t, a, s, l, r) {
+        this.vssMediaCollection.runCourtesyValidator(this.mapScale, e, t, a, s, l, r);
     }
 }

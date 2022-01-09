@@ -8,19 +8,19 @@ import ProjectedPoint from '../projection/projected-point.class.js';
 import expect from '../joezone/expect.js';
 
 export default class Graticule extends BasePackage {
-    constructor(e, a, t, r) {
+    constructor(e, a, t, s) {
         if (super(e), a = Number(a), t = Number(t), this.parallelFrequency = Number.isNaN(a) ? 'none' : a, 
-        this.meridianFrequency = Number.isNaN(t) ? 'none' : t, this.drawToPoles = void 0 !== r && r, 
+        this.meridianFrequency = Number.isNaN(t) ? 'none' : t, this.drawToPoles = void 0 !== s && s, 
         this.parallels = [], this.meridians = [], 'none' != this.parallelFrequency && (this.parallelFrequency <= 0 || this.parallelFrequency > 30) && (this.parallelFrequency = 10), 
         'none' != this.meridianFrequency && (this.meridianFrequency <= 0 || this.meridianFrequency > 30) && (this.meridianFrequency = 10), 
-        'none' != this.parallelFrequency) for (var s = -90 + this.parallelFrequency; s < 90; s += this.parallelFrequency) {
-            (n = new LineFeature).featureName = 'Parallel ' + s;
-            for (var i = -180; i <= 180; i++) n.addPoint(new ProjectedPoint(s, i));
+        'none' != this.parallelFrequency) for (var r = -90 + this.parallelFrequency; r < 90; r += this.parallelFrequency) {
+            (n = new LineFeature).featureName = 'Parallel ' + r;
+            for (var i = -180; i <= 180; i++) n.addPoint(new ProjectedPoint(r, i));
             this.parallels.push(n);
         }
         if ('none' != this.meridianFrequency) for (i = -180; i <= 180; i += this.meridianFrequency) {
             var n;
-            if ((n = new LineFeature).featureName = 'Meridian ' + i, 1 == this.drawToPoles) for (s = -90; s <= 90; s++) n.addPoint(new ProjectedPoint(s, i)); else for (s = -90 + t; s < 90; s++) n.addPoint(new ProjectedPoint(s, i));
+            if ((n = new LineFeature).featureName = 'Meridian ' + i, 1 == this.drawToPoles) for (r = -90; r <= 90; r++) n.addPoint(new ProjectedPoint(r, i)); else for (r = -90 + t; r < 90; r++) n.addPoint(new ProjectedPoint(r, i));
             this.meridians.push(n);
         }
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
@@ -29,9 +29,14 @@ export default class Graticule extends BasePackage {
     }
     recomputeStyles(e, a, t) {
         expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
-        for (var r = 0; r < this.parallels.length; r++) this.parallels[r].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, r, t);
-        for (r = 0; r < this.meridians.length; r++) this.meridians[r].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, r, t);
+        for (var s = 0; s < this.parallels.length; s++) this.parallels[s].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, s, t);
+        for (s = 0; s < this.meridians.length; s++) this.meridians[s].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, s, t);
         a.layerNeedsRestyling = !1;
+    }
+    runCourtesyValidator(e, a, t) {
+        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
+        for (var s = 0; s < this.parallels.length; s++) this.parallels[s].runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, s, t);
+        for (s = 0; s < this.meridians.length; s++) this.meridians[s].runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, s, t);
     }
     rotation(e) {
         for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toGeoCoords(e);
