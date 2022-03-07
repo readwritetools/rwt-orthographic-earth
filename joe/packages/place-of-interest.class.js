@@ -3,7 +3,7 @@ import BasePackage from './base-package.class.js';
 
 import PointFeature from '../features/point-feature.class.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
 
 export default class PlaceOfInterest extends BasePackage {
     constructor(e, t, a, s, i) {

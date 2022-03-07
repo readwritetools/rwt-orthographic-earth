@@ -1,5 +1,6 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
+import terminal from 'softlib/terminal.js';
+
 export default class RenderLoop {
     constructor(t, i) {
         this.rwtOrthographicEarth = t, this.earth = i, this.animations = new Array, this.mostRecentPaint = performance.now(), 
@@ -19,7 +20,7 @@ export default class RenderLoop {
         var t = this.earth.canvasCoordsToProjectedPoint();
         this.rwtOrthographicEarth.broadcastMessage('user/latitudeLongitude', t);
         var i = this.earth.discoverFeatures();
-        this.rwtOrthographicEarth.broadcastMessage('user/identifiedFeatures', i), this.earth.canvasCoordsPending = !1;
+        this.rwtOrthographicEarth.broadcastMessage('user/discoveredFeatures', i), this.earth.canvasCoordsPending = !1;
     }
     addAnimation(t) {
         this.animations.push(t);

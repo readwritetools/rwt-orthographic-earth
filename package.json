@@ -4,10 +4,9 @@
   "description": "An orthographic projection of Earth, a standards-based DOM Component",
   "author": "Read Write Tools",
   "license": "see license.blue",
-  "module": "rwt-orthographic-earth.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/readwritetools/rwt-orthographic-earth.git"
+  "type": "module",
+  "exports": {
+    ".": "rwt-orthographic-earth.js"
   },
   "keywords": [
     "web-component",
@@ -16,6 +15,10 @@
     "shadow-dom",
     "readwritetools"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/readwritetools/rwt-orthographic-earth.git"
+  },
   "bugs": {
     "url": "https://github.com/readwritetools/rwt-orthographic-earth/issues"
   },
@@ -28,7 +31,19 @@
     "rwt-orthographic-earth.js",
     "rwt-registration-keys.js"
   ],
-  "dependencies": {
-    "rwt-dockable-panels": "^1.0.5"
+  "readwritetools": {
+    "modules": {
+      "esmodules": true,
+      "commonjs": false
+    },
+    "suitability": {
+      "browser": "api",
+      "nodejs": "none"
+    },
+	"imports": {
+		"gcsio/": "/node_modules/gcsio/",
+		"softlib/": "/node_modules/softlib/",
+		"rwt-dockable-panels/": "/rwt-modules/rwt-dockable-panels/"
+    }
   }
 }

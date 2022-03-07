@@ -65,8 +65,6 @@ The Orthographic Earth component has these features:
       used on both small cell phones and large mega-pixel monitors.
    * The component is self-contained, which allows for the possibility of having two
       or more Earth drawings appear side-by-side on the same page.
-   * Data can be added to the map using topoJSON packages having points, lines or
-      polygons.
    * The user interface supports both touchscreen and mouse gestures for scaling,
       translation, rotation and tilt.
    * Users can locate and identify features by pointing to them.
@@ -74,13 +72,26 @@ The Orthographic Earth component has these features:
       interactions, allowing synchronization with other parts of the HTML page.
    * Features can be styled using a declarative visual stylesheet language.
 
+Data layers can use sources with any of these supported formats. See <a href='https://hub.readwritetools.com/libs/gcsio.blue'>GCS I/O</a>
+for more about these formats. See <a href='https://towardsdatascience.com/2022-051-better-compression-of-gis-features-9f38a540bda5'>Better Compression of GIS Features</a>
+for optimization techniques.
+
+   * gfe - Geographic Feature Encoding
+   * ice - Indexed Coordinate Encoding
+   * tae - Topological Arc Encoding
+   * gfebin - Geographic Feature Encoding binary
+   * icebin - Indexed Coordinate Encoding binary
+   * taebin - Topological Arc Encoding binary
+   * geojson - <a href='https://datatracker.ietf.org/doc/html/rfc7946'>RFC 7946</a>
+   * topojson - (<a href='https://github.com/topojson/topojson-specification'>Specification</a>
+)
+
 #### In the wild
 
 To see examples of this component in use, visit any of these:
 
 
 <table>
-	<tr><td><a href='https://joe.earth'>joe.earth</a></td><td>JavaScript Orthographic Earth</td></tr>
 	<tr><td><a href='https://full.earth'>full.earth</a></td><td>Polar views the world</td></tr>
 	<tr><td><a href='https://timezone.earth'>timezone.earth</a></td><td>Interactive map of world time</td></tr>
 	<tr><td><a href='https://simply.earth'>simply.earth</a></td><td>Political geography of the world</td></tr>
@@ -88,43 +99,39 @@ To see examples of this component in use, visit any of these:
 
 ### Installation
 
-#### Prerequisites
 
-The <span>rwt-orthographic-earth</span> DOM component works in
-any browser that supports modern W3C standards. It has one dependency: the
-open-source <span>rwt-dockable-panels</span> component, also
-written by Read Write Tools.
-
-#### Download
+<details>
+	<summary>Prerequisites</summary>
+	<p>The <span class=product>rwt-orthographic-earth</span> DOM component works in any browser that supports modern W3C standards and the W3C Web Platform Incubator Community Group's <a href='https://wicg.github.io/import-maps/'>importmap</a> proposal. Chrome provides a good implementation of the <span>importmap</span> proposal, other browsers can use Guy Bedford's polyfill  <a href='https://www.npmjs.com/package/es-module-shims'>es-module-shims</a>.</p>
+	<p>It has three additional dependencies, also written by Read Write Tools:</p>
+	<dl>
+		<dt><a href='https://www.npmjs.com/package/rwt-dockable-panels'>rwt-dockable-panels</a></dt>
+		<dd>Dockable Panels DOM component.</dd>
+		<dt><a href='https://www.npmjs.com/package/softlib'>softlib</a></dt>
+		<dd>Runtime code safety and sanity checking.</dd>
+		<dt><a href='https://www.npmjs.com/package/gcsio'>GCS I/O</a></dt>
+		<dd>Geographic Coordinate System I/O Library.</dd>
+	</dl>
+</details>
 
 
 <details>
 	<summary>Download using NPM</summary>
-	<p><b>OPTION 1:</b> Familiar with Node.js and the <code>package.json</code> file?<br />Great. Install the component with this command:</p>
+	<p>Install the component and dependencies with these commands:</p>
 	<pre lang=bash>
-npm install rwt-orthographic-earth<br />	</pre>
-	<p><b>OPTION 2:</b> No prior experience using NPM?<br />Just follow these general steps:</p>
-	<ul>
-		<li>Install <a href='https://nodejs.org'>Node.js/NPM</a> on your development computer.</li>
-		<li>Create a <code>package.json</code> file in the root of your web project using the command:</li>
-		<pre lang=bash>
-npm init<br />		</pre>
-		<li>Download and install the DOM component using the command:</li>
-		<pre lang=bash>
-npm install rwt-orthographic-earth<br />		</pre>
-	</ul>
+npm install rwt-orthographic-earth<br />npm install rwt-dockable-panels<br />npm install softlib<br />npm install gcsio<br />	</pre>
 	<p style='font-size:0.9em'>Important note: This DOM component uses Node.js and NPM and <code>package.json</code> as a convenient <i>distribution and installation</i> mechanism. The DOM component itself does not need them.</p>
 </details>
 
 
 <details>
 	<summary>Download using Github</summary>
-	<p>If you prefer using Github directly, simply follow these steps:</p>
+	<p>If you prefer using Github, follow these steps:</p>
 	<ul>
 		<li>Create a <code>node_modules</code> directory in the root of your web project.</li>
-		<li>Clone the <span class=product>rwt-orthographic-earth</span> and <span class=product>rwt-dockable-panels</span> DOM components into it using the command:</li>
+		<li>Clone the required repos into it using these commands:</li>
 		<pre lang=bash>
-git clone https://github.com/readwritetools/rwt-orthographic-earth.git<br />git clone https://github.com/readwritetools/rwt-dockable-panels.git<br />		</pre>
+git clone https://github.com/readwritetools/rwt-orthographic-earth.git<br />git clone https://github.com/readwritetools/rwt-dockable-panels.git<br />git clone https://github.com/readwritetools/softlib.git<br />git clone https://github.com/readwritetools/gcsio.git<br />		</pre>
 	</ul>
 </details>
 
@@ -133,8 +140,18 @@ git clone https://github.com/readwritetools/rwt-orthographic-earth.git<br />git 
 After installation, you need to add three things to your HTML page to make use
 of it:
 
-   1. Add a `script` tag to load the component's `rwt-orthographic-earth.js` file:
+   1. Add an `importmap` and a `script` tag to load the component and its dependencies:
 ```html
+<script src='/node_modules/es-module-shims/dist/es-module-shims.js' async></script>
+<script type=importmap>
+{
+    "imports": {
+        "gcsio/": "/node_modules/gcsio/",
+        "softlib/": "/node_modules/softlib/",
+        "rwt-dockable-panels/": "/node_modules/rwt-dockable-panels/"
+    }
+}            
+</script>
 <script src='/node_modules/rwt-orthographic-earth/rwt-orthographic-earth.js' type=module></script>             
 ```
 
@@ -159,10 +176,10 @@ of it:
      
      function addLayers(earth1) {
         earth1.addVisualizationStyleSheet('/vss/earth1-styles.vss');
-        earth1.addMapItem({ layerType:'space', vssIdentifier'space', layerName: 'Space' });
-        earth1.addMapItem({ layerType:'sphere', vssIdentifier'sphere', layerName: 'Oceans' });
-        earth1.addMapItem({ layerType:'graticule', vssIdentifier'graticule-3-by-3',layerName: 'Graticule',  meridianFrequency:3, parallelFrequency:3, drawToPoles:false });
-        earth1.addMapItem({ layerType:'topojson-package', vssIdentifier'land-110m', layerName: 'Land', url:'/natural-earth/land-110m.topojson', embeddedName:'land-110m', featureKey:'name' });
+        earth1.addMapItem({ layerType:'space', vssIdentifier: 'space', layerName: 'Space' });
+        earth1.addMapItem({ layerType:'sphere', vssIdentifier: 'sphere', layerName: 'Oceans' });
+        earth1.addMapItem({ layerType:'graticule', vssIdentifier: 'graticule-3-by-3',layerName: 'Graticule',  meridianFrequency:3, parallelFrequency:3, drawToPoles:false });
+        earth1.addMapItem({ layerType:'gcs-package', vssIdentifier: 'land-110m', layerName: 'Land', url:'/natural-earth/land-110m.geojson', featureKey:'name' });
      }
      
      function configure(earth1) {
@@ -174,7 +191,7 @@ of it:
 ```
 
 
-### Configure the Component
+#### Configure the Component
 
 The component can be configured by adding any of these optional attributes to
 the `<rwt-orthographic-earth>` element tag.
@@ -220,6 +237,11 @@ the `<rwt-orthographic-earth>` element tag.
 	<dt><code>panels</code> Declares the presence and order of menu panels.</dt>
 	<dd>
 		<ul>
+			<li><code>interaction</code> Mouse gestures for manipulation and interaction.</li>
+			<li><code>layers</code> Choose which layers to display.</li>
+			<li><code>locate</code> Display longitude and latitude of mouse position.</li>
+			<li><code>discover</code> Discover features a pointer position.</li>
+			<li><code>identify</code> Identify underlying feature details.</li>
 			<li><code>season</code> Change the reference date.</li>
 			<li><code>time-of-day</code> Change the time of day.</li>
 			<li><code>point-of-reference</code> Change the longitude/latitude of the observation point.</li>
@@ -230,17 +252,13 @@ the `<rwt-orthographic-earth>` element tag.
 			<li><code>zoom</code> Change the map's scale.</li>
 			<li><code>space</code> Shift the space point of view.</li>
 			<li><code>canvas</code> Shift the canvas origin.</li>
-			<li><code>locate</code> Display longitude and latitude of mouse position.</li>
-			<li><code>layers</code> Choose which layers to display.</li>
-			<li><code>identify</code> Identify feature details.</li>
 			<li><code>time-lapse</code> Rotate the Earth.</li>
-			<li><code>interaction</code> Mouse gestures for manipulation and interaction.</li>
 			<li><code>hello-world</code> Licensing information.</li>
 		</ul>
 	</dd>
 </dl>
 
-### Life-cycle events
+#### Life-cycle events
 
 The component issues life-cycle events.
 
@@ -250,9 +268,25 @@ The component issues life-cycle events.
 	<dd>Sent when the component is fully loaded and ready to be used. As a convenience you can use the <code>waitOnLoading()</code> method which returns a promise that resolves when the <code>component-loaded</code> event is received. Call this asynchronously with <code>await</code>.</dd>
 </dl>
 
----
+### Metadata
 
-### Reference
+#### Module exports
+
+
+<table>
+	<tr><td>ES modules</td> 		<td>true</td></tr>
+	<tr><td>Common JS</td> 		<td>false</td></tr>
+</table>
+
+#### Suitability
+
+
+<table>
+	<tr><td>Browser</td> 			<td>API</td></tr>
+	<tr><td>node.js</td> 			<td>none</td></tr>
+</table>
+
+#### Availability
 
 
 <table>
@@ -263,7 +297,7 @@ The component issues life-cycle events.
 	<tr><td><img src='/img/48x48/read-write-stack.png' alt='Read Write Stack logo' width=48 /></td>	<td>Publication venue</td>	<td><a href='https://readwritestack.com/components/orthographic-earth.blue'>READ WRITE STACK</a></td></tr>
 </table>
 
-### License
+#### License
 
 The <span>rwt-orthographic-earth</span> DOM component is not
 freeware. After evaluating it and before using it in a public-facing website,
@@ -274,6 +308,7 @@ eBook, mobile app, or desktop application, you must obtain a license from <a hre
 
 <details>
 	<summary>JavaScript Orthographic Earth Software License Agreement</summary>
+	<p>Copyright © 2022 Read Write Tools.</p>
 	<ol>
 		<li>This Software License Agreement ("Agreement") is a legal contract between you and Read Write Tools ("RWT"). The "Materials" subject to this Agreement include the "JavaScript Orthographic Earth" software and associated documentation.</li>
 		<li>By using these Materials, you agree to abide by the terms and conditions of this Agreement.</li>

@@ -5,10 +5,10 @@ import * as CB from './panel-callbacks.js';
 
 import EarthPosition from '../astronomy/earth-position.class.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
 
 const Static = {
-    rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js'
+    rwtDockablePanels: 'rwt-dockable-panels/rwt-dockable-panels.js'
 };
 
 Object.seal(Static);
@@ -45,9 +45,13 @@ export default class Menu {
             if (null != t && '' != t) {
                 var e = t.split(' ');
                 for (let t = 0; t < e.length; t++) {
-                    var a = e[t], r = this.getPanelConfigById(a);
-                    null == r ? console.log(`No panel configuration defined for '${a}'`) : (this.rwtDockablePanels.appendPanel(a, r.options, r.panelLines), 
-                    this.registerListeners(a), this.changeNotifiers(a));
+                    var a = e[t];
+                    if ('' != a.trim()) {
+                        var r = this.getPanelConfigById(a);
+                        null == r ? terminal.warning(`No panel configuration defined for '${a}'`) : (r.options.tabIndex = 103 + 3 * t, 
+                        this.rwtDockablePanels.appendPanel(a, r.options, r.panelLines), this.registerListeners(a), 
+                        this.changeNotifiers(a));
+                    }
                 }
             }
         }
@@ -143,11 +147,6 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', n.value);
             }));
 
-          case 'locate':
-          case 'layers':
-          case 'identify':
-            return;
-
           case 'time-lapse':
             var l = this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation');
             return void l.addEventListener('change', (() => {
@@ -155,6 +154,10 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/timeLapseRotation', t);
             }));
 
+          case 'locate':
+          case 'layers':
+          case 'identify':
+          case 'discover':
           case 'interaction':
           case 'hello-world':
           case 'earth-orbit':
@@ -163,7 +166,7 @@ export default class Menu {
             return;
 
           default:
-            console.log(`unexpected panel '${t}' when registering broadcasters`);
+            terminal.logic(`unexpected panel '${t}' when registering broadcasters`);
         }
     }
     registerListeners(t) {
@@ -334,11 +337,27 @@ export default class Menu {
                 }));
             }));
 
+          case 'discover':
+            return void this.rwtOrthographicEarth.addEventListener('user/discoveredFeatures', (t => {
+                var e = t.detail, a = this.rwtDockablePanels.shadowRoot.getElementById('discover-table');
+                if (e.length > 0) {
+                    var r = [];
+                    r.push('<tr><th class=\'chef-center\'>Feature</th><th class=\'chef-center\'>Value</th></tr>');
+                    for (let t of e) r.push(t.identifyHTML);
+                    a.innerHTML = r.join('');
+                } else a.innerHTML = '<tr><th class=\'chef-center\'>Hover pointer —➤ Discover features at pointer position</th></tr>';
+            }));
+
           case 'identify':
             return void this.rwtOrthographicEarth.addEventListener('user/identifiedFeatures', (t => {
                 var e = t.detail, a = [];
-                a.push('<tr><th class=\'chef-center\'>Feature</th><th class=\'chef-center\'>Value</th></tr>');
-                for (let t of e) a.push(t.identifyHTML);
+                for (let t of e) {
+                    a.push(`<tr><th class='chef-h3' colspan=2>${t.layerName}</th></tr>`);
+                    for (let e in t.featureData) {
+                        let r = t.featureData[e];
+                        if ('Array' == r.constructor.name) for (let t = 0; t < r.length; t++) a.push(`<tr><td>${e}[${t}]</td><td>${r[t]}</td></tr>`); else a.push(`<tr><td>${e}</td><td>${r}</td></tr>`);
+                    }
+                }
                 this.rwtDockablePanels.shadowRoot.getElementById('identify-table').innerHTML = a.join('');
             }));
 
@@ -356,7 +375,7 @@ export default class Menu {
             return;
 
           default:
-            console.log(`unexpected panel '${t}' when registering listeners`);
+            terminal.logic(`unexpected panel '${t}' when registering listeners`);
         }
     }
     twoDigits(t) {

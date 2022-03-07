@@ -3,7 +3,7 @@ import BasePackage from './base-package.class.js';
 
 import GeneralFeature from '../features/general-feature.class.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
 
 export default class Sphere extends BasePackage {
     constructor(e) {

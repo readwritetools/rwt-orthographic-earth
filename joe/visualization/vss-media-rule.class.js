@@ -13,7 +13,9 @@ import Space from '../packages/space.class.js';
 
 import Sphere from '../packages/sphere.class.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
+
+import terminal from 'softlib/terminal.js';
 
 export default class vssMediaRule {
     constructor(e, r) {
@@ -28,26 +30,26 @@ export default class vssMediaRule {
     getSelector(e) {
         return this.vssSelectorCollection.getSelector(e);
     }
-    computeMediaRuleStyle(e, r, a, t, s, o, i) {
+    computeMediaRuleStyle(e, r, a, t, s, i, o) {
         var l = r, n = '.' + a, c = '#' + t, u = `["${s}"]`;
-        if (this.assignPropertyValues(e, l, i), '' != a && this.assignPropertyValues(e, n, i), 
-        '' != t && this.assignPropertyValues(e, c, i), '' != s && this.assignPropertyValues(e, u, i), 
-        '' != a && '' != s && this.assignPropertyValues(e, n + u, i), '' != t && '' != s && this.assignPropertyValues(e, c + u, i), 
-        null != o) for (var d in o) {
-            var p = o[d];
+        if (this.assignPropertyValues(e, l, o), '' != a && this.assignPropertyValues(e, n, o), 
+        '' != t && this.assignPropertyValues(e, c, o), '' != s && this.assignPropertyValues(e, u, o), 
+        '' != a && '' != s && this.assignPropertyValues(e, n + u, o), '' != t && '' != s && this.assignPropertyValues(e, c + u, o), 
+        null != i) for (var d in i) {
+            var p = i[d];
             if ('' != a) {
                 var h = `${n}[${d}="${p}"]`;
-                this.assignPropertyValues(e, h, i);
+                this.assignPropertyValues(e, h, o);
             }
             if ('' != t) {
-                var v = `${c}[${d}="${p}"]`;
-                this.assignPropertyValues(e, v, i);
+                var m = `${c}[${d}="${p}"]`;
+                this.assignPropertyValues(e, m, o);
             }
         }
     }
-    runCourtesyValidator(e, r, a, t, s, o) {
-        var i = e, l = '.' + r, n = '#' + a, c = `["${t}"]`;
-        if (this.courtesyValidator(i, e, r, a, t), '' != r && this.courtesyValidator(l, e, r, a, t), 
+    runCourtesyValidator(e, r, a, t, s, i) {
+        var o = e, l = '.' + r, n = '#' + a, c = `["${t}"]`;
+        if (this.courtesyValidator(o, e, r, a, t), '' != r && this.courtesyValidator(l, e, r, a, t), 
         '' != a && this.courtesyValidator(n, e, r, a, t), '' != t && this.courtesyValidator(c, e, r, a, t), 
         '' != r && '' != t && this.courtesyValidator(l + c, e, r, a, t), '' != a && '' != t && this.courtesyValidator(n + c, e, r, a, t), 
         null != s) for (var u in s) {
@@ -65,20 +67,20 @@ export default class vssMediaRule {
     assignPropertyValues(e, r, a) {
         var t = this.lookupStyle(r);
         if (null != t) for (let r in t.properties) {
-            var s = t.properties[r], o = s.name, i = s.value;
-            if (Array.isArray(i)) {
-                var l = i[a % i.length];
-                e[o] = l;
-            } else e[o] = i;
+            var s = t.properties[r], i = s.name, o = s.value;
+            if (Array.isArray(o)) {
+                var l = o[a % o.length];
+                e[i] = l;
+            } else e[i] = o;
         }
     }
     lookupStyle(e) {
         if ('' != e) return this.selectorExists(e) ? this.getSelector(e) : void 0;
     }
     courtesyValidator(e, r, a, t, s) {
-        var o = this.lookupStyle(e);
-        if (null != o) for (let a in o.properties) {
-            var i = o.properties[a], l = i.name, n = i.value, c = !1;
+        var i = this.lookupStyle(e);
+        if (null != i) for (let a in i.properties) {
+            var o = i.properties[a], l = o.name, n = o.value, c = !1;
             switch (r) {
               case 'point':
                 c = PointFeature.courtesyValidator(l);
@@ -99,8 +101,8 @@ export default class vssMediaRule {
               case 'sphere':
                 c = Sphere.courtesyValidator(l);
             }
-            if (!c) return void console.warn(`${e} { ${l} } unsupported ${r} property`);
-            if (null == n) return void console.warn(`${e} { ${l} } unable to parse value.`);
+            if (!c) return void terminal.warning(`${e} { ${l} } unsupported ${r} property`);
+            if (null == n) return void terminal.warning(`${e} { ${l} } unable to parse value.`);
             switch (l) {
               case 'visibility':
               case 'deep-space':
@@ -160,50 +162,50 @@ export default class vssMediaRule {
                 break;
 
               default:
-                console.warn(`${e} { ${l}:${n} } not expected in validator.`);
+                terminal.warning(`${e} { ${l}:${n} } not expected in validator.`);
             }
         }
     }
     validateVisibility(e, r, a) {
         var t = [ 'hidden', 'visible' ];
-        return !!t.includes(a) || (console.warn(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
+        return !!t.includes(a) || (terminal.warning(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
         !1);
     }
     validateTransparency(e, r, a) {
         var t = Number.parseFloat(a);
-        return Number.isNaN(t) ? (console.warn(`${e} { ${r}:${a} } expected a number.`), 
-        !1) : !(t < 0 || t > 1) || (console.warn(`${e} { ${r}:${a} } should be between 0.0 and 1.0`), 
+        return Number.isNaN(t) ? (terminal.warning(`${e} { ${r}:${a} } expected a number.`), 
+        !1) : !(t < 0 || t > 1) || (terminal.warning(`${e} { ${r}:${a} } should be between 0.0 and 1.0`), 
         !1);
     }
     validateWidth(e, r, a) {
-        return 'none' == a || (!Number.isNaN(Number.parseFloat(a)) || (console.warn(`${e} { ${r}:${a} } expected a number.`), 
+        return 'none' == a || (!Number.isNaN(Number.parseFloat(a)) || (terminal.warning(`${e} { ${r}:${a} } expected a number.`), 
         !1));
     }
     validateNumber(e, r, a) {
-        return !Number.isNaN(Number.parseFloat(a)) || (console.warn(`${e} { ${r}:${a} } expected a number.`), 
+        return !Number.isNaN(Number.parseFloat(a)) || (terminal.warning(`${e} { ${r}:${a} } expected a number.`), 
         !1);
     }
     validateInteger(e, r, a) {
-        return !Number.isNaN(Number.parseInt(a)) || (console.warn(`${e} { ${r}:${a} } expected an integer.`), 
+        return !Number.isNaN(Number.parseInt(a)) || (terminal.warning(`${e} { ${r}:${a} } expected an integer.`), 
         !1);
     }
     validateColor(e, r, a) {
-        return 'String' == a.constructor.name && -1 != a.indexOf('#') || (console.warn(`${e} { ${r}:${a} } expected a color value in the form #rrggbb or #rrggbbaa.`), 
+        return 'String' == a.constructor.name && -1 != a.indexOf('#') || (terminal.warning(`${e} { ${r}:${a} } expected a color value in the form #rrggbb or #rrggbbaa.`), 
         !1);
     }
     validateSymbolType(e, r, a) {
         var t = [ 'circle', 'polygon', 'triangle', 'rhombus', 'pentagon', 'hexagon', 'star', 'diamond', 'trigram', 'shuriken', 'pentagram', 'hexagram' ];
-        return !!t.includes(a) || (console.warn(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
+        return !!t.includes(a) || (terminal.warning(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
         !1);
     }
     validateStrokeType(e, r, a) {
         var t = [ 'solid', 'dotted', 'short-dash', 'long-dash', 'dot-dash', 'dot-dot-dash', 'dot-dot-dot-dash', 'dot-dash-dot' ];
-        return !!t.includes(a) || (console.warn(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
+        return !!t.includes(a) || (terminal.warning(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
         !1);
     }
     validateFillType(e, r, a) {
         var t = [ 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'copy', 'xor', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity' ];
-        return !!t.includes(a) || (console.warn(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
+        return !!t.includes(a) || (terminal.warning(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
         !1);
     }
 }

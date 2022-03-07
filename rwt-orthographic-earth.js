@@ -19,19 +19,23 @@ import PlaceOfInterest from './joe/packages/place-of-interest.class.js';
 
 import TopojsonPackage from './joe/packages/topojson-package.class.js';
 
+import GcsPackage from './joe/packages/gcs-package.class.js';
+
 import Animation from './joe/interaction/animation.class.js';
 
 import InteractionHandler from './joe/interaction/interaction-handler.class.js';
 
 import Menu from './joe/panels/menu.class.js';
 
-import expect from './joe/joezone/expect.js';
+import expect from 'softlib/expect.js';
+
+import terminal from 'softlib/terminal.js';
 
 const Static = {
     componentName: 'rwt-orthographic-earth',
     elementInstance: 1,
-    vssURL: '/node_modules/rwt-orthographic-earth/joe/visualization/rwt-orthographic-earth.vss',
-    rwtDockablePanels: '/node_modules/rwt-dockable-panels/rwt-dockable-panels.js',
+    componentPath: '/',
+    vssURL: 'joe/visualization/rwt-orthographic-earth.vss',
     zOrder: 1
 };
 
@@ -46,16 +50,21 @@ export default class rwtOrthographicEarth extends HTMLElement {
     }
     async connectedCallback() {
         if (this.isConnected) try {
-            this.attachShadow({
+            this.determineComponentPath(), this.attachShadow({
                 mode: 'open'
-            }), this.createCanvas(), this.createEarth(), this.createInteractionHandler(), this.addVisualizationStyleSheet(Static.vssURL), 
+            }), this.createCanvas(), this.createEarth(), this.createInteractionHandler(), this.addVisualizationStyleSheet(`${Static.componentPath}${Static.vssURL}`), 
             await this.addDockablePanels(), this.registerMenuListeners(), this.registerUserListeners(), 
             this.registerVisualizationListeners(), this.registerEarthPositionListeners(), this.registerResizeListener(), 
             this.resizeCanvas(), this.setupAnimations(), this.initializeEarthValues(), this.reflectValues(), 
             this.sendComponentLoaded(), this.validate();
         } catch (e) {
-            console.log(e.message);
+            terminal.caught(e);
         }
+    }
+    determineComponentPath() {
+        Static.componentPath = new URL(import.meta.url).pathname;
+        var e = Static.componentPath.lastIndexOf('/');
+        -1 != e && (Static.componentPath = Static.componentPath.substr(0, e + 1));
     }
     createCanvas() {
         this.canvas = document.createElement('canvas'), this.canvas.style.position = 'absolute', 
@@ -190,15 +199,23 @@ export default class rwtOrthographicEarth extends HTMLElement {
 
           case 'topojson-package':
             var h = new TopojsonPackage(this);
-            t = this.earth.addPackage(h);
-            var l = e.url || '', c = e.embeddedName || '';
-            await h.retrieveData('replace', l, c), this.invalidateCanvas();
+            t = this.retreiveExternalFile(h, e);
+            break;
+
+          case 'gcs-package':
+            var l = new GcsPackage(this);
+            t = this.retreiveExternalFile(l, e);
             break;
 
           default:
-            console.log(`Unrecognized layerType ${e.layerType}`);
+            terminal.abnormal(`Unrecognized layerType ${e.layerType}`);
         }
         return t;
+    }
+    async retreiveExternalFile(e, t) {
+        expect(e, [ 'TopojsonPackage', 'GcsPackage' ]), expect(t, 'Object');
+        var a = t.url || '', s = this.earth.addPackage(e);
+        return await e.retrieveData('replace', a, t), this.invalidateCanvas(), s;
     }
     addLayer(e, t) {
         expect(e, 'Number');
@@ -280,6 +297,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
         this.addEventListener('user/changeCanvasCoords', (e => {
             var t = e.detail;
             this.earth.changeCanvasCoords(t.x, t.y);
+        })), this.addEventListener('user/requestFeatureIdentification', (e => {
+            var t = e.detail;
+            this.earth.requestFeatureIdentification(t.x, t.y);
         })), this.addEventListener('user/changePlaceOfInterest', (e => {
             var t = e.detail;
             this.earth.changePlaceOfInterest(t.x, t.y), this.earth.recalculatePlaceOfInterestDependants();
@@ -319,12 +339,12 @@ export default class rwtOrthographicEarth extends HTMLElement {
                 var o = (await import('../../rwt-registration-keys.js')).default;
                 for (let e = 0; e < o.length; e++) {
                     var h = o[e];
-                    if (h.hasOwnProperty('product-key') && h['product-key'] == Static.componentName) return n != h.registration && console.warn(`${r} See https://readwritetools.com/licensing.blue to learn more.`), 
+                    if (h.hasOwnProperty('product-key') && h['product-key'] == Static.componentName) return n != h.registration && terminal.warning(`${r} See https://readwritetools.com/licensing.blue to learn more.`), 
                     void (i == t && window.setTimeout(this.authenticate.bind(this, h), 1e3));
                 }
-                console.warn(`${r} rwt-registration-key.js file missing "product-key": "${Static.componentName}"`);
+                terminal.warning(`${r} rwt-registration-key.js file missing "product-key": "${Static.componentName}"`);
             } catch (e) {
-                console.warn(`${r} rwt-registration-key.js missing from website's root directory.`);
+                terminal.warning(`${r} rwt-registration-key.js missing from website's root directory.`);
             }
         }
     }
@@ -343,7 +363,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
             var o = await fetch('https://validation.readwritetools.com/v1/genuine/component', r);
             if (200 == o.status) await o.json();
         } catch (e) {
-            console.info(e.message);
+            terminal.caught(e);
         }
     }
 }

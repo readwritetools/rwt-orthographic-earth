@@ -5,7 +5,7 @@ import HemisphereFeature from '../features/hemisphere-feature.class.js';
 
 import * as CB from '../panels/panel-callbacks.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
 
 const degreesToRadians = Math.PI / 180;
 

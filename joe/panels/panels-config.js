@@ -215,7 +215,7 @@ export default {
         options: {
             id: 'point-of-reference',
             titlebar: 'Point of observation',
-            tooltip: 'Change the longitude/latitude of the observation point'
+            tooltip: 'Press \'n Drag pointer —➤ Change the longitude/latitude of the observation point'
         },
         panelLines: [ {
             lineType: 'dropdown',
@@ -409,7 +409,7 @@ export default {
         options: {
             id: 'zoom',
             titlebar: 'Zoom',
-            tooltip: 'Change the map\'s scale'
+            tooltip: '<Alt> Drag pointer —➤ Change the map\'s scale'
         },
         panelLines: [ {
             lineType: 'slider+input',
@@ -429,7 +429,7 @@ export default {
         options: {
             id: 'space',
             titlebar: 'Space',
-            tooltip: 'Shift the space point of view'
+            tooltip: '<Shift> \'n Drag pointer —➤ Shift the space point of view'
         },
         panelLines: [ {
             lineType: 'slider+input',
@@ -491,7 +491,7 @@ export default {
         options: {
             id: 'locate',
             titlebar: 'Locate',
-            tooltip: 'Display longitude and latitude of mouse position'
+            tooltip: 'Hover pointer —➤ Display longitude and latitude of mouse position'
         },
         panelLines: [ {
             lineType: 'generic',
@@ -513,15 +513,29 @@ export default {
         } ]
     }, {
         options: {
+            id: 'discover',
+            titlebar: 'Discover',
+            tooltip: 'Hover pointer —➤ Discover features at pointer position'
+        },
+        panelLines: [ {
+            lineType: 'table',
+            id: 'discover-table',
+            heightInPx: '200px',
+            overflowY: 'auto'
+        } ]
+    }, {
+        options: {
             id: 'identify',
             titlebar: 'Identify',
-            tooltip: 'Identify feature details'
+            tooltip: '<Ctrl> \'n Click —➤ Identify underlying feature details'
         },
         panelLines: [ {
             lineType: 'table',
             id: 'identify-table',
-            heightInPx: '200px',
-            overflowY: 'auto'
+            minHeightInPx: '300px',
+            maxHeightInPx: '600px',
+            overflowY: 'auto',
+            innerHTML: '<tr><th class=\'chef-center\'>&lt;Ctrl&gt; \'n Click —➤ Identify underlying feature details</th></tr>'
         } ]
     }, {
         options: {
@@ -569,8 +583,8 @@ export default {
         panelLines: [ {
             lineType: 'table',
             id: 'interaction-table',
-            innerHTML: '\n<tr><th class=\'chef-center\'>Cursor</th><th class=\'chef-center\'>Key</th><th class=\'chef-center\'>Action</th></tr>\t            \n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAWCAYAAADJqhx8AAACfElEQVQ4y53TP0gbYRgG8Cc5z1zuDyStgaoXQxPpYMDB0iaQQhQEF0GqIDh0cKk4d3JRwcmpix2bDqVVaGkpnRyUGtSlpRQqNUKDKDqUnGjMnzvlck+XRtporemzft/7g+/h/RCLxX4AuIf/jd/vZzgcJoCHAMS6gXA4zGw2y0QiQQDPADTUBYRCIZqmyXK5zMHBwVNN0x4DaLoy0NbWxuPjY5KkbducmJigpmmvAdy6EqDrOguFAquxLIuTk5OUZfkTgLt1AyRZKpU4NzfHzs7ObwCSlwKtra0sFousjeM4XFlZYSKR2APwoG6gms3NTfb09JgAHgFw1w2Q5NHREUdHRx1RFJ8CkOsGqhkZGaEgCJ8B+C4t8bKMjY1RluWMqqrXAQDBYPCvgG3bzOfzNAyDhmEwl8vRtm3OzMzQ6/VuKIrS3uByuc71UqlUIAgCdnZ2MDU1hXQ6XXK73ackXY7jQBRFViqVm7Ztv/8DIIn19XVks1kMDw9D13UEAgHs7u6mAbzTNO3U4/G4T05OoOt6g+M4XxAKhSrVVV5aWmJHR8e+x+P5mEqlSJJbW1vs6+v7CiB24R60tLSUTdPk8vIyo9HoPoBuAPf7+/vPupmenqaiKC8BBM4BwWCwuLi4yHg8vvFrGAD8zc3NqdnZWZKkYRgcGhrKAYifAxRFKXV1dX0HcLvmqHtgYGAvk8mQJOfn5xmJRF4AuFYLfPD5fHcueJ0UiUSeVLs4ODhgMpmkJEm9giCcNS94vd634+Pj26urq7WAfXh4aMmyHM/n800LCwtYW1srlMvlV4qibFuWxX9+9Wg0qkqS9FyW5TeqqvY2NjbekCRJ+P3OT156AYCdO5fkAAAAAElFTkSuQmCC\' /></td>\n\t<td class=\'chef-center\'>Hover</td>\n\t<td class=\'chef-center\'>identify features</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAA9ElEQVQoz6WSMWrDQBBF3yzGhSpjjCCFg0HdqjP4AME3CAR0jBzFt9CCwTcIPoDB3aoTGKcwCBNUqXDhdWEWpEiRSfK7Hf6fmf3zhQ6sNmc3Cq4AlJXi/XUi3zmNwnp7cvPnqqsX+2PA28uTtIQfu083G1/ow+FryHIxFQDlJz0SAczGF9bbkwMYANTXK4qCNE3JsgwRQWtNkiSEYUidq1abs6t39SIA5xzWWowxLfOUd8/Di/pqo+B6/+NfoMqqqY3juEXSWjfeZaXu58jz3NXNMcZgre00ByCKIpFHh/8pCP8LAMByMZX9Meid5EWtrP4m5DdDwW587eQWhQAAAABJRU5ErkJggg==\' /></td>\n\t<td class=\'chef-center\'>Click</td>\n\t<td class=\'chef-center\'>set place of interest</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFUlEQVRYw91W0RKDMAgznv//y9mD9sbYSlOo5936ZrUlhhDAllt0zxjsd9exZRHwHQsAW7C2D0C6Z9/WLWYOLQFg2XgEQAVEGYDNdQbESg08lwJV8f/LQIWFVQBQOajYKgZmg6wR4aweeiphN9ue/dbsDeyBYdr2CVsNL7teTrNwNCQVOy2IFHtEYzvkwTn3Y6OGZEyT0o4nzsODNMDof+zXvQAozwMBMF8hSDGg6qBnODhfMKOBTdGBaDxIVcENUxCUFH5pwKbBmk8UvFMhVNmAMO0yMwGpzekQcoiIeh/IAcMsAxNVyaxQ17TRqDcYQPcxMNKE2C3zA8nl+x8BM1NReSKqdtFSCp7UQFeIau6XAaje+wLo8I5BQUpGKwAAAABJRU5ErkJggg==\' /></td>\n\t<td class=\'chef-center\'>Move</td>\n\t<td class=\'chef-center\'>change central viewpoint</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACsUlEQVRYw+2XQWsTQRTH/7vT7KyBapOSQHYLpQXrpYHetiS72SB4tbdKD/UD1JNID6aUBRFEv4AehKIg6Em/QUKlIIIiBa2gveihUMk2NjWJcZPnZVs36bZp6W5O/mEOA8O8H+//5s0M8F//RD3G85mZmetEJAcZVOwgIPIdpmkCwLW9vb0GACe0DPioTUQ0MTHxLRqNvgEQC9UCP83Pz78VRXEVQD6MoGKvBYqiXEomk3HG2I/Qi9DVHyJqerOQzWabiqJ8YoxF+mLB3Nzc2tLSUsMLkclkfo+MjHwGEBoELS8vO6qqbjDG7oyOjn4xDKPVDaEoygqAc6EATE1NlQcHB++58wtjY2MPdV2vddthmubjMIpQYIxdrFarD9z5T9u2b21tbb02DKMFAKVSCY7jOPV6nQcFIHgKQALQFgSho9HE4/FoLBZ7qarqlUajUdvc3PxaqVRutlqtIhGRIAgd+5xWAwckgtD0W2Dbdo0xdnV8fPzF7u6uXS6XnwIoBZ6B0x6XQxu5qegLgHs5gYjQFVcIvBMeAy74zPOc84LX2n5d4wCQHxoaegeAUqnUq7B6xVHKJxKJdV3XHcuyKJfLtROJxOoxECLnXDyDA53BVVXdyOVy7WKxeNCwXIj1IyBE1ybpzNE553cBkGVZh65ywzBaw8PDH7oDJZPJJ56X1pk1wDlf0TTtl997wgMRASBJknQ7k8lUTdMMDAAAIpzzBU3TdvwgdF13YrHYewCldDq9vW9VkAAAIMqy/EzTtJofRKFQqM/Ozq566yRogH2IG5qmVegECgNgH+LRUZnoBwAASLIs319cXLR7AYghAbSJ6HytVtvp9++KAVhIpVIfs9ls01tw/bBAkCRpLZ1Ob1uWRb2CBw4wOTkZBbA9PT39nU6ooDMQAXD5BJ/cjvEXdZyYDo2qEJUAAAAASUVORK5CYII=\' /></td>\n\t<td class=\'chef-center\'>Alt</td>\n\t<td class=\'chef-center\'>zoom in / zoom out</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA7UlEQVRYw9VXWxLFEBTD2BaLZ2G5P3VH9Xi/z1dbIwmpgLGbSykFpRS2kbtaLsInXy6CIl8mIkU+XUQJeYsIWSNCa/16N8aQ369aBWJ3lojZIdOE46Z3lIAUlqA6uJ9rZBljGCVC9JADAGMMPSJkjtzvYK3lpdOeEqG1xgurNGT8kcfaYu2xsJItfnLOHdH/+bGCV2OlLAgTLrQAAB4BPGUBhUvaGVpRuAxRs4eEmCIcYUOuF087NfJPDjSKaCLvitDSzSiHE10FVWoTlcPZvhvKGktq2kfN4PQj2T2H0iOO5UdcTI64mh1xOR1VP15vH3cdOtO+AAAAAElFTkSuQmCC\' /></td>\n\t<td class=\'chef-center\'>Shift</td>\n\t<td class=\'chef-center\'>change position in space</td>\n</tr>\n',
-            maxHeightInPx: '320px'
+            innerHTML: '\n<tr><th class=\'chef-center\'>Cursor</th><th class=\'chef-center\'>Mouse</th><th class=\'chef-center\'>Action</th></tr>\t            \n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFUlEQVRYw91W0RKDMAgznv//y9mD9sbYSlOo5936ZrUlhhDAllt0zxjsd9exZRHwHQsAW7C2D0C6Z9/WLWYOLQFg2XgEQAVEGYDNdQbESg08lwJV8f/LQIWFVQBQOajYKgZmg6wR4aweeiphN9ue/dbsDeyBYdr2CVsNL7teTrNwNCQVOy2IFHtEYzvkwTn3Y6OGZEyT0o4nzsODNMDof+zXvQAozwMBMF8hSDGg6qBnODhfMKOBTdGBaDxIVcENUxCUFH5pwKbBmk8UvFMhVNmAMO0yMwGpzekQcoiIeh/IAcMsAxNVyaxQ17TRqDcYQPcxMNKE2C3zA8nl+x8BM1NReSKqdtFSCp7UQFeIau6XAaje+wLo8I5BQUpGKwAAAABJRU5ErkJggg==\' /></td>\n\t<td class=\'chef-center\'>Press<br>\'n Drag</td>\n\t<td class=\'chef-center\'>Change the point of observation</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACsUlEQVRYw+2XQWsTQRTH/7vT7KyBapOSQHYLpQXrpYHetiS72SB4tbdKD/UD1JNID6aUBRFEv4AehKIg6Em/QUKlIIIiBa2gveihUMk2NjWJcZPnZVs36bZp6W5O/mEOA8O8H+//5s0M8F//RD3G85mZmetEJAcZVOwgIPIdpmkCwLW9vb0GACe0DPioTUQ0MTHxLRqNvgEQC9UCP83Pz78VRXEVQD6MoGKvBYqiXEomk3HG2I/Qi9DVHyJqerOQzWabiqJ8YoxF+mLB3Nzc2tLSUsMLkclkfo+MjHwGEBoELS8vO6qqbjDG7oyOjn4xDKPVDaEoygqAc6EATE1NlQcHB++58wtjY2MPdV2vddthmubjMIpQYIxdrFarD9z5T9u2b21tbb02DKMFAKVSCY7jOPV6nQcFIHgKQALQFgSho9HE4/FoLBZ7qarqlUajUdvc3PxaqVRutlqtIhGRIAgd+5xWAwckgtD0W2Dbdo0xdnV8fPzF7u6uXS6XnwIoBZ6B0x6XQxu5qegLgHs5gYjQFVcIvBMeAy74zPOc84LX2n5d4wCQHxoaegeAUqnUq7B6xVHKJxKJdV3XHcuyKJfLtROJxOoxECLnXDyDA53BVVXdyOVy7WKxeNCwXIj1IyBE1ybpzNE553cBkGVZh65ywzBaw8PDH7oDJZPJJ56X1pk1wDlf0TTtl997wgMRASBJknQ7k8lUTdMMDAAAIpzzBU3TdvwgdF13YrHYewCldDq9vW9VkAAAIMqy/EzTtJofRKFQqM/Ozq566yRogH2IG5qmVegECgNgH+LRUZnoBwAASLIs319cXLR7AYghAbSJ6HytVtvp9++KAVhIpVIfs9ls01tw/bBAkCRpLZ1Ob1uWRb2CBw4wOTkZBbA9PT39nU6ooDMQAXD5BJ/cjvEXdZyYDo2qEJUAAAAASUVORK5CYII=\' /></td>\n\t<td class=\'chef-center\'>&lt;Alt&gt;<br>\'n Drag</td>\n\t<td class=\'chef-center\'>Zoom in / Zoom out</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA7UlEQVRYw9VXWxLFEBTD2BaLZ2G5P3VH9Xi/z1dbIwmpgLGbSykFpRS2kbtaLsInXy6CIl8mIkU+XUQJeYsIWSNCa/16N8aQ369aBWJ3lojZIdOE46Z3lIAUlqA6uJ9rZBljGCVC9JADAGMMPSJkjtzvYK3lpdOeEqG1xgurNGT8kcfaYu2xsJItfnLOHdH/+bGCV2OlLAgTLrQAAB4BPGUBhUvaGVpRuAxRs4eEmCIcYUOuF087NfJPDjSKaCLvitDSzSiHE10FVWoTlcPZvhvKGktq2kfN4PQj2T2H0iOO5UdcTI64mh1xOR1VP15vH3cdOtO+AAAAAElFTkSuQmCC\' /></td>\n\t<td class=\'chef-center\'>&lt;Shift&gt;<br>\'n Drag </td>\n\t<td class=\'chef-center\'>Change position in space</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAACeElEQVRIx81WsU7jQBB9u3ZYHIsQBVIgW4pikeaOhioNBVVEQ4MQn5CGir+gS0nNV6BraPiF01FECiABTZBAyM5iA/uuOGwhCMRKwomprN31vpk3b2YH+MZGpZQBYKSU3Nvbq38Z0urqKkulkjk4OODOzg4BmC8NbWFhgdvb20xNKcVx75J5DgkhQHIqzucGnJbJ/628iQEbjYYCgFarpYIgcDc2NtypAL7NoWVZDIKAURQdAyjd3Nwca63D+/v7EMBkJVOtVrm1tfVWpZyfn6fjOARAAFxaWiIA4zgO2+12a9hd9rhOKKVwd3c3TMVCCIGTk5NfAMTUVGrbn/t6enqKNPKJRUNyZF2mZ17OEcCPsUVjWRYsyxorFUN5KRQKfHx8RJoDkhmtcRyj3+9DCIE4jmGMQRiG2b9aa0RRhMFggGKxmAswBUupEIPBgCm4ECLLX+qIbdt4eHjI8i2l/JDyd5R6npdxX6vVAIBRFAkp5Yc5fHv5Z/l9B5gkSfZ9fn6OlZWVqba2YV2Z9XodvV7vdftCt9vNHDIm33M4Ozv7uqx+AvgzTKXi6uoKy8vL2UIK9mXNO0kScXFxAc/z3u3ljU4IAa01dnd3s870aR0+PT2J6+trVCqVbC1VYq5IpITjODg6OoLruiiXy7l6qbi9vaXv+7i8vIRt23h+fs71+htj0Ol0cHZ2BgAiiqL8vM/MzND3fUOSYRjSGMM4jqm1ptaary1JEpLk4eEhATAIgvFmk0qlwn8lNtr29/fpOA5d1x1/EFpbW9tUSv0eBdpsNgmALw5OZouLix4Azs3NpbMpAbBQKKTPkAHA9fV1FotF/1uM738BSieHRE75uvAAAAAASUVORK5CYII=\' /></td>\n\t<td class=\'chef-center\'>&lt;Ctrl&gt;<br>\'n Click</td>\n\t<td class=\'chef-center\'>Identify underlying<br>feature details</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAWCAYAAADJqhx8AAACfElEQVQ4y53TP0gbYRgG8Cc5z1zuDyStgaoXQxPpYMDB0iaQQhQEF0GqIDh0cKk4d3JRwcmpix2bDqVVaGkpnRyUGtSlpRQqNUKDKDqUnGjMnzvlck+XRtporemzft/7g+/h/RCLxX4AuIf/jd/vZzgcJoCHAMS6gXA4zGw2y0QiQQDPADTUBYRCIZqmyXK5zMHBwVNN0x4DaLoy0NbWxuPjY5KkbducmJigpmmvAdy6EqDrOguFAquxLIuTk5OUZfkTgLt1AyRZKpU4NzfHzs7ObwCSlwKtra0sFousjeM4XFlZYSKR2APwoG6gms3NTfb09JgAHgFw1w2Q5NHREUdHRx1RFJ8CkOsGqhkZGaEgCJ8B+C4t8bKMjY1RluWMqqrXAQDBYPCvgG3bzOfzNAyDhmEwl8vRtm3OzMzQ6/VuKIrS3uByuc71UqlUIAgCdnZ2MDU1hXQ6XXK73ackXY7jQBRFViqVm7Ztv/8DIIn19XVks1kMDw9D13UEAgHs7u6mAbzTNO3U4/G4T05OoOt6g+M4XxAKhSrVVV5aWmJHR8e+x+P5mEqlSJJbW1vs6+v7CiB24R60tLSUTdPk8vIyo9HoPoBuAPf7+/vPupmenqaiKC8BBM4BwWCwuLi4yHg8vvFrGAD8zc3NqdnZWZKkYRgcGhrKAYifAxRFKXV1dX0HcLvmqHtgYGAvk8mQJOfn5xmJRF4AuFYLfPD5fHcueJ0UiUSeVLs4ODhgMpmkJEm9giCcNS94vd634+Pj26urq7WAfXh4aMmyHM/n800LCwtYW1srlMvlV4qibFuWxX9+9Wg0qkqS9FyW5TeqqvY2NjbekCRJ+P3OT156AYCdO5fkAAAAAElFTkSuQmCC\' /></td>\n\t<td class=\'chef-center\'>Hover Pointer</td>\n\t<td class=\'chef-center\'>Discover features and location at pointer</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAA9ElEQVQoz6WSMWrDQBBF3yzGhSpjjCCFg0HdqjP4AME3CAR0jBzFt9CCwTcIPoDB3aoTGKcwCBNUqXDhdWEWpEiRSfK7Hf6fmf3zhQ6sNmc3Cq4AlJXi/XUi3zmNwnp7cvPnqqsX+2PA28uTtIQfu083G1/ow+FryHIxFQDlJz0SAczGF9bbkwMYANTXK4qCNE3JsgwRQWtNkiSEYUidq1abs6t39SIA5xzWWowxLfOUd8/Di/pqo+B6/+NfoMqqqY3juEXSWjfeZaXu58jz3NXNMcZgre00ByCKIpFHh/8pCP8LAMByMZX9Meid5EWtrP4m5DdDwW587eQWhQAAAABJRU5ErkJggg==\' /></td>\n\t<td class=\'chef-center\'>Long Click</td>\n\t<td class=\'chef-center\'>Set place of interest</td>\n</tr>\n',
+            maxHeightInPx: '400px'
         } ]
     }, {
         options: {

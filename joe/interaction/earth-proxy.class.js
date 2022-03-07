@@ -1,6 +1,8 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import Cursors from './cursors.js';
 
+import terminal from 'softlib/terminal.js';
+
 export default class EarthProxy {
     constructor(t, e) {
         this.rwtOrthographicEarth = t, this.earth = t.earth, this.canvas = e, this.initialLatitude = 0, 
@@ -9,14 +11,14 @@ export default class EarthProxy {
     }
     registerEventListeners() {
         this.canvas.addEventListener('mouse/hover/ctrlkey', this.noop.bind(this)), this.canvas.addEventListener('mouse/hover/altkey', this.noop.bind(this)), 
-        this.canvas.addEventListener('mouse/hover/shiftkey', this.noop.bind(this)), this.canvas.addEventListener('mouse/hover/nokey', this.locateIdentify.bind(this)), 
-        this.canvas.addEventListener('gesture/begin/ctrlkey', this.reserved.bind(this)), 
+        this.canvas.addEventListener('mouse/hover/shiftkey', this.noop.bind(this)), this.canvas.addEventListener('mouse/hover/nokey', this.locatePositionAndDiscoverFeatures.bind(this)), 
+        this.canvas.addEventListener('gesture/begin/ctrlkey', this.beginIdentify.bind(this)), 
         this.canvas.addEventListener('gesture/begin/altkey', this.beginZoom.bind(this)), 
         this.canvas.addEventListener('gesture/begin/shiftkey', this.beginPan.bind(this)), 
         this.canvas.addEventListener('gesture/begin/nokey', this.beginChangePlaceOfInterest.bind(this)), 
-        this.canvas.addEventListener('gesture/tap/ctrlkey', this.noop.bind(this)), this.canvas.addEventListener('gesture/tap/altkey', this.noop.bind(this)), 
-        this.canvas.addEventListener('gesture/tap/shiftkey', this.noop.bind(this)), this.canvas.addEventListener('gesture/tap/nokey', this.noop.bind(this)), 
-        this.canvas.addEventListener('gesture/doubletap/ctrlkey', this.noop.bind(this)), 
+        this.canvas.addEventListener('gesture/tap/ctrlkey', this.identifyFeatures.bind(this)), 
+        this.canvas.addEventListener('gesture/tap/altkey', this.noop.bind(this)), this.canvas.addEventListener('gesture/tap/shiftkey', this.noop.bind(this)), 
+        this.canvas.addEventListener('gesture/tap/nokey', this.noop.bind(this)), this.canvas.addEventListener('gesture/doubletap/ctrlkey', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/doubletap/altkey', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/doubletap/shiftkey', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/doubletap/nokey', this.noop.bind(this)), this.canvas.addEventListener('gesture/press/ctrlkey', this.noop.bind(this)), 
@@ -32,7 +34,7 @@ export default class EarthProxy {
         this.canvas.addEventListener('gesture/verticalpan', this.panVerticalGesture.bind(this)), 
         this.canvas.addEventListener('gesture/twofingertap', this.noop.bind(this)), this.canvas.addEventListener('gesture/threefingertap', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/horizontalflick', this.onGesture), this.canvas.addEventListener('gesture/verticalflick', this.noop.bind(this)), 
-        this.canvas.addEventListener('gesture/stationtrack', this.locateIdentify.bind(this)), 
+        this.canvas.addEventListener('gesture/stationtrack', this.locatePositionAndDiscoverFeatures.bind(this)), 
         this.canvas.addEventListener('gesture/twostationtrack', this.noop.bind(this)), this.canvas.addEventListener('gesture/counterclockwise', this.noop.bind(this)), 
         this.canvas.addEventListener('gesture/clockwise', this.noop.bind(this));
     }
@@ -42,8 +44,14 @@ export default class EarthProxy {
         this.initialMapScale = this.earth.getMapScale(), this.initialTranslationEastWest = this.earth.getTranslationEastWest(), 
         this.initialTranslationNorthSouth = this.earth.getTranslationNorthSouth();
     }
-    locateIdentify(t) {
+    locatePositionAndDiscoverFeatures(t) {
         this.rwtOrthographicEarth.broadcastMessage('user/changeCanvasCoords', {
+            x: t.detail.x,
+            y: t.detail.y
+        });
+    }
+    identifyFeatures(t) {
+        this.rwtOrthographicEarth.broadcastMessage('user/requestFeatureIdentification', {
             x: t.detail.x,
             y: t.detail.y
         });
@@ -59,6 +67,9 @@ export default class EarthProxy {
     }
     reserved(t) {
         this.canvas.style.cursor = Cursors.reserved;
+    }
+    beginIdentify(t) {
+        this.canvas.style.cursor = Cursors.hand;
     }
     beginZoom(t) {
         this.canvas.style.cursor = Cursors.zoomScale;

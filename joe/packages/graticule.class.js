@@ -5,7 +5,7 @@ import LineFeature from '../features/line-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
 
 export default class Graticule extends BasePackage {
     constructor(e, a, t, s) {

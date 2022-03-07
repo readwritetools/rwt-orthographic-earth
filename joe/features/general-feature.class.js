@@ -1,7 +1,7 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
-import expect from '../joezone/expect.js';
+import expect from 'softlib/expect.js';
 
 export default class GeneralFeature extends BaseFeature {
     constructor(e, t) {

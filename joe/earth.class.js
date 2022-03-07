@@ -17,7 +17,9 @@ import vssStyleSheet from './visualization/vss-style-sheet.class.js';
 
 import EarthPosition from './astronomy/earth-position.class.js';
 
-import expect from './joezone/expect.js';
+import expect from 'softlib/expect.js';
+
+import terminal from 'softlib/terminal.js';
 
 export default class Earth {
     constructor(t) {
@@ -174,7 +176,7 @@ export default class Earth {
         this.earthPosition.changeTimezoneOffset(t);
     }
     addPackage(t) {
-        return expect(t, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage' ]), 
+        return expect(t, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
         this.catalog.addPackage(t);
     }
     addLayer(t) {
@@ -217,6 +219,11 @@ export default class Earth {
     }
     discoverFeatures() {
         return this.getCoordinatesFromCanvasXY(this.canvasCoords.x, this.canvasCoords.y).isOnEarth ? this.catalog.discoverFeatures(this.canvasCoords.x, this.canvasCoords.y) : [];
+    }
+    requestFeatureIdentification(t, e) {
+        if (!this.getCoordinatesFromCanvasXY(t, e).isOnEarth) return [];
+        var a = this.catalog.requestFeatureIdentification(t, e);
+        this.rwtOrthographicEarth.broadcastMessage('user/identifiedFeatures', a);
     }
     renderArbitraryPoint(t, e) {
         var a = new ProjectedPoint(t, e);
