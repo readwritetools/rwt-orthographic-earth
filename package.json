@@ -1,6 +1,6 @@
 {
   "name": "rwt-orthographic-earth",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "An orthographic projection of Earth, a standards-based DOM Component",
   "author": "Read Write Tools",
   "license": "see license.blue",
@@ -40,10 +40,10 @@
       "browser": "api",
       "nodejs": "none"
     },
-	"imports": {
-		"gcsio/": "/node_modules/gcsio/",
-		"softlib/": "/node_modules/softlib/",
-		"rwt-dockable-panels/": "/rwt-modules/rwt-dockable-panels/"
+    "imports": {
+      "gcsio/": "/node_modules/gcsio/",
+      "softlib/": "/node_modules/softlib/",
+      "rwt-dockable-panels/": "/rwt-modules/rwt-dockable-panels/"
     }
   }
 }
