@@ -1,11 +1,11 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 const degreesToRadians = Math.PI / 180;
 
 export default class CartesianTransformation {
     constructor(t, a, r, s, e) {
         this.rwtOrthographicEarth = t, this.earth = a, this.translate = {}, this.translate.a = parseInt(r), 
-        this.translate.b = parseInt(s), this.mapScale = e, this.multiplier = 1 / e, this.allPointsNeedTransformation = !0;
+        this.translate.b = parseInt(s), this.mapScale = e, this.multiplier = 1 / e, this.allPointsNeedTransformation = !0, 
+        Object.seal(this);
     }
     reflectValues() {
         this.rwtOrthographicEarth.broadcastMessage('carte/translationEastWest', this.translate.a), 
@@ -46,7 +46,7 @@ export default class CartesianTransformation {
     getMapScale() {
         return this.mapScale;
     }
-    toPixels(t, a, r, s) {
+    toEarthXY(t, a, r, s) {
         var e = t.easting, i = t.northing;
         t.projectedTheta = Math.atan2(i, e), t.projectedTheta < 0 && (t.projectedTheta = 2 * Math.PI + t.projectedTheta), 
         r && (e += this.translate.a, i += this.translate.b), s && (e *= this.multiplier, 

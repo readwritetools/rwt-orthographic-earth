@@ -5,7 +5,9 @@ import * as CB from './panel-callbacks.js';
 
 import EarthPosition from '../astronomy/earth-position.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
+
+import terminal from 'softlib/terminal.js';
 
 const Static = {
     rwtDockablePanels: 'rwt-dockable-panels/rwt-dockable-panels.js'
@@ -15,7 +17,7 @@ Object.seal(Static);
 
 export default class Menu {
     constructor(t) {
-        this.rwtOrthographicEarth = t, this.rwtDockablePanels = null;
+        this.rwtOrthographicEarth = t, this.rwtDockablePanels = null, this.shortcutKey = 'F1';
     }
     async initialize() {
         this.initializeCSS(), await this.instantiateComponent(), await this.rwtDockablePanels.waitOnLoading().then((() => {
@@ -23,7 +25,8 @@ export default class Menu {
             var t = 'open';
             this.rwtOrthographicEarth.hasAttribute('menu-state') && (t = this.rwtOrthographicEarth.getAttribute('menu-state')), 
             'open' == t ? this.rwtDockablePanels.openToolbar() : this.rwtDockablePanels.closeToolbar(), 
-            this.rwtDockablePanels.style.display = 'block';
+            this.rwtOrthographicEarth.hasAttribute('shortcut') && (this.shortcutKey = this.rwtOrthographicEarth.getAttribute('shortcut'), 
+            this.rwtDockablePanels.shortcutKey = this.shortcutKey), this.rwtDockablePanels.style.display = 'block';
         }));
     }
     initializeCSS() {
@@ -273,10 +276,10 @@ export default class Menu {
                 e > 40 && (e = 5 * Math.round(e / 5)), e > 100 && (e = 10 * Math.round(e / 10)), 
                 e = e.toFixed(0)), this.rwtDockablePanels.shadowRoot.getElementById('map-scale').value = e, 
                 this.rwtDockablePanels.shadowRoot.getElementById('map-scale-slider').value = this.valueToSliderPosition(1, 100, 1, 1e3, t.detail);
-                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), d = Math.round(2 * n / 100), h = Math.round(2 * l / 100);
+                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), h = Math.round(2 * n / 100), d = Math.round(2 * l / 100);
                 null != a && null != r && (a.setAttribute('min', -1 * n), a.setAttribute('max', n), 
-                a.setAttribute('step', d), r.setAttribute('min', -1 * l), r.setAttribute('max', l), 
-                r.setAttribute('step', h));
+                a.setAttribute('step', h), r.setAttribute('min', -1 * l), r.setAttribute('max', l), 
+                r.setAttribute('step', d));
             }));
 
           case 'space':
@@ -312,24 +315,24 @@ export default class Menu {
                 if ('disallow' == o) var i = ''; else i = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == o ? 'checked' : ''} />`;
                 var n = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
                 l.id = `layers-${a}`, l['data-z-order'] = s, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${i}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${r}</td>`;
-                let d = !1;
+                let h = !1;
                 for (let t = 0; t < n.childNodes.length; t++) if (n.childNodes[t]['data-z-order'] < s) {
-                    n.insertBefore(l, n.childNodes[t]), d = !0;
+                    n.insertBefore(l, n.childNodes[t]), h = !0;
                     break;
                 }
-                d || n.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
+                h || n.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
                     e = parseInt(e, 10);
                     var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
                     expect(r, 'Layer'), r.changeVisibility(a);
                     var o = this.rwtOrthographicEarth.getPackage(r.packageId);
-                    expect(o, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage' ]), 
+                    expect(o, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircle', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
                     o.changeVisibility(a);
                     var s = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${e}-identifiable`);
                     null != s && (s.disabled = !a);
                 }));
-                var h = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
-                null != h && h.addEventListener('change', (t => {
+                var d = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
+                null != d && d.addEventListener('change', (t => {
                     var e = t.currentTarget.attributes['data-layer-id'].value;
                     e = parseInt(e, 10);
                     var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
@@ -355,7 +358,7 @@ export default class Menu {
                     a.push(`<tr><th class='chef-h3' colspan=2>${t.layerName}</th></tr>`);
                     for (let e in t.featureData) {
                         let r = t.featureData[e];
-                        if ('Array' == r.constructor.name) for (let t = 0; t < r.length; t++) a.push(`<tr><td>${e}[${t}]</td><td>${r[t]}</td></tr>`); else a.push(`<tr><td>${e}</td><td>${r}</td></tr>`);
+                        if (r && 'Array' == r.constructor.name) for (let t = 0; t < r.length; t++) a.push(`<tr><td>${e}[${t}]</td><td>${r[t]}</td></tr>`); else a.push(`<tr><td>${e}</td><td>${r}</td></tr>`);
                     }
                 }
                 this.rwtDockablePanels.shadowRoot.getElementById('identify-table').innerHTML = a.join('');

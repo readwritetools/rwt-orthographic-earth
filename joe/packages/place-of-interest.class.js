@@ -3,11 +3,11 @@ import BasePackage from './base-package.class.js';
 
 import PointFeature from '../features/point-feature.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 export default class PlaceOfInterest extends BasePackage {
-    constructor(e, t, a, s, i) {
-        super(e, t, a, s, i), this.pointFeature = new PointFeature, this.pointFeature.featureName = 'place-of-interest', 
+    constructor(e, t, r, a, s) {
+        super(e, t, r, a, s), this.pointFeature = new PointFeature, this.pointFeature.featureName = 'place-of-interest', 
         this.registerEventListeners(), this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, 
         this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0, 
         this.rwtOrthographicEarth.broadcastMessage('package/place-of-interest', null), Object.seal(this);
@@ -20,26 +20,40 @@ export default class PlaceOfInterest extends BasePackage {
             this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.invalidateCanvas();
         }));
     }
-    recomputeStyles(e, t, a) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.pointFeature.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, a), 
-        t.layerNeedsRestyling = !1;
+    recomputeStyles(e, t, r, a) {
+        expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(r, 'Layer'), expect(a, 'Number'), 
+        super.recomputeStyles(e, t, r, (() => {
+            this.pointFeature.computeFeatureStyle(e, t, r.vssClassname, r.vssIdentifier, 0, a);
+        }));
     }
-    runCourtesyValidator(e, t, a) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.pointFeature.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, a);
+    runCourtesyValidator(e, t, r) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(r, 'Number'), super.runCourtesyValidator((() => {
+            this.pointFeature.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, r);
+        }));
     }
-    rotation(e) {
-        this.pointFeature.toGeoCoords(e), this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
+    rotation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'GeocentricCoordinates'), super.rotation(e, t, (() => {
+            this.pointFeature.toGeoCoords(e, t);
+        }));
     }
-    projection(e) {
-        this.pointFeature.toPlane(e), this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
+    projection(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'OrthographicProjection'), super.projection(e, t, (() => {
+            this.pointFeature.toPlane(e, t);
+        }));
     }
-    transformation(e) {
-        this.pointFeature.toPixels(e), this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
+    transformation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'CartesianTransformation'), super.transformation(e, t, (() => {
+            this.pointFeature.toPixels(e, t);
+        }));
     }
-    placement(e) {
-        this.pointFeature.toCanvas(e), this.packagePointsNeedPlacement = !1;
+    placement(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'Viewport'), super.placement(e, t, (() => {
+            this.pointFeature.toViewportCanvas(e, t);
+        }));
     }
-    renderLayer(e, t) {
-        expect(e, 'Earth'), expect(t, 'Number'), this.pointFeature.renderFeature(e, t);
+    drawLayer(e, t, r) {
+        expect(e, 'RenderClock'), expect(t, 'Earth'), expect(r, 'Number'), super.drawLayer(e, (() => {
+            this.pointFeature.drawFeature(e, t, r);
+        }));
     }
 }

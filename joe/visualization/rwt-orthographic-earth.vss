@@ -11,86 +11,141 @@
 @charset "UTF-8";
 
 /*------------------------- predefined grammar ------------------------------*/
-/* earth { stroke-width: 0; } */
-point { symbol-type: circle; size: 3; stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; node-count: 3; inner-size: 1; }
-line { stroke-width: 0.5; stroke-color: #AAAAAA; }
-polygon { stroke-width: 0.5; stroke-color: #AAAAAA; fill-color: #AAAAAA; }
+point {
+	visibility: visible;
+	scale: 1;
+	symbol-type: circle;
+	stroke-width: none;
+	stroke-color: #777;
+	fill-color: #777;
+	/* No default for these: size, inner-size, node-count, code-point */
+}
+
+line {
+	visibility: visible;
+	scale: 1;
+	stroke-width: 1;
+	stroke-color: #777;
+	stroke-type: solid;
+}
+
+polygon {
+	visibility: visible;
+	scale: 1;
+	transparency: 1.0;
+	stroke-width: 1;
+	stroke-color: #555;
+	stroke-type: solid;
+	fill-color: #999;
+	fill-type: source-over;
+}
 
 /*------------------------------- night -------------------------------------*/
-.night { fill-color: #33333377; }
+.night {
+	fill-color: #33333377;
+}
 		
 /*--------------------------- place of interest -----------------------------*/
-.place-of-interest { radius: 5; fill-color: #db9404; stroke-width: 6; stroke-color: #b87c02aa; }
+.place-of-interest {
+	radius: 5;
+	fill-color: #db9404;
+	stroke-width: 6;
+	stroke-color: #b87c02aa;
+}
 
 /*------------------------------- space -------------------------------------*/
-.space { deep-space: visible; deep-space-color: #093640; deep-space-star-count: 500; deep-space-star-color: #E0E070; }
-.space { earth-glow: hidden; earth-glow-size: 40; earth-glow-offset: 40; earth-glow-axis: 203.5; earth-glow-inner-color: #107187; earth-glow-outer-color: #093640; }
-.space { sunrise: hidden; sunrise-inner-radius: 5; sunrise-outer-radius: 120; sunrise-inner-color: #107187; sunrise-outer-color: #093640; }
+.space {
+	deep-space: visible;
+	deep-space-color: #093640;
+	deep-space-star-count: 500;
+	deep-space-star-color: #E0E070;
+}
 
-.sphere  { fill-color: #148BA6; }
+.space {
+	earth-glow: hidden;
+	earth-glow-size: 40;
+	earth-glow-offset: 40;
+	earth-glow-axis: 203.5;
+	earth-glow-inner-color: #107187;
+	earth-glow-outer-color: #093640;
+}
 
-#named-meridians["Prime Meridian"],
-#named-meridians["Intl. Dateline"] { stroke-width: 1.5; stroke-color: #107187; }
+.space { 
+	sunrise: hidden; 
+	sunrise-inner-radius: 5; 
+	sunrise-outer-radius: 120; 
+	sunrise-inner-color: #107187; 
+	sunrise-outer-color: #093640;
+}
 
-#named-parallels["Equator"] { stroke-width: 2.0; stroke-color: #107187; }
-#named-parallels["Arctic Circle"],
-#named-parallels["Tropic of Cancer"],
-#named-parallels["Tropic of Capricorn"],
-#named-parallels["Antarctic Circle"] { stroke-width: 1.0; stroke-color: #107187; }
+.sphere { 
+	fill-color: #cccccc20;
+}
 
-.graticule-3-by-3{ stroke-color: #107187; stroke-width: 0.25; }
-.graticule-3-by-3["Parallel 9"],
-.graticule-3-by-3["Parallel 18"],
-.graticule-3-by-3["Parallel 27"],
-.graticule-3-by-3["Parallel 36"],
-.graticule-3-by-3["Parallel 54"],
-.graticule-3-by-3["Parallel 63"],
-.graticule-3-by-3["Parallel 72"],
-.graticule-3-by-3["Parallel 81"],
-.graticule-3-by-3["Parallel -9"],
-.graticule-3-by-3["Parallel -18"],
-.graticule-3-by-3["Parallel -27"],
-.graticule-3-by-3["Parallel -36"],
-.graticule-3-by-3["Parallel -54"],
-.graticule-3-by-3["Parallel -63"],
-.graticule-3-by-3["Parallel -72"],
-.graticule-3-by-3["Parallel -81"],
-.graticule-3-by-3["Parallel 90"],
-.graticule-3-by-3["Meridian 9"],
-.graticule-3-by-3["Meridian 18"],
-.graticule-3-by-3["Meridian 27"],
-.graticule-3-by-3["Meridian 36"],
-.graticule-3-by-3["Meridian 54"],
-.graticule-3-by-3["Meridian 63"],
-.graticule-3-by-3["Meridian 72"],
-.graticule-3-by-3["Meridian 81"],
-.graticule-3-by-3["Meridian 90"],
-.graticule-3-by-3["Meridian 99"],
-.graticule-3-by-3["Meridian 108"],
-.graticule-3-by-3["Meridian 117"],
-.graticule-3-by-3["Meridian 126"],
-.graticule-3-by-3["Meridian 135"],
-.graticule-3-by-3["Meridian 144"],
-.graticule-3-by-3["Meridian 153"],
-.graticule-3-by-3["Meridian 162"],
-.graticule-3-by-3["Meridian 171"],
-.graticule-3-by-3["Meridian 180"],
-.graticule-3-by-3["Meridian -9"],
-.graticule-3-by-3["Meridian -18"],
-.graticule-3-by-3["Meridian -27"],
-.graticule-3-by-3["Meridian -36"],
-.graticule-3-by-3["Meridian -54"],
-.graticule-3-by-3["Meridian -63"],
-.graticule-3-by-3["Meridian -72"],
-.graticule-3-by-3["Meridian -81"],
-.graticule-3-by-3["Meridian -90"],
-.graticule-3-by-3["Meridian -99"],
-.graticule-3-by-3["Meridian -108"],
-.graticule-3-by-3["Meridian -117"],
-.graticule-3-by-3["Meridian -126"],
-.graticule-3-by-3["Meridian -135"],
-.graticule-3-by-3["Meridian -144"],
-.graticule-3-by-3["Meridian -153"],
-.graticule-3-by-3["Meridian -162"],
-.graticule-3-by-3["Meridian -171"],
-.graticule-3-by-3["Meridian -180"] { stroke-color: #107187; stroke-width: 0.5; }
+.named-meridians["Prime Meridian"],
+.named-meridians["Intl. Dateline"] {
+	stroke-width: 1.5;
+	stroke-color: #107187;
+}
+
+.named-parallels { 
+	stroke-color: #107187; 
+}
+.named-parallels["Equator"] { 
+	stroke-width: 2.0;
+}
+.named-parallels["Arctic Circle"],
+.named-parallels["Tropic of Cancer"],
+.named-parallels["Tropic of Capricorn"],
+.named-parallels["Antarctic Circle"] { 
+	stroke-width: 1.0;
+}
+
+.crosshairs {
+	symbol-type: crosshair;
+	stroke-color: #777;
+	stroke-width: 1;
+	size: 1;
+}
+
+.great-circle[type="embarkation"],
+.great-circle[type="destination"] {
+	symbol-type: star;
+	size: 5;
+	fill-color: #f00;
+	stroke-width: 1;
+	stroke-color: #777;
+}
+.great-circle[type="embarkation antipode"],
+.great-circle[type="destination antipode"] {
+	symbol-type: shuriken;
+	size: 5;
+	fill-color: #777;
+	stroke-width: 1;
+	stroke-color: #eee;
+}
+.great-circle[type="waypoint"] {
+	symbol-type: circle;
+	size: 3;
+	fill-color: #f00;
+	stroke-width: 1;
+	stroke-color: #777;
+}
+.great-circle[type="alt waypoint"] {
+	symbol-type: circle;
+	size: 3;
+	fill-color: #777;
+	stroke-width: 1;
+	stroke-color: #eee;
+}
+.great-circle[type="arc"] {
+	stroke-width: 3;
+	stroke-type: solid;
+	stroke-color: #fcc;
+}
+.great-circle[type="great circle"] {
+	stroke-width: 2;
+	stroke-type: short-dash;
+	stroke-color: #999;
+}
+

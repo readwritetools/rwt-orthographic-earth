@@ -9,62 +9,136 @@ import PolygonFeature from '../features/polygon-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
-import expect from 'softlib/expect.js';
+import RS from '../enum/rendering-state.enum.js';
+
+import PS from '../enum/projection-stage.enum.js';
+
+import FT from '../enum/feature-type.enum.js';
+
+import expect from '../dev/expect.js';
 
 export default class ExternalPackage extends BasePackage {
     constructor(e) {
         super(e), this.featurePolygons = [], this.featureLines = [], this.featurePoints = [], 
-        this.replaceAppend = '', this.url = '', this.featureKey = '';
-    }
-    recomputeStyles(e, t, s) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(s, 'Number');
-        for (var r = 0; r < this.featurePolygons.length; r++) this.featurePolygons[r].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, r, s);
-        for (r = 0; r < this.featureLines.length; r++) this.featureLines[r].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, r, s);
-        for (r = 0; r < this.featurePoints.length; r++) this.featurePoints[r].computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, r, s);
-        t.layerNeedsRestyling = !1;
+        this.replaceAppend = '', this.url = '', this.featureKey = '', this.polygonStopLength = 0, 
+        this.lineStopLength = 0, this.pointStopLength = 0;
     }
     runCourtesyValidator(e, t, s) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(s, 'Number');
-        for (var r = 0; r < this.featurePolygons.length; r++) this.featurePolygons[r].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, r, s);
-        for (r = 0; r < this.featureLines.length; r++) this.featureLines[r].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, r, s);
-        for (r = 0; r < this.featurePoints.length; r++) this.featurePoints[r].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, r, s);
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(s, 'Number'), super.runCourtesyValidator((() => {
+            for (var r = 0; r < this.featurePolygons.length; r++) this.featurePolygons[r].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, r, s);
+            for (r = 0; r < this.featureLines.length; r++) this.featureLines[r].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, r, s);
+            for (r = 0; r < this.featurePoints.length; r++) this.featurePoints[r].runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, r, s);
+        }));
     }
-    rotation(e) {
-        for (var t = 0; t < this.featurePolygons.length; t++) this.featurePolygons[t].toGeoCoords(e);
-        for (t = 0; t < this.featureLines.length; t++) this.featureLines[t].toGeoCoords(e);
-        for (t = 0; t < this.featurePoints.length; t++) this.featurePoints[t].toGeoCoords(e);
-        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
+    rotation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'GeocentricCoordinates'), super.rotation(e, t, (() => {
+            this.polygonStopLength = this.featurePolygons.length, this.timeRestrictedLoop(this.featurePolygons, FT.POLYGON, e, PS.ROTATION, (s => {
+                s.toGeoCoords(e, t);
+            })), this.lineStopLength = this.featureLines.length, this.timeRestrictedLoop(this.featureLines, FT.LINE, e, PS.ROTATION, (s => {
+                s.toGeoCoords(e, t);
+            })), this.pointStopLength = this.featurePoints.length, this.timeRestrictedLoop(this.featurePoints, FT.POINT, e, PS.ROTATION, (s => {
+                s.toGeoCoords(e, t);
+            }));
+        }));
     }
-    projection(e) {
-        for (var t = 0; t < this.featurePolygons.length; t++) this.featurePolygons[t].toPlane(e);
-        for (t = 0; t < this.featureLines.length; t++) this.featureLines[t].toPlane(e);
-        for (t = 0; t < this.featurePoints.length; t++) this.featurePoints[t].toPlane(e);
-        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
+    projection(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'OrthographicProjection'), super.projection(e, t, (() => {
+            this.timeRestrictedLoop(this.featurePolygons, FT.POLYGON, e, PS.PROJECTION, (s => {
+                s.toPlane(e, t);
+            })), this.timeRestrictedLoop(this.featureLines, FT.LINE, e, PS.PROJECTION, (s => {
+                s.toPlane(e, t);
+            })), this.timeRestrictedLoop(this.featurePoints, FT.POINT, e, PS.PROJECTION, (s => {
+                s.toPlane(e, t);
+            }));
+        }));
     }
-    transformation(e) {
-        for (var t = 0; t < this.featurePolygons.length; t++) this.featurePolygons[t].toPixels(e);
-        for (t = 0; t < this.featureLines.length; t++) this.featureLines[t].toPixels(e);
-        for (t = 0; t < this.featurePoints.length; t++) this.featurePoints[t].toPixels(e);
-        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
+    transformation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'CartesianTransformation'), super.transformation(e, t, (() => {
+            this.timeRestrictedLoop(this.featurePolygons, FT.POLYGON, e, PS.TRANSFORMATION, (s => {
+                s.toPixels(e, t);
+            })), this.timeRestrictedLoop(this.featureLines, FT.LINE, e, PS.TRANSFORMATION, (s => {
+                s.toPixels(e, t);
+            })), this.timeRestrictedLoop(this.featurePoints, FT.POINT, e, PS.TRANSFORMATION, (s => {
+                s.toPixels(e, t);
+            }));
+        }));
     }
-    placement(e) {
-        for (var t = 0; t < this.featurePolygons.length; t++) this.featurePolygons[t].toCanvas(e);
-        for (t = 0; t < this.featureLines.length; t++) this.featureLines[t].toCanvas(e);
-        for (t = 0; t < this.featurePoints.length; t++) this.featurePoints[t].toCanvas(e);
-        this.packagePointsNeedPlacement = !1;
+    placement(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'Viewport'), super.placement(e, t, (() => {
+            this.timeRestrictedLoop(this.featurePolygons, FT.POLYGON, e, PS.PLACEMENT, (s => {
+                s.toViewportCanvas(e, t);
+            })), this.timeRestrictedLoop(this.featureLines, FT.LINE, e, PS.PLACEMENT, (s => {
+                s.toViewportCanvas(e, t);
+            })), this.timeRestrictedLoop(this.featurePoints, FT.POINT, e, PS.PLACEMENT, (s => {
+                s.toViewportCanvas(e, t);
+            }));
+        }));
     }
-    renderLayer(e, t) {
-        expect(e, 'Earth'), expect(t, 'Number'), this.renderPolygons(e, t), this.renderLines(e, t), 
-        this.renderPoints(e, t);
+    recomputeStyles(e, t, s, r) {
+        expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(s, 'Layer'), expect(r, 'Number'), 
+        super.recomputeStyles(e, t, s, (() => {
+            this.timeRestrictedLoop(this.featurePolygons, FT.POLYGON, e, PS.STYLING, ((o, i) => {
+                o.computeFeatureStyle(e, t, s.vssClassname, s.vssIdentifier, i, r);
+            })), this.timeRestrictedLoop(this.featureLines, FT.LINE, e, PS.STYLING, ((o, i) => {
+                o.computeFeatureStyle(e, t, s.vssClassname, s.vssIdentifier, i, r);
+            })), this.timeRestrictedLoop(this.featurePoints, FT.POINT, e, PS.STYLING, ((o, i) => {
+                o.computeFeatureStyle(e, t, s.vssClassname, s.vssIdentifier, i, r);
+            }));
+        }));
     }
-    renderPolygons(e, t) {
-        for (var s = 0; s < this.featurePolygons.length; s++) this.featurePolygons[s].renderFeature(e, t);
+    drawLayer(e, t, s) {
+        expect(e, 'RenderClock'), expect(t, 'Earth'), expect(s, 'Number'), super.drawLayer(e, (() => {
+            this.timeRestrictedLoop(this.featurePolygons, FT.POLYGON, e, PS.DRAWING, (r => {
+                r.drawFeature(e, t, s);
+            })), this.timeRestrictedLoop(this.featureLines, FT.LINE, e, PS.DRAWING, (r => {
+                r.drawFeature(e, t, s);
+            })), this.timeRestrictedLoop(this.featurePoints, FT.POINT, e, PS.DRAWING, (r => {
+                r.drawFeature(e, t, s);
+            }));
+        }));
     }
-    renderLines(e, t) {
-        for (var s = 0; s < this.featureLines.length; s++) this.featureLines[s].renderFeature(e, t);
-    }
-    renderPoints(e, t) {
-        for (var s = 0; s < this.featurePoints.length; s++) this.featurePoints[s].renderFeature(e, t);
+    timeRestrictedLoop(e, t, s, r, o) {
+        expect(e, 'Array'), expect(t, 'Number'), expect(s, 'RenderClock'), expect(r, 'Number'), 
+        expect(o, 'Function');
+        let i = performance.now(), n = i + s.getTimeAllotment(r);
+        var a = 0;
+        switch (t) {
+          case FT.POINT:
+            a = this.pointStopLength;
+            break;
+
+          case FT.LINE:
+            a = this.lineStopLength;
+            break;
+
+          case FT.POLYGON:
+            a = this.polygonStopLength;
+            break;
+
+          default:
+            terminal(`unexpected featureType ${t}`);
+        }
+        for (var p = 0; p < e.length && !(s.renderingState == RS.SKETCHING && p >= a) && !(performance.now() > n); p++) {
+            o(e[p], p);
+        }
+        switch (t) {
+          case FT.POINT:
+            this.pointStopLength = p;
+            break;
+
+          case FT.LINE:
+            this.lineStopLength = p;
+            break;
+
+          case FT.POLYGON:
+            this.polygonStopLength = p;
+            break;
+
+          default:
+            terminal(`unexpected featureType ${t}`);
+        }
+        let u = performance.now();
+        s.consumeRenderTime(u - i);
     }
     discoverFeatures(e, t) {
         var s = this.discoverPolygon(e, t);

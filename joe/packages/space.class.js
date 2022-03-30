@@ -3,7 +3,7 @@ import BasePackage from './base-package.class.js';
 
 import GeneralFeature from '../features/general-feature.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 const degreesToRadians = Math.PI / 180;
 
@@ -21,13 +21,18 @@ export default class Space extends BasePackage {
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/space', null), 
         Object.seal(this);
     }
-    recomputeStyles(e, a, t) {
-        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), this.properties.computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, 0, t);
-        var s = this.properties.canvasParams['deep-space'], r = this.properties.canvasParams['deep-space-star-count'];
-        'visible' == s && r != this.stars.length && this.createStarField(r), a.layerNeedsRestyling = !1;
+    recomputeStyles(e, a, r, t) {
+        expect(e, 'RenderClock'), expect(a, 'vssStyleSheet'), expect(r, 'Layer'), expect(t, 'Number'), 
+        super.recomputeStyles(e, a, r, (() => {
+            this.properties.computeFeatureStyle(e, a, r.vssClassname, r.vssIdentifier, 0, t);
+            var s = this.properties.canvasParams['deep-space'], i = this.properties.canvasParams['deep-space-star-count'];
+            'visible' == s && i != this.stars.length && this.createStarField(i);
+        }));
     }
-    runCourtesyValidator(e, a, t) {
-        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), this.properties.runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, 0, t);
+    runCourtesyValidator(e, a, r) {
+        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(r, 'Number'), super.runCourtesyValidator((() => {
+            this.properties.runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, 0, r);
+        }));
     }
     static courtesyValidator(e) {
         switch (e) {
@@ -56,63 +61,66 @@ export default class Space extends BasePackage {
     createStarField(e) {
         this.stars = [];
         for (var a = 0; a < e; a++) {
-            var t = new Object;
-            t.x = Math.random(), t.y = Math.random(), t.radius = .5, a > .9 * e && (t.radius = 1), 
-            a > .97 * e && (t.radius = 1.5), a > .99 * e && (t.radius = 2), this.stars.push(t);
+            var r = new Object;
+            r.x = Math.random(), r.y = Math.random(), r.radius = .5, a > .9 * e && (r.radius = 1), 
+            a > .97 * e && (r.radius = 1.5), a > .99 * e && (r.radius = 2), this.stars.push(r);
         }
     }
-    rotation(e) {
-        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
+    rotation(e, a) {
+        expect(e, 'RenderClock'), expect(a, 'GeocentricCoordinates'), super.rotation(e, a, (() => {}));
     }
-    projection(e) {
-        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
+    projection(e, a) {
+        expect(e, 'RenderClock'), expect(a, 'OrthographicProjection'), super.projection(e, a, (() => {}));
     }
-    transformation(e) {
-        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
+    transformation(e, a) {
+        expect(e, 'RenderClock'), expect(a, 'CartesianTransformation'), super.transformation(e, a, (() => {}));
     }
-    placement(e) {
-        this.packagePointsNeedPlacement = !1;
+    placement(e, a) {
+        expect(e, 'RenderClock'), expect(a, 'Viewport'), super.placement(e, a, (() => {}));
     }
-    renderLayer(e, a) {
-        expect(e, 'Earth'), expect(a, 'Number');
-        let t = this.properties.canvasParams.get(a);
-        if (expect(t, 'vssCanvasParameters'), 'hidden' != t.visibility) {
-            var s = e.getVisualizedRadius(), r = parseInt(t['earth-glow-size']);
-            r < 0 && (r = 0), r > s && (r = s);
-            var i = t['earth-glow-offset'];
-            null == i && (i = r), (i = parseInt(i)) < 0 && (i = 0), i > r && (i = r);
-            var o = parseFloat(t['earth-glow-axis']);
-            'visible' == t['deep-space'] && this.renderDeepSpace(e, t), 'visible' == t['earth-glow'] && this.renderEarthGlow(e, t, r, i, o), 
-            'visible' == t.sunrise && this.renderSunrise(e, t, r, i, o);
-        }
+    drawLayer(e, a, r) {
+        expect(e, 'RenderClock'), expect(a, 'Earth'), expect(r, 'Number'), super.drawLayer(e, (() => {
+            let e = this.properties.canvasParams.get(r);
+            'hidden' != e.visibility && this.drawSpace(a, e);
+        }));
+    }
+    drawSpace(e, a) {
+        expect(e, 'Earth'), expect(a, 'vssCanvasParameters');
+        var r = e.getVisualizedRadius(), t = parseInt(a['earth-glow-size']);
+        t < 0 && (t = 0), t > r && (t = r);
+        var s = a['earth-glow-offset'];
+        null == s && (s = t), (s = parseInt(s)) < 0 && (s = 0), s > t && (s = t);
+        var i = parseFloat(a['earth-glow-axis']);
+        'visible' == a['deep-space'] && this.renderDeepSpace(e, a), 'visible' == a['earth-glow'] && this.renderEarthGlow(e, a, t, s, i), 
+        'visible' == a.sunrise && this.renderSunrise(e, a, t, s, i);
     }
     renderDeepSpace(e, a) {
         expect(e, 'Earth'), expect(a, 'vssCanvasParameters');
-        var t = e.canvas.getContext('2d');
-        t.fillStyle = a['deep-space-color'], t.fillRect(0, 0, e.canvas.width, e.canvas.height), 
-        t.fillStyle = a['deep-space-star-color'];
-        for (var s = a['deep-space-star-count'], r = 0; r < s; r++) {
-            var i = e.canvas.width * this.stars[r].x, o = e.canvas.height * this.stars[r].y, c = this.stars[r].radius;
-            t.beginPath(), t.arc(i, o, c, 0, 2 * Math.PI, !1), t.closePath(), t.fill();
+        var r = e.canvas.getContext('2d');
+        r.fillStyle = a['deep-space-color'], r.fillRect(0, 0, e.canvas.width, e.canvas.height), 
+        r.fillStyle = a['deep-space-star-color'];
+        for (var t = a['deep-space-star-count'], s = 0; s < t; s++) {
+            var i = e.canvas.width * this.stars[s].x, o = e.canvas.height * this.stars[s].y, c = this.stars[s].radius;
+            r.beginPath(), r.arc(i, o, c, 0, 2 * Math.PI, !1), r.closePath(), r.fill();
         }
     }
-    renderEarthGlow(e, a, t, s, r) {
+    renderEarthGlow(e, a, r, t, s) {
         expect(e, 'Earth'), expect(a, 'vssCanvasParameters');
-        var i = e.canvas.getContext('2d'), o = e.carte.translate.a * e.carte.multiplier, c = e.carte.translate.b * e.carte.multiplier, n = e.viewport.centerPoint.x + o, l = e.viewport.centerPoint.y + c, p = e.getVisualizedRadius(), d = degreesToRadians * r, h = n + Math.cos(d) * s, u = l - Math.sin(d) * s, g = p + t, v = p - t, P = i.createRadialGradient(h, u, v, h, u, g);
-        P.addColorStop(0, a['earth-glow-inner-color']), P.addColorStop(1, a['earth-glow-outer-color']), 
-        i.fillStyle = P, i.beginPath(), i.arc(h, u, g, 0, 2 * Math.PI, !1), i.closePath(), 
+        var i = e.canvas.getContext('2d'), o = e.carte.translate.a * e.carte.multiplier, c = e.carte.translate.b * e.carte.multiplier, n = e.viewport.centerPoint.x + o, l = e.viewport.centerPoint.y + c, p = e.getVisualizedRadius(), d = degreesToRadians * s, u = n + Math.cos(d) * t, h = l - Math.sin(d) * t, v = p + r, g = p - r, x = i.createRadialGradient(u, h, g, u, h, v);
+        x.addColorStop(0, a['earth-glow-inner-color']), x.addColorStop(1, a['earth-glow-outer-color']), 
+        i.fillStyle = x, i.beginPath(), i.arc(u, h, v, 0, 2 * Math.PI, !1), i.closePath(), 
         i.fill();
     }
-    renderSunrise(e, a, t, s, r) {
+    renderSunrise(e, a, r, t, s) {
         expect(e, 'Earth'), expect(a, 'vssCanvasParameters');
-        var i = e.canvas.getContext('2d'), o = e.carte.translate.a * e.carte.multiplier, c = e.carte.translate.b * e.carte.multiplier, n = e.viewport.centerPoint.x + o, l = e.viewport.centerPoint.y + c, p = e.getVisualizedRadius(), d = degreesToRadians * (r + 180), h = n + Math.cos(d) * p, u = l - Math.sin(d) * p, g = parseInt(a['sunrise-inner-radius']);
-        g < 0 && (g = 0), g > p / 4 && (g = p / 4);
-        var v = a['sunrise-outer-radius'];
-        null == v && (v = p / 2), (v = parseInt(v)) < 0 && (v = 0), v > 4 * p && (v = 4 * p), 
-        v < g && (v = g + 1);
-        var P = i.createRadialGradient(h, u, g, h, u, v);
-        P.addColorStop(0, a['sunrise-inner-color']), P.addColorStop(1, a['sunrise-outer-color']), 
-        i.fillStyle = P, i.beginPath(), i.arc(h, u, v, 0, 2 * Math.PI, !1), i.closePath(), 
+        var i = e.canvas.getContext('2d'), o = e.carte.translate.a * e.carte.multiplier, c = e.carte.translate.b * e.carte.multiplier, n = e.viewport.centerPoint.x + o, l = e.viewport.centerPoint.y + c, p = e.getVisualizedRadius(), d = degreesToRadians * (s + 180), u = n + Math.cos(d) * p, h = l - Math.sin(d) * p, v = parseInt(a['sunrise-inner-radius']);
+        v < 0 && (v = 0), v > p / 4 && (v = p / 4);
+        var g = a['sunrise-outer-radius'];
+        null == g && (g = p / 2), (g = parseInt(g)) < 0 && (g = 0), g > 4 * p && (g = 4 * p), 
+        g < v && (g = v + 1);
+        var x = i.createRadialGradient(u, h, v, u, h, g);
+        x.addColorStop(0, a['sunrise-inner-color']), x.addColorStop(1, a['sunrise-outer-color']), 
+        i.fillStyle = x, i.beginPath(), i.arc(u, h, g, 0, 2 * Math.PI, !1), i.closePath(), 
         i.fill();
     }
 }

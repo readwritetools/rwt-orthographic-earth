@@ -13,7 +13,7 @@ import Space from '../packages/space.class.js';
 
 import Sphere from '../packages/sphere.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 import terminal from 'softlib/terminal.js';
 
@@ -100,6 +100,10 @@ export default class vssMediaRule {
 
               case 'sphere':
                 c = Sphere.courtesyValidator(l);
+                break;
+
+              default:
+                c = !1;
             }
             if (!c) return void terminal.warning(`${e} { ${l} } unsupported ${r} property`);
             if (null == n) return void terminal.warning(`${e} { ${l} } unable to parse value.`);
@@ -161,6 +165,10 @@ export default class vssMediaRule {
                 this.validateFillType(e, l, n);
                 break;
 
+              case 'code-point':
+                this.validateCodePoint(e, l, n);
+                break;
+
               default:
                 terminal.warning(`${e} { ${l}:${n} } not expected in validator.`);
             }
@@ -190,11 +198,11 @@ export default class vssMediaRule {
         !1);
     }
     validateColor(e, r, a) {
-        return 'String' == a.constructor.name && -1 != a.indexOf('#') || (terminal.warning(`${e} { ${r}:${a} } expected a color value in the form #rrggbb or #rrggbbaa.`), 
-        !1);
+        return 'String' == a.constructor.name && -1 != a.indexOf('#') || ('none' == a || (terminal.warning(`${e} { ${r}:${a} } expected a color value in the form #rrggbb or #rrggbbaa.`), 
+        !1));
     }
     validateSymbolType(e, r, a) {
-        var t = [ 'circle', 'polygon', 'triangle', 'rhombus', 'pentagon', 'hexagon', 'star', 'diamond', 'trigram', 'shuriken', 'pentagram', 'hexagram' ];
+        var t = [ 'circle', 'polygon', 'triangle', 'rhombus', 'pentagon', 'hexagon', 'star', 'diamond', 'trigram', 'shuriken', 'pentagram', 'hexagram', 'crosshair', 'x-mark', 'unicode' ];
         return !!t.includes(a) || (terminal.warning(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
         !1);
     }
@@ -207,5 +215,8 @@ export default class vssMediaRule {
         var t = [ 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'copy', 'xor', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity' ];
         return !!t.includes(a) || (terminal.warning(`${e} { ${r}:${a} } expected to be one of [${t.join(', ')}].`), 
         !1);
+    }
+    validateCodePoint(e, r, a) {
+        return !0;
     }
 }

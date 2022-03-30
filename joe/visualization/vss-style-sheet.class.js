@@ -7,6 +7,8 @@ import cssTokenizer from './css-tokenizer.js';
 
 import cssParser from './css-parser.js';
 
+import expect from '../dev/expect.js';
+
 import terminal from 'softlib/terminal.js';
 
 export default class vssStyleSheet {
@@ -24,33 +26,33 @@ export default class vssStyleSheet {
                 referrerPolicy: 'no-referrer'
             });
             if (200 != t.status && 304 != t.status) throw new Error(`Request for ${e} returned with ${t.status}`);
-            var a = await t.text();
-            this.addVisualizationRule(a);
+            var r = await t.text();
+            this.addVisualizationRule(r);
         } catch (e) {
             terminal.caught(e);
         }
     }
     addVisualizationRule(e) {
-        var t = cssTokenizer(e), a = cssParser(t);
-        if ('STYLESHEET' != a.type) return terminal.logic('Expected \'STYLESHEET\', but found %s', a.type);
-        var l = this.vssMediaCollection.getAllMediaRule();
-        this.decodeSheet(l, a), this.allFeaturesNeedRestyling = !0, this.rwtOrthographicEarth.broadcastMessage('visualization/styleSheetAdded', null);
+        var t = cssTokenizer(e), r = cssParser(t);
+        if ('STYLESHEET' != r.type) return terminal.logic(`Expected 'STYLESHEET', but found ${r.type}`);
+        var a = this.vssMediaCollection.getAllMediaRule();
+        this.decodeSheet(a, r), this.allFeaturesNeedRestyling = !0, this.rwtOrthographicEarth.broadcastMessage('visualization/styleSheetAdded', null);
     }
     decodeSheet(e, t) {
-        for (var a = 0; a < t.value.length; a++) {
-            var l = t.value[a];
-            if ('AT-RULE' != l.type) if ('STYLE-RULE' == l.type) for (var s = this.determineSelectorName(l.selector), r = 0; r < l.value.length; r++) {
-                var i = l.value[r];
-                if ('DECLARATION' == i.type) for (var o = this.determinePropertyValuePair(i.name, i.value), n = 0; n < s.length; n++) {
-                    var c = s[n];
+        for (var r = 0; r < t.value.length; r++) {
+            var a = t.value[r];
+            if ('AT-RULE' != a.type) if ('STYLE-RULE' == a.type) for (var n = this.determineSelectorName(a.selector), l = 0; l < a.value.length; l++) {
+                var i = a.value[l];
+                if ('DECLARATION' == i.type) for (var o = this.determinePropertyValuePair(i.name, i.value), s = 0; s < n.length; s++) {
+                    var c = n[s];
                     if (e.selectorExists(c)) var u = e.getSelector(c); else u = e.createNewSelector(c);
                     u.addProperty(o);
-                } else terminal.logic('Expected \'DECLARATION\', but found %s . . . skipping', i.type);
-            } else terminal.logic('Expected \'AT-RULE\' or \'STYLE-RULE\', but found %s . . . skipping', l.type); else {
-                if ('media' != l.name) continue;
-                var v = this.determineValidMapScales(l.prelude);
-                if (this.vssMediaCollection.ruleExists(v.minScale, v.maxScale)) var p = this.vssMediaCollection.getRule(v.minScale, v.maxScale); else p = this.vssMediaCollection.createNewRule(v.minScale, v.maxScale);
-                this.decodeSheet(p, l);
+                } else terminal.logic(`Expected 'DECLARATION', but found ${i.type} . . . skipping`);
+            } else terminal.logic(`Expected 'AT-RULE' or 'STYLE-RULE', but found ${a.type} . . . skipping`); else {
+                if ('media' != a.name) continue;
+                var p = this.determineValidMapScales(a.prelude);
+                if (this.vssMediaCollection.ruleExists(p.minScale, p.maxScale)) var v = this.vssMediaCollection.getRule(p.minScale, p.maxScale); else v = this.vssMediaCollection.createNewRule(p.minScale, p.maxScale);
+                this.decodeSheet(v, a);
             }
         }
     }
@@ -58,60 +60,84 @@ export default class vssStyleSheet {
         for (var t = {
             minScale: 'min',
             maxScale: 'max'
-        }, a = 0; a < e.length; a++) if ('BLOCK' == e[a].type && '(' == e[a].name) {
-            for (var l = '', s = '', r = 0; r < e[a].value.length; r++) {
-                var i = e[a].value[r];
-                if ('IDENT' == i.tokenType) l = i.value; else {
+        }, r = 0; r < e.length; r++) if ('BLOCK' == e[r].type && '(' == e[r].name) {
+            for (var a = '', n = '', l = 0; l < e[r].value.length; l++) {
+                var i = e[r].value[l];
+                if ('IDENT' == i.tokenType) a = i.value; else {
                     if (':' == i.tokenType) continue;
-                    'NUMBER' == i.tokenType && (s = i.value);
+                    'NUMBER' == i.tokenType && (n = i.value);
                 }
             }
-            'gt-scale' == l ? t.minScale = s : 'ng-scale' == l && (t.maxScale = s);
-        } else if ('IDENT' == e[a].tokenType && 'and' == e[a].value) continue;
+            'gt-scale' == a ? t.minScale = n : 'ng-scale' == a && (t.maxScale = n);
+        } else if ('IDENT' == e[r].tokenType && 'and' == e[r].value) continue;
         return t;
     }
     determineSelectorName(e) {
-        for (var t = [], a = '', l = 0; l < e.length; l++) if ('DELIM' == e[l].tokenType && '.' == e[l].value) a += e[l].value; else if ('HASH' == e[l].tokenType) a += '#' + e[l].value; else if ('IDENT' == e[l].tokenType) a += e[l].value; else if ('BLOCK' == e[l].type && '[' == e[l].name) {
-            for (var s = '', r = e[l].value, i = 0; i < r.length; i++) 'IDENT' == r[i].tokenType || 'DELIM' == r[i].tokenType || 'NUMBER' == r[i].tokenType ? s += r[i].value : 'STRING' == r[i].tokenType && (s += `"${r[i].value}"`);
-            a += `[${s}]`;
-        } else 'DELIM' == e[l].tokenType && ',' == e[l].value && (t.push(a), a = '');
-        return t.push(a), t;
+        for (var t = [], r = '', a = 0; a < e.length; a++) if ('DELIM' == e[a].tokenType && '.' == e[a].value) r += e[a].value; else if ('HASH' == e[a].tokenType) r += '#' + e[a].value; else if ('IDENT' == e[a].tokenType) r += e[a].value; else if ('BLOCK' == e[a].type && '[' == e[a].name) {
+            for (var n = '', l = e[a].value, i = 0; i < l.length; i++) 'IDENT' == l[i].tokenType || 'DELIM' == l[i].tokenType || 'NUMBER' == l[i].tokenType ? n += l[i].value : 'STRING' == l[i].tokenType && (n += `"${l[i].value}"`);
+            r += `[${n}]`;
+        } else 'DELIM' == e[a].tokenType && ',' == e[a].value && (t.push(r), r = '');
+        return t.push(r), t;
     }
     determinePropertyValuePair(e, t) {
-        var a = new vssProperty;
-        a.name = e;
-        for (var l = 0; l < t.length; l++) {
-            var s = t[l];
-            if ('BLOCK' == s.type && '(' == s.name) {
-                for (var r = [], i = s.value, o = 0; o < i.length; o++) 'HASH' == i[o].tokenType && r.push('#' + i[o].value);
-                a.value = r;
-            } else switch (s.tokenType) {
+        var r = new vssProperty;
+        r.name = e;
+        for (var a = 0; a < t.length; a++) {
+            var n = t[a];
+            if ('BLOCK' == n.type && '(' == n.name) {
+                for (var l = [], i = n.value, o = 0; o < i.length; o++) 'HASH' == i[o].tokenType && l.push('#' + i[o].value);
+                r.value = l;
+            } else if ('FUNCTION' == n.type) r.value = this.decodeFunction(r.name, n.name, n.value); else switch (n.tokenType) {
               case 'WHITESPACE':
                 continue;
 
               case 'DIMENSION':
-                a.value = s.num;
+                r.value = n.num;
                 break;
 
               case 'HASH':
-                a.value = '#' + s.value;
+                r.value = '#' + n.value;
                 break;
 
               case 'NUMBER':
               case 'IDENT':
-                a.value = s.value;
+                r.value = n.value;
                 break;
 
               default:
                 continue;
             }
         }
-        return a;
+        return r;
     }
-    computeStyle(e, t, a, l, s, r) {
-        return this.vssMediaCollection.computeStyle(this.mapScale, e, t, a, l, s, r);
+    decodeFunction(e, t, r) {
+        if (expect(name, 'String'), expect(r, 'Array'), 'rgb' == t || 'RGB' == t) {
+            if (3 != r.length) return terminal.abnormal(`VSS style sheet expected 3 arguments to ${t} for property ${e}`), 
+            null;
+            return `#${convertIntegerToHex(getFunctionArg(r[0]))}${convertIntegerToHex(getFunctionArg(r[1]))}${convertIntegerToHex(getFunctionArg(r[2]))}`;
+        }
+        if ('rgba' == t || 'RGBA' == t) {
+            if (4 != r.length) return terminal.abnormal(`VSS style sheet expected 4 arguments to ${t} for property ${e}`), 
+            null;
+            return `#${convertIntegerToHex(getFunctionArg(r[0]))}${convertIntegerToHex(getFunctionArg(r[1]))}${convertIntegerToHex(getFunctionArg(r[2]))}${convertIntegerToHex(Math.round(255 * getFunctionArg(r[3]), 0))}`;
+        }
+        return terminal.abnormal(`VSS style sheet unhandled function ${t} for property ${e}`), 
+        null;
     }
-    runCourtesyValidator(e, t, a, l, s, r) {
-        this.vssMediaCollection.runCourtesyValidator(this.mapScale, e, t, a, l, s, r);
+    computeStyle(e, t, r, a, n, l) {
+        return this.vssMediaCollection.computeStyle(this.mapScale, e, t, r, a, n, l);
     }
+    runCourtesyValidator(e, t, r, a, n, l) {
+        this.vssMediaCollection.runCourtesyValidator(this.mapScale, e, t, r, a, n, l);
+    }
+}
+
+function getFunctionArg(e) {
+    expect(e, 'CSSParserRule');
+    var t = e.value;
+    return 'Array' != t.constructor.name || 1 != t.length || 'CSSParserToken' != t[0].constructor.name || 'integer' != t[0].type && 'number' != t[0].type ? 0 : t[0].value;
+}
+
+function convertIntegerToHex(e) {
+    return expect(e, 'Number'), isNaN(e) || e < 0 || e > 255 ? '00' : e.toString(16).padStart(2, '0').toUpperCase();
 }

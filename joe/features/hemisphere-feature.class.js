@@ -3,9 +3,9 @@ import PolygonFeature from './polygon-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
-import ECEF from '../projection/earth-centered-earth-fixed.class.js';
+import * as ECEF from '../spherical-earth/coordinate-translations.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 import terminal from 'softlib/terminal.js';
 

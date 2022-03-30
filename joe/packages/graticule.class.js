@@ -5,62 +5,69 @@ import LineFeature from '../features/line-feature.class.js';
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 export default class Graticule extends BasePackage {
-    constructor(e, a, t, s) {
-        if (super(e), a = Number(a), t = Number(t), this.parallelFrequency = Number.isNaN(a) ? 'none' : a, 
-        this.meridianFrequency = Number.isNaN(t) ? 'none' : t, this.drawToPoles = void 0 !== s && s, 
+    constructor(e, r, t, a) {
+        if (super(e), r = Number(r), t = Number(t), this.parallelFrequency = Number.isNaN(r) ? 'none' : r, 
+        this.meridianFrequency = Number.isNaN(t) ? 'none' : t, this.drawToPoles = void 0 !== a && a, 
         this.parallels = [], this.meridians = [], 'none' != this.parallelFrequency && (this.parallelFrequency <= 0 || this.parallelFrequency > 30) && (this.parallelFrequency = 10), 
         'none' != this.meridianFrequency && (this.meridianFrequency <= 0 || this.meridianFrequency > 30) && (this.meridianFrequency = 10), 
-        'none' != this.parallelFrequency) for (var r = -90 + this.parallelFrequency; r < 90; r += this.parallelFrequency) {
-            (n = new LineFeature).featureName = 'Parallel ' + r;
-            for (var i = -180; i <= 180; i++) n.addPoint(new ProjectedPoint(r, i));
+        'none' != this.parallelFrequency) for (var s = -90 + this.parallelFrequency; s < 90; s += this.parallelFrequency) {
+            (n = new LineFeature).featureName = 'Parallel ' + s;
+            for (var i = -180; i <= 180; i++) n.addPoint(new ProjectedPoint(s, i));
             this.parallels.push(n);
         }
-        if ('none' != this.meridianFrequency) for (i = -180; i <= 180; i += this.meridianFrequency) {
+        if ('none' != this.meridianFrequency) for (i = -180; i < 180; i += this.meridianFrequency) {
             var n;
-            if ((n = new LineFeature).featureName = 'Meridian ' + i, 1 == this.drawToPoles) for (r = -90; r <= 90; r++) n.addPoint(new ProjectedPoint(r, i)); else for (r = -90 + t; r < 90; r++) n.addPoint(new ProjectedPoint(r, i));
+            if ((n = new LineFeature).featureName = 'Meridian ' + i, 1 == this.drawToPoles) for (s = -90; s <= 90; s++) n.addPoint(new ProjectedPoint(s, i)); else for (s = -90 + t; s < 90; s++) n.addPoint(new ProjectedPoint(s, i));
             this.meridians.push(n);
         }
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/graticule', null), 
         Object.seal(this);
     }
-    recomputeStyles(e, a, t) {
-        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
-        for (var s = 0; s < this.parallels.length; s++) this.parallels[s].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, s, t);
-        for (s = 0; s < this.meridians.length; s++) this.meridians[s].computeFeatureStyle(e, a.vssClassname, a.vssIdentifier, s, t);
-        a.layerNeedsRestyling = !1;
+    recomputeStyles(e, r, t, a) {
+        expect(e, 'RenderClock'), expect(r, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), 
+        super.recomputeStyles(e, r, t, (() => {
+            for (var s = 0; s < this.parallels.length; s++) this.parallels[s].computeFeatureStyle(e, r, t.vssClassname, t.vssIdentifier, s, a);
+            for (s = 0; s < this.meridians.length; s++) this.meridians[s].computeFeatureStyle(e, r, t.vssClassname, t.vssIdentifier, s, a);
+        }));
     }
-    runCourtesyValidator(e, a, t) {
-        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number');
-        for (var s = 0; s < this.parallels.length; s++) this.parallels[s].runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, s, t);
-        for (s = 0; s < this.meridians.length; s++) this.meridians[s].runCourtesyValidator(e, a.vssClassname, a.vssIdentifier, s, t);
+    runCourtesyValidator(e, r, t) {
+        expect(e, 'vssStyleSheet'), expect(r, 'Layer'), expect(t, 'Number'), super.runCourtesyValidator((() => {
+            for (var a = 0; a < this.parallels.length; a++) this.parallels[a].runCourtesyValidator(e, r.vssClassname, r.vssIdentifier, a, t);
+            for (a = 0; a < this.meridians.length; a++) this.meridians[a].runCourtesyValidator(e, r.vssClassname, r.vssIdentifier, a, t);
+        }));
     }
-    rotation(e) {
-        for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toGeoCoords(e);
-        for (a = 0; a < this.meridians.length; a++) this.meridians[a].toGeoCoords(e);
-        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
+    rotation(e, r) {
+        expect(e, 'RenderClock'), expect(r, 'GeocentricCoordinates'), super.rotation(e, r, (() => {
+            for (var t = 0; t < this.parallels.length; t++) this.parallels[t].toGeoCoords(e, r);
+            for (t = 0; t < this.meridians.length; t++) this.meridians[t].toGeoCoords(e, r);
+        }));
     }
-    projection(e) {
-        for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toPlane(e);
-        for (a = 0; a < this.meridians.length; a++) this.meridians[a].toPlane(e);
-        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
+    projection(e, r) {
+        expect(e, 'RenderClock'), expect(r, 'OrthographicProjection'), super.projection(e, r, (() => {
+            for (var t = 0; t < this.parallels.length; t++) this.parallels[t].toPlane(e, r);
+            for (t = 0; t < this.meridians.length; t++) this.meridians[t].toPlane(e, r);
+        }));
     }
-    transformation(e) {
-        for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toPixels(e);
-        for (a = 0; a < this.meridians.length; a++) this.meridians[a].toPixels(e);
-        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
+    transformation(e, r) {
+        expect(e, 'RenderClock'), expect(r, 'CartesianTransformation'), super.transformation(e, r, (() => {
+            for (var t = 0; t < this.parallels.length; t++) this.parallels[t].toPixels(e, r);
+            for (t = 0; t < this.meridians.length; t++) this.meridians[t].toPixels(e, r);
+        }));
     }
-    placement(e) {
-        for (var a = 0; a < this.parallels.length; a++) this.parallels[a].toCanvas(e);
-        for (a = 0; a < this.meridians.length; a++) this.meridians[a].toCanvas(e);
-        this.packagePointsNeedPlacement = !1;
+    placement(e, r) {
+        expect(e, 'RenderClock'), expect(r, 'Viewport'), super.placement(e, r, (() => {
+            for (var t = 0; t < this.parallels.length; t++) this.parallels[t].toViewportCanvas(e, r);
+            for (t = 0; t < this.meridians.length; t++) this.meridians[t].toViewportCanvas(e, r);
+        }));
     }
-    renderLayer(e, a) {
-        expect(e, 'Earth'), expect(a, 'Number');
-        for (var t = 0; t < this.parallels.length; t++) this.parallels[t].renderFeature(e, a);
-        for (t = 0; t < this.meridians.length; t++) this.meridians[t].renderFeature(e, a);
+    drawLayer(e, r, t) {
+        expect(e, 'RenderClock'), expect(r, 'Earth'), expect(t, 'Number'), super.drawLayer(e, (() => {
+            for (var a = 0; a < this.parallels.length; a++) this.parallels[a].drawFeature(e, r, t);
+            for (a = 0; a < this.meridians.length; a++) this.meridians[a].drawFeature(e, r, t);
+        }));
     }
 }

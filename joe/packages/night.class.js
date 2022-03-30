@@ -3,9 +3,9 @@ import BasePackage from './base-package.class.js';
 
 import HemisphereFeature from '../features/hemisphere-feature.class.js';
 
-import * as CB from '../panels/panel-callbacks.js';
+import * as CB from '../menu/panel-callbacks.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 const degreesToRadians = Math.PI / 180;
 
@@ -24,33 +24,51 @@ export default class Night extends BasePackage {
             this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0;
         }));
     }
-    recomputeStyles(e, t, i) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number'), this.identityPoints.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, i), 
-        t.layerNeedsRestyling = !1;
+    recomputeStyles(e, t, i, s) {
+        expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(i, 'Layer'), expect(s, 'Number'), 
+        super.recomputeStyles(e, t, i, (() => {
+            this.identityPoints.computeFeatureStyle(e, t, i.vssClassname, i.vssIdentifier, 0, s);
+        }));
     }
     runCourtesyValidator(e, t, i) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number'), this.identityPoints.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, i);
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(i, 'Number'), super.runCourtesyValidator((() => {
+            this.identityPoints.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, i);
+        }));
     }
-    rotation(e) {
-        for (var t = 0; t < this.identityPoints.outerRing.length; t++) e.toNightCoords(this.identityPoints.outerRing[t]);
-        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
+    rotation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'GeocentricCoordinates'), super.rotation(e, t, (() => {
+            for (var e = 0; e < this.identityPoints.outerRing.length; e++) t.toNightPhiLambda(this.identityPoints.outerRing[e]);
+        }));
     }
-    projection(e) {
-        var t = CB.numSecondsSinceMidnightUTC(this.rwtOrthographicEarth.earth.earthPosition.UTC) + 64800;
-        t >= 86400 && (t -= 86400);
-        for (var i = 2 * (t / 86400) * Math.PI, s = 0; s < this.identityPoints.outerRing.length; s++) e.toNightPlane(this.identityPoints.outerRing[s], i);
-        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
+    projection(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'OrthographicProjection'), super.projection(e, t, (() => {
+            var e = CB.numSecondsSinceMidnightUTC(this.rwtOrthographicEarth.earth.earthPosition.UTC) + 64800;
+            e >= 86400 && (e -= 86400);
+            var i = 2 * (e / 86400) * Math.PI;
+            this.identityPoints.pointsOnNearSide = 0, this.identityPoints.pointsOnFarSide = 0;
+            for (var s = 0; s < this.identityPoints.outerRing.length; s++) {
+                let e = this.identityPoints.outerRing[s];
+                t.toNightEastingNorthing(e, i), e.isOnNearSide ? this.identityPoints.pointsOnNearSide++ : this.identityPoints.pointsOnFarSide++;
+            }
+        }));
     }
-    transformation(e) {
-        for (var t = 0; t < this.identityPoints.outerRing.length; t++) e.toPixels(this.identityPoints.outerRing[t], !0, !0, !0);
-        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
+    transformation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'CartesianTransformation'), super.transformation(e, t, (() => {
+            for (var e = 0; e < this.identityPoints.outerRing.length; e++) t.toEarthXY(this.identityPoints.outerRing[e], !0, !0, !0);
+        }));
     }
-    placement(e) {
-        this.identityPoints.toCanvas(e), this.packagePointsNeedPlacement = !1;
+    placement(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'Viewport'), super.placement(e, t, (() => {
+            for (var i = 0; i < this.identityPoints.outerRing.length; i++) {
+                let s = this.identityPoints.outerRing[i];
+                if (t.toCanvasXY(s), s.isOnNearSide) if (s.isOnCanvas) this.identityPoints.pointsOnCanvas++; else if (this.identityPoints.pointsOffCanvas++, 
+                e.renderingState == RS.SKETCHING) return;
+            }
+        }));
     }
-    renderLayer(e, t) {
-        expect(e, 'Earth'), expect(t, 'Number');
-        let i = this.identityPoints.canvasParams.get(t);
-        expect(i, 'vssCanvasParameters'), 'hidden' != i.visibility && this.identityPoints.renderFeature(e, t);
+    drawLayer(e, t, i) {
+        expect(e, 'RenderClock'), expect(t, 'Earth'), expect(i, 'Number'), super.drawLayer(e, (() => {
+            this.identityPoints.drawFeature(e, t, i);
+        }));
     }
 }

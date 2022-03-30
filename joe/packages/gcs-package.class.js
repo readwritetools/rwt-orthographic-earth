@@ -13,11 +13,11 @@ import GcsHoldingArea from 'gcsio/gcs/gcs-holding-area.class.js';
 
 import * as GcsParser from 'gcsio/api/gcs-parser.js';
 
-import expect from 'softlib/expect.js';
-
-import aver from 'softlib/aver.js';
+import expect from '../dev/expect.js';
 
 import terminal from 'softlib/terminal.js';
+
+import aver from 'softlib/aver.js';
 
 export default class GcsPackage extends ExternalPackage {
     constructor(e) {

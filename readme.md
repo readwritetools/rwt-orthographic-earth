@@ -103,7 +103,9 @@ To see examples of this component in use, visit any of these:
 <details>
 	<summary>Prerequisites</summary>
 	<p>The <span class=product>rwt-orthographic-earth</span> DOM component works in any browser that supports modern W3C standards and the W3C Web Platform Incubator Community Group's <a href='https://wicg.github.io/import-maps/'>importmap</a> proposal. Chrome provides a good implementation of the <span>importmap</span> proposal, other browsers can use Guy Bedford's polyfill  <a href='https://www.npmjs.com/package/es-module-shims'>es-module-shims</a>.</p>
-	<p>It has three additional dependencies, also written by Read Write Tools:</p>
+	<pre lang=bash>
+npm install es-module-shims<br />	</pre>
+	<p>The <span class=product>rwt-orthographic-earth</span> DOM component has three additional dependencies, also written by Read Write Tools:</p>
 	<dl>
 		<dt><a href='https://www.npmjs.com/package/rwt-dockable-panels'>rwt-dockable-panels</a></dt>
 		<dd>Dockable Panels DOM component.</dd>
@@ -143,7 +145,7 @@ of it:
    1. Add an `importmap` and a `script` tag to load the component and its dependencies:
 ```html
 <script src='/node_modules/es-module-shims/dist/es-module-shims.js' async></script>
-<script type=importmap>
+<script type=importmap-shim>
 {
     "imports": {
         "gcsio/": "/node_modules/gcsio/",
@@ -152,7 +154,7 @@ of it:
     }
 }            
 </script>
-<script src='/node_modules/rwt-orthographic-earth/rwt-orthographic-earth.js' type=module></script>             
+<script src='/node_modules/rwt-orthographic-earth/rwt-orthographic-earth.js' type=module-shim></script>             
 ```
 
    2. Add the component tag somewhere on the page.
@@ -166,7 +168,7 @@ of it:
    3. Listen for the component to be fully loaded before programmatically configuring
       its layers, stylesheets, and initial settings. Here's an example:
 ```html
-<script type=module>
+<script type=module-shim>
      var earth1 = document.getElementById('earth1');
      var promise = earth1.waitOnLoading();
      promise.then(() => {

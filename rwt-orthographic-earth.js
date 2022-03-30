@@ -9,11 +9,15 @@ import Sphere from './joe/packages/sphere.class.js';
 
 import Night from './joe/packages/night.class.js';
 
+import Crosshairs from './joe/packages/crosshairs.class.js';
+
 import Graticule from './joe/packages/graticule.class.js';
 
 import NamedMeridians from './joe/packages/named-meridians.class.js';
 
 import NamedParallels from './joe/packages/named-parallels.class.js';
+
+import GreatCircle from './joe/packages/great-circle.class.js';
 
 import PlaceOfInterest from './joe/packages/place-of-interest.class.js';
 
@@ -25,9 +29,9 @@ import Animation from './joe/interaction/animation.class.js';
 
 import InteractionHandler from './joe/interaction/interaction-handler.class.js';
 
-import Menu from './joe/panels/menu.class.js';
+import Menu from './joe/menu/menu.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from './joe/dev/expect.js';
 
 import terminal from 'softlib/terminal.js';
 
@@ -128,6 +132,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
     }
     resizeCanvas() {
         if (this.canvas.width = this.offsetWidth, this.canvas.height = this.offsetHeight, 
+        this.earth.viewport.syncCanvasDimensions(this.canvas.width, this.canvas.height), 
         0 == this.explicitCenterPoint) {
             var e = Math.round(this.canvas.width / 2), t = Math.round(this.canvas.height / 2);
             this.earth.setCenterPoint({
@@ -173,9 +178,16 @@ export default class rwtOrthographicEarth extends HTMLElement {
             e.vssClassname = e.vssClassname || 'night', t = this.earth.addPackage(new Night(this));
             break;
 
+          case 'crosshairs':
+            e.vssClassname = e.vssClassname || 'crosshairs';
+            var a = null == e.parallelFrequency ? 10 : e.parallelFrequency, s = null == e.meridianFrequency ? 10 : e.meridianFrequency;
+            t = this.earth.addPackage(new Crosshairs(this, a, s));
+            break;
+
           case 'graticule':
             e.vssClassname = e.vssClassname || 'graticule';
-            var a = null == e.parallelFrequency ? 10 : e.parallelFrequency, s = null == e.meridianFrequency ? 10 : e.meridianFrequency, i = null != e.drawToPoles && e.drawToPoles;
+            a = null == e.parallelFrequency ? 10 : e.parallelFrequency, s = null == e.meridianFrequency ? 10 : e.meridianFrequency;
+            var i = null != e.drawToPoles && e.drawToPoles;
             t = this.earth.addPackage(new Graticule(this, a, s, i));
             break;
 
@@ -192,6 +204,10 @@ export default class rwtOrthographicEarth extends HTMLElement {
             t = this.earth.addPackage(new NamedParallels(this, o, r));
             break;
 
+          case 'great-circle':
+            e.vssClassname = e.vssClassname || 'great-circle', t = this.earth.addPackage(new GreatCircle(this, e.embarkation, e.destination));
+            break;
+
           case 'place-of-interest':
             e.vssClassname;
             t = this.earth.addPackage(new PlaceOfInterest(this));
@@ -203,8 +219,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
             break;
 
           case 'gcs-package':
-            var l = new GcsPackage(this);
-            t = this.retreiveExternalFile(l, e);
+            var c = new GcsPackage(this);
+            t = this.retreiveExternalFile(c, e);
             break;
 
           default:

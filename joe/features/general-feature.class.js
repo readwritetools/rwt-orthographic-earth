@@ -1,17 +1,17 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 export default class GeneralFeature extends BaseFeature {
     constructor(e, t) {
         super(), this.kvPairs = e, this.generalFeatureType = t;
     }
-    computeFeatureStyle(e, t, r, a, s) {
-        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(r, 'String'), expect(a, 'Number'), 
-        expect(s, 'Number');
-        let o = e.computeStyle(this.generalFeatureType, t, r, '', this.kvPairs, a);
-        expect(o, 'vssCanvasParameters'), this.canvasParams.set(s, o);
+    computeFeatureStyle(e, t, r, a, s, o) {
+        expect(t, 'vssStyleSheet'), expect(r, 'String'), expect(a, 'String'), expect(s, 'Number'), 
+        expect(o, 'Number');
+        let c = t.computeStyle(this.generalFeatureType, r, a, '', this.kvPairs, s);
+        expect(c, 'vssCanvasParameters'), this.canvasParams.set(o, c);
     }
     runCourtesyValidator(e, t, r, a, s) {
         e.runCourtesyValidator(this.generalFeatureType, t, r, '', this.kvPairs, a);
@@ -19,11 +19,15 @@ export default class GeneralFeature extends BaseFeature {
     static courtesyValidator(e) {
         return !1;
     }
-    toGeoCoords(e) {}
-    toPlane(e) {}
-    toPixels(e) {}
-    toCanvas(e) {}
-    renderFeature(e, t) {
-        expect(e, 'Earth'), expect(t, 'Number');
+    toGeoCoords(e, t) {}
+    toPlane(e, t) {}
+    toPixels(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'CartesianTransformation');
+    }
+    toViewportCanvas(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'Viewport');
+    }
+    drawFeature(e, t, r) {
+        expect(e, 'RenderClock'), expect(t, 'Earth'), expect(r, 'Number'), terminal.logic('Feature subclass must provide a drawFeature() function');
     }
 }

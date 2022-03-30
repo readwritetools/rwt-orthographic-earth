@@ -3,7 +3,7 @@ import BasePackage from './base-package.class.js';
 
 import GeneralFeature from '../features/general-feature.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
 
 export default class Sphere extends BasePackage {
     constructor(e) {
@@ -15,12 +15,16 @@ export default class Sphere extends BasePackage {
         this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/sphere', null), 
         Object.seal(this);
     }
-    recomputeStyles(e, t, a) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.properties.computeFeatureStyle(e, t.vssClassname, t.vssIdentifier, 0, a), 
-        t.layerNeedsRestyling = !1;
+    recomputeStyles(e, t, r, a) {
+        expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(r, 'Layer'), expect(a, 'Number'), 
+        super.recomputeStyles(e, t, r, (() => {
+            this.properties.computeFeatureStyle(e, t, r.vssClassname, r.vssIdentifier, 0, a);
+        }));
     }
-    runCourtesyValidator(e, t, a) {
-        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(a, 'Number'), this.properties.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, a);
+    runCourtesyValidator(e, t, r) {
+        expect(e, 'vssStyleSheet'), expect(t, 'Layer'), expect(r, 'Number'), super.runCourtesyValidator((() => {
+            this.properties.runCourtesyValidator(e, t.vssClassname, t.vssIdentifier, 0, r);
+        }));
     }
     static courtesyValidator(e) {
         switch (e) {
@@ -36,27 +40,30 @@ export default class Sphere extends BasePackage {
             return !1;
         }
     }
-    rotation(e) {
-        this.packagePointsNeedGeoCoords = !1, this.packagePointsNeedProjection = !0;
+    rotation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'GeocentricCoordinates'), super.rotation(e, t, (() => {}));
     }
-    projection(e) {
-        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0;
+    projection(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'OrthographicProjection'), super.projection(e, t, (() => {}));
     }
-    transformation(e) {
-        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0;
+    transformation(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'CartesianTransformation'), super.transformation(e, t, (() => {}));
     }
-    placement(e) {
-        this.packagePointsNeedPlacement = !1;
+    placement(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'Viewport'), super.placement(e, t, (() => {}));
     }
-    renderLayer(e, t) {
-        expect(e, 'Earth'), expect(t, 'Number');
-        let a = this.properties.canvasParams.get(t);
-        if (expect(a, 'vssCanvasParameters'), 'hidden' != a.visibility) {
-            var s = e.canvas.getContext('2d'), r = e.carte.translate.a * e.carte.multiplier, o = e.carte.translate.b * e.carte.multiplier, i = e.viewport.centerPoint.x + r, c = e.viewport.centerPoint.y + o, n = e.getVisualizedRadius();
-            s.beginPath(), s.arc(i, c, n, 0, 2 * Math.PI, !1), s.closePath(), s.fillStyle = a.computeFillPlusTransparency(), 
-            s.strokeStyle = a['stroke-color'], s.lineWidth = a['stroke-width'], 'none' != a['stroke-width'] && s.stroke(), 
-            s.globalCompositeOperation = a['fill-type'], 'none' != a['fill-color'] && s.fill(), 
-            s.globalCompositeOperation = 'source-over';
-        }
+    drawLayer(e, t, r) {
+        expect(e, 'RenderClock'), expect(t, 'Earth'), expect(r, 'Number'), super.drawLayer(e, (() => {
+            let e = this.properties.canvasParams.get(r);
+            'hidden' != e.visibility && this.drawSphere(t, e);
+        }));
+    }
+    drawSphere(e, t) {
+        expect(e, 'Earth'), expect(t, 'vssCanvasParameters');
+        var r = e.canvas.getContext('2d'), a = e.carte.translate.a * e.carte.multiplier, s = e.carte.translate.b * e.carte.multiplier, o = e.viewport.centerPoint.x + a, c = e.viewport.centerPoint.y + s, i = e.getVisualizedRadius();
+        r.beginPath(), r.arc(o, c, i, 0, 2 * Math.PI, !1), r.closePath(), r.fillStyle = t.computeFillPlusTransparency(), 
+        r.strokeStyle = t['stroke-color'], r.lineWidth = t['stroke-width'], 'none' != t['stroke-width'] && r.stroke(), 
+        r.globalCompositeOperation = t['fill-type'], 'none' != t['fill-color'] && r.fill(), 
+        r.globalCompositeOperation = 'source-over';
     }
 }

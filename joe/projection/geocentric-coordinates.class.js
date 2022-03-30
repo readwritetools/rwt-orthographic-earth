@@ -1,13 +1,12 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-import ECEF from './earth-centered-earth-fixed.class.js';
+import * as ECEF from '../spherical-earth/coordinate-translations.js';
 
 const degreesToRadians = Math.PI / 180;
 
 export default class GeocentricCoordinates {
-    constructor(t, e, a) {
-        this.rwtOrthographicEarth = t, this.earth = e, this.declination = a, this.delta0 = a * degreesToRadians, 
-        this.allPointsNeedGeoCoords = !0;
+    constructor(t, a, e) {
+        this.rwtOrthographicEarth = t, this.earth = a, this.declination = e, this.delta0 = e * degreesToRadians, 
+        this.allPointsNeedGeoCoords = !0, Object.seal(this);
     }
     reflectValues() {}
     setDeclination(t) {
@@ -16,11 +15,11 @@ export default class GeocentricCoordinates {
     getDeclination() {
         return this.declination;
     }
-    toGeoCoords(t) {
+    toPhiLambda(t) {
         t.apparentPhi = t.phi, t.apparentLambda = t.lambda;
     }
-    toNightCoords(t) {
-        var {x: e, y: a, z: i} = ECEF.ll2xyz(t.latitude, t.longitude), {x1: o, y1: r, z1: s} = ECEF.rotateX(e, a, i, this.delta0), {rho: d, theta: n, phi: h} = ECEF.xyz2rtp(o, r, s), l = ECEF.cophi2phi(h);
+    toNightPhiLambda(t) {
+        var {x: a, y: e, z: i} = ECEF.ll2xyz(t.latitude, t.longitude), {x1: o, y1: s, z1: r} = ECEF.rotateX(a, e, i, this.delta0), {rho: h, theta: n, phi: d} = ECEF.xyz2rtp(o, s, r), l = ECEF.cophi2phi(d);
         t.apparentPhi = l, t.apparentLambda = n;
     }
     inverse(t) {}

@@ -17,7 +17,7 @@ import vssStyleSheet from './visualization/vss-style-sheet.class.js';
 
 import EarthPosition from './astronomy/earth-position.class.js';
 
-import expect from 'softlib/expect.js';
+import expect from './dev/expect.js';
 
 import terminal from 'softlib/terminal.js';
 
@@ -34,8 +34,7 @@ export default class Earth {
         this.canvasCoords = {
             x: 0,
             y: 0
-        }, this.canvasCoordsPending = !1, this.pendingUpdates = !1, this.currentlyPainting = !1, 
-        this.renderLoop = new RenderLoop(t, this);
+        }, this.canvasCoordsPending = !1, this.renderLoop = new RenderLoop(t, this);
     }
     reflectValues() {
         this.coords.reflectValues(), this.ortho.reflectValues(), this.carte.reflectValues(), 
@@ -47,9 +46,6 @@ export default class Earth {
     addVisualizationRule(t) {
         this.visual.addVisualizationRule(t);
     }
-    visualization() {
-        this.catalog.recomputeStyles(this.visual);
-    }
     runCourtesyValidator() {
         this.catalog.runCourtesyValidator(this.visual);
     }
@@ -58,9 +54,6 @@ export default class Earth {
     }
     reflectDeclination(t) {
         this.coords.setDeclination(t), this.invalidateCanvas();
-    }
-    rotation() {
-        this.catalog.rotation(this.coords);
     }
     getEarthRadius() {
         return this.ortho.radius;
@@ -77,9 +70,6 @@ export default class Earth {
     }
     getTangentLongitude() {
         return this.ortho.longitude0;
-    }
-    projection() {
-        this.catalog.projection(this.ortho);
     }
     setTranslation(t, e) {
         this.carte.setTranslation(t, e), this.invalidateCanvas();
@@ -114,15 +104,13 @@ export default class Earth {
     }
     degreesPerPixelAtTangent() {
         var t = new ProjectedPoint(this.getTangentLatitude(), this.getTangentLongitude());
-        this.ortho.toPlane(t), this.carte.toPixels(t, !0, !0, !0), this.viewport.toCanvas(t);
+        this.coords.toPhiLambda(t), this.ortho.toEastingNorthing(t), this.carte.toEarthXY(t, !0, !0, !0), 
+        this.viewport.toCanvasXY(t);
         var e = t.latitude, a = t.longitude;
         t.earthX += 1, t.earthY += 1, t.easting = t.earthX / this.carte.multiplier, t.northing = t.earthY / this.carte.multiplier, 
         this.ortho.inverseProjection(t);
         var i = t.latitude, s = t.longitude;
         return (Math.abs(s - a) + Math.abs(i - e)) / 2;
-    }
-    transformation() {
-        this.catalog.transformation(this.carte);
     }
     setCenterPoint(t) {
         this.viewport.setCenterPoint(t), this.invalidateCanvas();
@@ -135,9 +123,6 @@ export default class Earth {
     }
     getCenterPoint() {
         return this.viewport.getCenterPoint();
-    }
-    placement() {
-        this.catalog.placement(this.viewport);
     }
     recalculateJulianDateDependants() {
         this.earthPosition.recalculateJulianDateDependants();
@@ -176,7 +161,7 @@ export default class Earth {
         this.earthPosition.changeTimezoneOffset(t);
     }
     addPackage(t) {
-        return expect(t, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
+        return expect(t, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircle', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
         this.catalog.addPackage(t);
     }
     addLayer(t) {
@@ -189,12 +174,10 @@ export default class Earth {
         return expect(t, 'Number'), this.catalog.getLayer(t);
     }
     invalidateCanvas() {
-        this.pendingUpdates = !0;
+        this.renderLoop.invalidateCanvas();
     }
-    paintCanvas(t) {
-        this.currentlyPainting = !0, this.visualization(), this.rotation(), this.projection(), 
-        this.transformation(), this.placement(), this.catalog.render(this), this.currentlyPainting = !1, 
-        this.pendingUpdates = !1;
+    renderAllInOne(t) {
+        expect(t, 'RenderClock'), this.catalog.renderAllInOne(this, t);
     }
     changeCanvasCoords(t, e) {
         this.canvasCoords.x = t, this.canvasCoords.y = e, this.canvasCoordsPending = !0;
@@ -227,8 +210,8 @@ export default class Earth {
     }
     renderArbitraryPoint(t, e) {
         var a = new ProjectedPoint(t, e);
-        return this.coords.toGeoCoords(a), this.ortho.toPlane(a), this.carte.toPixels(a, !0, !0, !0), 
-        this.viewport.toCanvas(a), a;
+        return this.coords.toPhiLambda(a), this.ortho.toEastingNorthing(a), this.carte.toEarthXY(a, !0, !0, !0), 
+        this.viewport.toCanvasXY(a), a;
     }
     getVisualizedRadius() {
         return Math.round(this.ortho.radius * this.carte.multiplier);

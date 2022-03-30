@@ -1,12 +1,11 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 const radiansToDegrees = 180 / Math.PI;
 
 import ProjectedPoint from '../projection/projected-point.class.js';
 
 import * as AA from './astronomical-algorithms.js';
 
-import * as CB from '../panels/panel-callbacks.js';
+import * as CB from '../menu/panel-callbacks.js';
 
 export default class EarthPosition {
     constructor(t) {

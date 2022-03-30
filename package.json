@@ -9,6 +9,9 @@
     ".": "rwt-orthographic-earth.js"
   },
   "keywords": [
+    "GIS",
+    "maps",
+    "Earth",
     "web-component",
     "custom-element",
     "html-template",
@@ -26,6 +29,7 @@
   "files": [
     "img",
     "joe",
+    "license.blue",
     "license.html",
     "readme.md",
     "rwt-orthographic-earth.js",

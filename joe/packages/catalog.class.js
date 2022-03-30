@@ -1,9 +1,11 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-import expect from 'softlib/expect.js';
+import expect from '../dev/expect.js';
+
+import terminal from 'softlib/terminal.js';
 
 class OrderedPair {
-    constructor(e, a) {
-        this.zOrder = e, this.layerId = a;
+    constructor(e, t) {
+        this.zOrder = e, this.layerId = t;
     }
 }
 
@@ -14,21 +16,21 @@ export default class Catalog {
         this.rwtOrthographicEarth = e, this.packages = new Map, this.layers = new Map, this.paintSequence = [];
     }
     addPackage(e) {
-        expect(e, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]);
-        var a = Catalog.nextPackageId++;
-        return this.packages.set(a, e), a;
+        expect(e, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircle', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]);
+        var t = Catalog.nextPackageId++;
+        return this.packages.set(t, e), t;
     }
     addLayer(e) {
         expect(e, 'Layer');
-        var a = Catalog.nextLayerId++;
-        return this.layers.set(a, e), expect(e.zOrder, 'Number'), this.paintSequence.push(new OrderedPair(e.zOrder, a)), 
-        this.paintSequence.sort(((e, a) => e.zOrder < a.zOrder ? -1 : e.zOrder > a.zOrder ? 1 : 0)), 
+        var t = Catalog.nextLayerId++;
+        return this.layers.set(t, e), expect(e.zOrder, 'Number'), this.paintSequence.push(new OrderedPair(e.zOrder, t)), 
+        this.paintSequence.sort(((e, t) => e.zOrder < t.zOrder ? -1 : e.zOrder > t.zOrder ? 1 : 0)), 
         this.rwtOrthographicEarth.broadcastMessage('catalog/layerAdded', {
-            layerId: a,
+            layerId: t,
             zOrder: e.zOrder,
             layerName: e.layerName,
             identifiable: e.identifiable
-        }), a;
+        }), t;
     }
     getPackage(e) {
         return expect(e, 'Number'), this.packages.has(e) ? this.packages.get(e) : null;
@@ -36,139 +38,115 @@ export default class Catalog {
     getLayer(e) {
         return expect(e, 'Number'), this.layers.has(e) ? this.layers.get(e) : null;
     }
-    recomputeStyles(e) {
-        expect(e, 'vssStyleSheet');
-        for (let [t, r] of this.layers) if (r.isVisible()) {
-            var a = this.packages.get(r.packageId);
-            expect(a, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
-            (e.allFeaturesNeedRestyling || r.layerNeedsRestyling) && a.recomputeStyles(e, r, t);
-        }
-        e.allFeaturesNeedRestyling = !1;
-    }
     runCourtesyValidator(e) {
         expect(e, 'vssStyleSheet');
-        for (let [t, r] of this.layers) if (r.isVisible()) {
-            var a = this.packages.get(r.packageId);
-            expect(a, [ 'Space', 'Sphere', 'Night', 'Graticule', 'NamedMeridians', 'NamedParallels', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
-            a.runCourtesyValidator(e, r, t);
+        for (let [a, r] of this.layers) if (r.isVisible()) {
+            var t = this.packages.get(r.packageId);
+            expect(t, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircle', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
+            t.runCourtesyValidator(e, r, a);
         }
     }
-    rotation(e) {
-        for (let [t, r] of this.layers) if (r.isVisible()) {
-            var a = this.packages.get(r.packageId);
-            (e.allPointsNeedGeoCoords || a.packagePointsNeedGeoCoords) && a.rotation(e);
-        }
-        e.allPointsNeedGeoCoords = !1;
-    }
-    projection(e) {
-        for (let [t, r] of this.layers) if (r.isVisible()) {
-            var a = this.packages.get(r.packageId);
-            (e.allPointsNeedProjection || a.packagePointsNeedProjection) && a.projection(e);
-        }
-        e.allPointsNeedProjection = !1;
-    }
-    transformation(e) {
-        for (let [t, r] of this.layers) if (r.isVisible()) {
-            var a = this.packages.get(r.packageId);
-            (e.allPointsNeedTransformation || a.packagePointsNeedTransformation) && a.transformation(e);
-        }
-        e.allPointsNeedTransformation = !1;
-    }
-    placement(e) {
-        for (let [t, r] of this.layers) if (r.isVisible()) {
-            var a = this.packages.get(r.packageId);
-            (e.allPointsNeedPlacement || a.packagePointsNeedPlacement) && a.placement(e);
-        }
-        e.allPointsNeedPlacement = !1;
-    }
-    render(e) {
-        this.cleanSlate(e);
-        for (let r = 0; r < this.paintSequence.length; r++) {
-            var a = this.paintSequence[r].layerId, t = this.layers.get(a);
-            if (expect(t, 'Layer'), t.isVisible()) this.packages.get(t.packageId).renderLayer(e, a);
+    renderAllInOne(e, t) {
+        expect(e, 'Earth'), expect(t, 'RenderClock'), this.cleanSlate(e);
+        for (let s = 0; s < this.paintSequence.length; s++) {
+            var a = this.paintSequence[s].layerId, r = this.layers.get(a);
+            if (expect(r, 'Layer'), r.isVisible() && t.isRenderTimeAvailable()) {
+                var i = this.packages.get(r.packageId);
+                i.rotation(t, e.coords), i.projection(t, e.ortho), i.transformation(t, e.carte), 
+                i.placement(t, e.viewport), i.recomputeStyles(t, e.visual, r, a), i.drawLayer(t, e, a);
+            }
         }
     }
     cleanSlate(e) {
-        var a = !1;
+        var t = !1;
         for (let e = 0; e < this.paintSequence.length; e++) {
-            var t = this.paintSequence[e].layerId, r = this.layers.get(t);
-            if (expect(r, 'Layer'), 'Space' == this.packages.get(r.packageId).constructor.name && 1 == (a = r.isVisible())) break;
+            var a = this.paintSequence[e].layerId, r = this.layers.get(a);
+            if (expect(r, 'Layer'), 'Space' == this.packages.get(r.packageId).constructor.name && 1 == (t = r.isVisible())) break;
         }
-        if (0 == a) {
-            var i = window.getComputedStyle(this.rwtOrthographicEarth).getPropertyValue('background-color'), s = this.rgbaHexFromCSS(i), l = e.canvas.getContext('2d');
-            l.fillStyle = s, l.fillRect(0, 0, e.canvas.width, e.canvas.height);
+        if (0 == t) {
+            var i = rgbaHexFromCSS(window.getComputedStyle(this.rwtOrthographicEarth).getPropertyValue('background-color')), s = e.canvas.getContext('2d');
+            s.fillStyle = i, s.fillRect(0, 0, e.canvas.width, e.canvas.height);
         }
     }
-    discoverFeatures(e, a) {
-        var t = [];
+    discoverFeatures(e, t) {
+        var a = [];
         for (let o = this.paintSequence.length - 1; o >= 0; o--) {
             var r = this.paintSequence[o].layerId, i = this.layers.get(r);
             if (i.isIdentifiable()) {
-                var s = this.packages.get(i.packageId).discoverFeatures(e, a);
+                var s = this.packages.get(i.packageId).discoverFeatures(e, t);
                 if (null != s) {
-                    var l = i.featureKey, n = s.kvPairs.hasOwnProperty(l) ? s.kvPairs[l] : '';
-                    if (i.identifyCallback) c = i.identifyCallback(s.kvPairs); else var c = `<tr><td>${i.layerName}</td><td>${n}</td></tr>`;
-                    t.push({
+                    var n = i.featureKey, l = s.kvPairs.hasOwnProperty(n) ? s.kvPairs[n] : '';
+                    if (i.identifyCallback) c = i.identifyCallback(s.kvPairs); else var c = `<tr><td>${i.layerName}</td><td>${l}</td></tr>`;
+                    a.push({
                         layerName: i.layerName,
                         featureType: s.featureType,
                         featureName: s.featureName,
-                        featureKey: l,
-                        featureValue: n,
+                        featureKey: n,
+                        featureValue: l,
                         featureData: Object.assign(s.kvPairs),
                         identifyHTML: c
                     });
                 }
             }
         }
-        return t;
+        return a;
     }
-    requestFeatureIdentification(e, a) {
-        var t = [];
+    requestFeatureIdentification(e, t) {
+        var a = [];
         for (let o = this.paintSequence.length - 1; o >= 0; o--) {
             var r = this.paintSequence[o].layerId, i = this.layers.get(r);
             if (i.isIdentifiable()) {
-                var s = this.packages.get(i.packageId).discoverFeatures(e, a);
+                var s = this.packages.get(i.packageId).discoverFeatures(e, t);
                 if (null != s) {
-                    var l = i.featureKey, n = s.kvPairs.hasOwnProperty(l) ? s.kvPairs[l] : '';
-                    if (i.identifyCallback) c = i.identifyCallback(s.kvPairs); else var c = `<tr><td>${i.layerName}</td><td>${n}</td></tr>`;
-                    t.push({
+                    var n = i.featureKey, l = s.kvPairs.hasOwnProperty(n) ? s.kvPairs[n] : '';
+                    if (i.identifyCallback) c = i.identifyCallback(s.kvPairs); else var c = `<tr><td>${i.layerName}</td><td>${l}</td></tr>`;
+                    a.push({
                         layerName: i.layerName,
                         featureType: s.featureType,
                         featureName: s.featureName,
-                        featureKey: l,
-                        featureValue: n,
+                        featureKey: n,
+                        featureValue: l,
                         featureData: Object.assign(s.kvPairs),
                         identifyHTML: c
                     });
                 }
             }
         }
-        return t;
+        return a;
     }
-    rgbaHexFromCSS(e) {
-        if (expect(e, 'String'), 'rgb(' == e.substr(0, 4)) {
-            let a = e.match(/^rgb\(([^)]+)\)/);
-            if (2 == a.length) {
-                let e = a[1].split(',');
-                if (3 == e.length) {
-                    return `#${this.convertIntegerToHex(e[0])}${this.convertIntegerToHex(e[1])}${this.convertIntegerToHex(e[2])}`;
-                }
+}
+
+function rgbaHexFromCSS(e) {
+    if (expect(e, 'String'), 'rgb(' == e.substr(0, 4)) {
+        let t = e.match(/^rgb\(([^)]+)\)/);
+        if (2 == t.length) {
+            let e = t[1].split(',');
+            if (3 == e.length) {
+                return `#${convertIntegerToHex(e[0])}${convertIntegerToHex(e[1])}${convertIntegerToHex(e[2])}`;
             }
         }
-        if ('rgba(' == e.substr(0, 5)) {
-            let a = e.match(/^rgba\(([^)]+)\)/);
-            if (2 == a.length) {
-                let e = a[1].split(',');
-                if (4 == e.length) {
-                    return `#${this.convertIntegerToHex(e[0])}${this.convertIntegerToHex(e[1])}${this.convertIntegerToHex(e[2])}${Math.round(255 * Number(e[3].trim()), 0).toString(16).padStart(2, '0').toUpperCase()}`;
-                }
+    }
+    if ('rgba(' == e.substr(0, 5)) {
+        let t = e.match(/^rgba\(([^)]+)\)/);
+        if (2 == t.length) {
+            let e = t[1].split(',');
+            if (4 == e.length) {
+                return `#${convertIntegerToHex(e[0])}${convertIntegerToHex(e[1])}${convertIntegerToHex(e[2])}${Math.round(255 * Number(e[3].trim()), 0).toString(16).padStart(2, '0').toUpperCase()}`;
             }
         }
-        return e;
     }
-    convertIntegerToHex(e) {
-        expect(e, 'String');
-        var a = Number(e.trim());
-        return isNaN(a) || a < 0 || a > 255 ? '00' : a.toString(16).padStart(2, '0').toUpperCase();
-    }
+    return e;
+}
+
+function convertIntegerToHex(e) {
+    expect(e, 'String');
+    var t = Number(e.trim());
+    return isNaN(t) || t < 0 || t > 255 ? '00' : t.toString(16).padStart(2, '0').toUpperCase();
+}
+
+function monitorPerformance(e) {
+    var t = performance.now();
+    e();
+    var a = performance.now() - t;
+    terminal.trace(`${e} ${a.toFixed(2)} ms`);
 }

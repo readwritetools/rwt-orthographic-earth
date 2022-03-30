@@ -1,7 +1,11 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import Layer from '../layers/layer.class.js';
 
-import expect from 'softlib/expect.js';
+import RS from '../enum/rendering-state.enum.js';
+
+import PS from '../enum/projection-stage.enum.js';
+
+import expect from '../dev/expect.js';
 
 import terminal from 'softlib/terminal.js';
 
@@ -15,28 +19,36 @@ export default class BasePackage {
         this.packagePointsNeedTransformation = !0, this.packagePointsNeedPlacement = !0), 
         this.rwtOrthographicEarth.earth.invalidateCanvas();
     }
-    recomputeStyles(e, a, t) {
-        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), terminal.logic('BasePackage subclass must provide a recomputeStyles() function');
+    recomputeStyles(e, t, o, a) {
+        expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(o, 'Layer'), expect(a, 'Function'), 
+        0 == t.allFeaturesNeedRestyling && 0 == o.layerNeedsRestyling || (a(), o.layerNeedsRestyling = !1);
     }
-    runCourtesyValidator(e, a, t) {
-        expect(e, 'vssStyleSheet'), expect(a, 'Layer'), expect(t, 'Number'), terminal.logic('BasePackage subclass must provide a runCourtesyValidator() function');
+    runCourtesyValidator(e) {
+        expect(e, 'Function'), e();
     }
-    rotation(e) {
-        terminal.logic('BasePackage subclass must provide a rotation() function');
+    rotation(e, t, o) {
+        expect(e, 'RenderClock'), expect(t, 'GeocentricCoordinates'), expect(o, 'Function'), 
+        0 == t.allPointsNeedGeoCoords && 0 == this.packagePointsNeedGeoCoords || (o(), this.packagePointsNeedGeoCoords = !1, 
+        this.packagePointsNeedProjection = !0);
     }
-    projection(e) {
-        terminal.logic('BasePackage subclass must provide a projection() function');
+    projection(e, t, o) {
+        expect(e, 'RenderClock'), expect(t, 'OrthographicProjection'), expect(o, 'Function'), 
+        0 == t.allPointsNeedProjection && 0 == this.packagePointsNeedProjection || (o(), 
+        this.packagePointsNeedProjection = !1, this.packagePointsNeedTransformation = !0);
     }
-    transformation(e) {
-        terminal.logic('BasePackage subclass must provide a transformation() function');
+    transformation(e, t, o) {
+        expect(e, 'RenderClock'), expect(t, 'CartesianTransformation'), expect(o, 'Function'), 
+        0 == t.allPointsNeedTransformation && 0 == this.packagePointsNeedTransformation || (o(), 
+        this.packagePointsNeedTransformation = !1, this.packagePointsNeedPlacement = !0);
     }
-    placement(e) {
-        terminal.logic('BasePackage subclass must provide a placement() function');
+    placement(e, t, o) {
+        expect(e, 'RenderClock'), expect(t, 'Viewport'), expect(o, 'Function'), 0 == t.allPointsNeedPlacement && 0 == this.packagePointsNeedPlacement || (o(), 
+        this.packagePointsNeedPlacement = !1);
     }
-    renderLayer(e, a) {
-        expect(e, 'Earth'), expect(a, 'Number'), terminal.logic('BasePackage subclass must provide a renderLayer() function');
+    drawLayer(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'Function'), t();
     }
-    discoverFeatures(e, a) {
+    discoverFeatures(e, t) {
         return null;
     }
 }

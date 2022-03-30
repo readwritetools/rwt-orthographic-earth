@@ -1,13 +1,13 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 const degreesToRadians = Math.PI / 180;
 
 export default class ProjectedPoint {
     constructor(t, i) {
         this.latitude = t, this.longitude = i, this.phi = t * degreesToRadians, this.lambda = i * degreesToRadians, 
         this.apparentPhi = this.phi, this.apparentLambda = this.lambda, this.northing = null, 
-        this.easting = null, this.visible = null, this.projectedTheta = null, this.earthY = null, 
-        this.earthX = null, this.canvasY = null, this.canvasX = null, this.isOnEarth = !0;
+        this.easting = null, this.isOnNearSide = null, this.projectedTheta = null, this.earthY = null, 
+        this.earthX = null, this.canvasY = null, this.canvasX = null, this.isOnCanvas = !0, 
+        this.isOnEarth = !0, Object.seal(this);
     }
     setLatitude(t) {
         this.latitude = t, this.phi = t * degreesToRadians, this.apparentPhi = this.phi;
@@ -21,16 +21,16 @@ export default class ProjectedPoint {
     setLambda(t) {
         this.lambda = t, this.longitude = t / degreesToRadians, this.apparentLambda = this.lambda;
     }
-    toGeoCoords(t) {
-        t.toGeoCoords(this);
+    toGeoCoords(t, i) {
+        i.toPhiLambda(this);
     }
-    toPlane(t) {
-        t.toPlane(this);
+    toPlane(t, i) {
+        i.toEastingNorthing(this);
     }
-    toPixels(t) {
-        t.toPixels(this, !0, !0, !0);
+    toPixels(t, i) {
+        i.toEarthXY(this, !0, !0, !0);
     }
-    toCanvas(t) {
-        t.toCanvas(this);
+    toViewportCanvas(t, i) {
+        i.toCanvasXY(this);
     }
 }

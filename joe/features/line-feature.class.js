@@ -1,7 +1,9 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
-import expect from 'softlib/expect.js';
+import RS from '../enum/rendering-state.enum.js';
+
+import expect from '../dev/expect.js';
 
 export default class LineFeature extends BaseFeature {
     constructor() {
@@ -11,15 +13,16 @@ export default class LineFeature extends BaseFeature {
         return 'boundary';
     }
     addPoint(e) {
-        this.lineSegment.push(e);
+        expect(e, 'ProjectedPoint'), this.lineSegment.push(e);
     }
-    computeFeatureStyle(e, t, s, a, i) {
-        expect(e, 'vssStyleSheet'), expect(t, 'String'), expect(s, 'String'), expect(a, 'Number'), 
-        expect(i, 'Number');
-        let n = e.computeStyle('line', t, s, this.featureName, this.kvPairs, a);
-        expect(n, 'vssCanvasParameters'), this.canvasParams.set(i, n);
-        let r = Number(n['stroke-width']);
-        isNaN(r) || (this.mouseEpsilon = Math.max(this.mouseEpsilon, r));
+    computeFeatureStyle(e, t, s, a, i, n) {
+        if (expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(s, 'String'), expect(a, 'String'), 
+        expect(i, 'Number'), expect(n, 'Number'), 0 == this.featureIsOnNearSide(e.renderingState)) return;
+        if (0 == this.featureIsOnCanvas(e.renderingState)) return;
+        let r = t.computeStyle('line', s, a, this.featureName, this.kvPairs, i);
+        expect(r, 'vssCanvasParameters'), this.canvasParams.set(n, r);
+        let o = Number(r['stroke-width']);
+        isNaN(o) || (this.mouseEpsilon = Math.max(this.mouseEpsilon, o));
     }
     runCourtesyValidator(e, t, s, a, i) {
         e.runCourtesyValidator('line', t, s, this.featureName, this.kvPairs, a);
@@ -37,72 +40,85 @@ export default class LineFeature extends BaseFeature {
             return !1;
         }
     }
-    toGeoCoords(e) {
-        for (var t = 0; t < this.lineSegment.length; t++) e.toGeoCoords(this.lineSegment[t]);
+    toGeoCoords(e, t) {
+        for (var s = 0; s < this.lineSegment.length; s++) t.toPhiLambda(this.lineSegment[s]);
     }
-    toPlane(e) {
-        for (var t = 0; t < this.lineSegment.length; t++) e.toPlane(this.lineSegment[t]);
+    toPlane(e, t) {
+        expect(e, 'RenderClock'), expect(t, 'OrthographicProjection'), this.pointsOnNearSide = 0, 
+        this.pointsOnFarSide = 0;
+        for (var s = 0; s < this.lineSegment.length; s++) {
+            let a = this.lineSegment[s];
+            if (t.toEastingNorthing(a), a.isOnNearSide) this.pointsOnNearSide++; else if (this.pointsOnFarSide++, 
+            e.renderingState == RS.SKETCHING) return;
+        }
     }
-    toPixels(e) {
-        for (var t = 0; t < this.lineSegment.length; t++) e.toPixels(this.lineSegment[t], !0, !0, !0);
+    toPixels(e, t) {
+        if (expect(e, 'RenderClock'), expect(t, 'CartesianTransformation'), 0 != this.featureIsOnNearSide(e.renderingState)) for (var s = 0; s < this.lineSegment.length; s++) t.toEarthXY(this.lineSegment[s], !0, !0, !0);
     }
-    toCanvas(e) {
-        for (var t = 0; t < this.lineSegment.length; t++) e.toCanvas(this.lineSegment[t]);
+    toViewportCanvas(e, t) {
+        if (expect(e, 'RenderClock'), expect(t, 'Viewport'), 0 != this.featureIsOnNearSide(e.renderingState)) {
+            this.pointsOnCanvas = 0, this.pointsOffCanvas = 0;
+            for (var s = 0; s < this.lineSegment.length; s++) {
+                let e = this.lineSegment[s];
+                t.toCanvasXY(e), e.isOnNearSide && (e.isOnCanvas ? this.pointsOnCanvas++ : this.pointsOffCanvas++);
+            }
+        }
     }
-    renderFeature(e, t) {
-        expect(e, 'Earth'), expect(t, 'Number');
-        let s = this.canvasParams.get(t);
-        if (expect(s, 'vssCanvasParameters'), 'hidden' != s.visibility && null != s['stroke-width'] && 'none' != s['stroke-width']) {
-            var a = Number(s.scale);
-            isNaN(a) && (a = 1);
-            var i = e.canvas.getContext('2d');
-            switch (i.lineWidth = Number(s['stroke-width']) * a, i.strokeStyle = s['stroke-color'], 
-            s['stroke-type']) {
+    drawFeature(e, t, s) {
+        if (expect(e, 'RenderClock'), expect(t, 'Earth'), expect(s, 'Number'), 0 == this.featureIsOnNearSide(e.renderingState)) return;
+        if (0 == this.featureIsOnCanvas(e.renderingState)) return;
+        let a = this.canvasParams.get(s);
+        if (0 != this.hasSomethingToDraw(a) && null != a['stroke-width'] && 'none' != a['stroke-width'] && 0 != a['stroke-width']) {
+            var i = Number(a.scale);
+            isNaN(i) && (i = 1);
+            var n = t.canvas.getContext('2d');
+            switch (n.lineWidth = Number(a['stroke-width']) * i, n.strokeStyle = a['stroke-color'], 
+            a['stroke-type']) {
               case 'solid':
-                i.setLineDash([]);
+                n.setLineDash([]);
                 break;
 
               case 'dotted':
-                i.setLineDash([ 3, 3 ]);
+                n.setLineDash([ 3, 3 ]);
                 break;
 
               case 'short-dash':
-                i.setLineDash([ 10, 10 ]);
+                n.setLineDash([ 10, 10 ]);
                 break;
 
               case 'long-dash':
-                i.setLineDash([ 20, 5 ]);
+                n.setLineDash([ 20, 5 ]);
                 break;
 
               case 'dot-dash':
-                i.setLineDash([ 15, 3, 3, 3 ]);
+                n.setLineDash([ 15, 3, 3, 3 ]);
                 break;
 
               case 'dot-dot-dash':
-                i.setLineDash([ 15, 3, 3, 3, 3, 3 ]);
+                n.setLineDash([ 15, 3, 3, 3, 3, 3 ]);
                 break;
 
               case 'dot-dot-dot-dash':
-                i.setLineDash([ 15, 3, 3, 3, 3, 3, 3, 3 ]);
+                n.setLineDash([ 15, 3, 3, 3, 3, 3, 3, 3 ]);
                 break;
 
               case 'dot-dash-dot':
-                i.setLineDash([ 3, 3, 12, 3, 3, 12 ]);
+                n.setLineDash([ 3, 3, 12, 3, 3, 12 ]);
                 break;
 
               default:
-                i.setLineDash([]);
+                n.setLineDash([]);
             }
-            this.renderArc(i), i.setLineDash([]);
+            this.drawArc(n), n.setLineDash([]);
         }
     }
-    renderArc(e) {
+    drawArc(e) {
         var t = !1, s = !1;
         e.beginPath();
         for (var a = 0; a < this.lineSegment.length; a++) {
             var i = this.lineSegment[a];
-            1 == (s = i.visible) && 0 == t ? e.moveTo(i.canvasX, i.canvasY) : 1 == s && 1 == t && e.lineTo(i.canvasX, i.canvasY), 
-            t = i.visible;
+            1 == (s = i.isOnNearSide) && 0 == t ? e.moveTo(i.canvasX, i.canvasY) : 1 == s && 1 == t && e.lineTo(i.canvasX, i.canvasY), 
+            t = i.isOnNearSide;
         }
         e.stroke();
     }
@@ -111,7 +127,7 @@ export default class LineFeature extends BaseFeature {
         let s = this.lineSegment[0];
         for (let a = 1; a < this.lineSegment.length; a++) {
             let i = this.lineSegment[a];
-            if (s.visible && i.visible) {
+            if (s.isOnNearSide && i.isOnNearSide) {
                 let a = this.distance(s.canvasX, s.canvasY, i.canvasX, i.canvasY), n = this.distance(s.canvasX, s.canvasY, e, t), r = this.distance(i.canvasX, i.canvasY, e, t);
                 if (Math.abs(a - (n + r)) < this.mouseEpsilon) return !0;
             }
