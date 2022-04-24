@@ -60,7 +60,7 @@ export default class TopojsonPackage extends ExternalPackage {
         }
         this.topojsonObjects = null, this.topojsonTransform = null, this.topojsonArcs = null, 
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/external', this.url);
+        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/topojson-package', this.url);
     }
     importKeyValuePairs(t) {
         if ('properties' in t == 0) return {};

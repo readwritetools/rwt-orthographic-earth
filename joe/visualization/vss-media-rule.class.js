@@ -30,21 +30,26 @@ export default class vssMediaRule {
     getSelector(e) {
         return this.vssSelectorCollection.getSelector(e);
     }
-    computeMediaRuleStyle(e, r, a, t, s, i, o) {
-        var l = r, n = '.' + a, c = '#' + t, u = `["${s}"]`;
-        if (this.assignPropertyValues(e, l, o), '' != a && this.assignPropertyValues(e, n, o), 
-        '' != t && this.assignPropertyValues(e, c, o), '' != s && this.assignPropertyValues(e, u, o), 
-        '' != a && '' != s && this.assignPropertyValues(e, n + u, o), '' != t && '' != s && this.assignPropertyValues(e, c + u, o), 
-        null != i) for (var d in i) {
-            var p = i[d];
+    computeMediaRuleStyle(e, r, a, t, s, i, o, l) {
+        var n = r, c = '.' + a, u = '#' + t, d = `["${i}"]`;
+        if (this.assignPropertyValues(e, n, l), '' != a && this.assignPropertyValues(e, c, l), 
+        '' != t && this.assignPropertyValues(e, u, l), '' != i && this.assignPropertyValues(e, d, l), 
+        '' != a && '' != i && this.assignPropertyValues(e, c + d, l), '' != t && '' != i && this.assignPropertyValues(e, u + d, l), 
+        null != o) for (var p in o) {
+            var h = o[p];
             if ('' != a) {
-                var h = `${n}[${d}="${p}"]`;
-                this.assignPropertyValues(e, h, o);
+                var v = `${c}[${p}="${h}"]`;
+                this.assignPropertyValues(e, v, l);
             }
             if ('' != t) {
-                var m = `${c}[${d}="${p}"]`;
-                this.assignPropertyValues(e, m, o);
+                var g = `${u}[${p}="${h}"]`;
+                this.assignPropertyValues(e, g, l);
             }
+        }
+        if (s) {
+            var m = '["selected"]';
+            this.assignPropertyValues(e, n + m, l), this.assignPropertyValues(e, c + m, l), 
+            this.assignPropertyValues(e, u + m, l);
         }
     }
     runCourtesyValidator(e, r, a, t, s, i) {

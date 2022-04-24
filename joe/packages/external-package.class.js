@@ -140,29 +140,29 @@ export default class ExternalPackage extends BasePackage {
         let u = performance.now();
         s.consumeRenderTime(u - i);
     }
-    discoverFeatures(e, t) {
-        var s = this.discoverPolygon(e, t);
-        return null == s && (s = this.discoverLine(e, t)), null == s && (s = this.discoverPoint(e, t)), 
-        s;
+    discoverFeatures(e, t, s) {
+        var r = this.discoverPolygon(e, t, s);
+        return null == r && (r = this.discoverLine(e, t, s)), null == r && (r = this.discoverPoint(e, t, s)), 
+        r;
     }
-    discoverPolygon(e, t) {
-        for (var s = 0; s < this.featurePolygons.length; s++) {
-            var r = this.featurePolygons[s];
-            if (1 == r.isPointerInsidePolygon(e, t)) return r;
+    discoverPolygon(e, t, s) {
+        for (var r = 0; r < this.featurePolygons.length; r++) {
+            var o = this.featurePolygons[r];
+            if (o.featureIsVisible(s) && o.isPointerInsidePolygon(e, t)) return o;
         }
         return null;
     }
-    discoverLine(e, t) {
-        for (var s = 0; s < this.featureLines.length; s++) {
-            var r = this.featureLines[s];
-            if (1 == r.isPointerOnLine(e, t)) return r;
+    discoverLine(e, t, s) {
+        for (var r = 0; r < this.featureLines.length; r++) {
+            var o = this.featureLines[r];
+            if (o.featureIsVisible(s) && o.isPointerOnLine(e, t)) return o;
         }
         return null;
     }
-    discoverPoint(e, t) {
-        for (var s = 0; s < this.featurePoints.length; s++) {
-            var r = this.featurePoints[s];
-            if (1 == r.isPointerAtPoint(e, t)) return r;
+    discoverPoint(e, t, s) {
+        for (var r = 0; r < this.featurePoints.length; r++) {
+            var o = this.featurePoints[r];
+            if (o.featureIsVisible(s) && o.isPointerAtPoint(e, t)) return o;
         }
         return null;
     }

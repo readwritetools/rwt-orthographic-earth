@@ -2,5 +2,5 @@
 import softlibExpect from 'softlib/expect.js';
 
 export default function expect(t, e, o) {
-    return !0;
+    return softlibExpect(t, e, o);
 }

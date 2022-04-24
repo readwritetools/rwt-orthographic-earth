@@ -21,7 +21,7 @@ export default class BasePackage {
     }
     recomputeStyles(e, t, o, a) {
         expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(o, 'Layer'), expect(a, 'Function'), 
-        0 == t.allFeaturesNeedRestyling && 0 == o.layerNeedsRestyling || (a(), o.layerNeedsRestyling = !1);
+        0 == t.allFeaturesNeedRestyling && 0 == o.layerNeedsRestyling || (a(), e.isRenderTimeAvailable() && (o.layerNeedsRestyling = !1));
     }
     runCourtesyValidator(e) {
         expect(e, 'Function'), e();
@@ -48,7 +48,7 @@ export default class BasePackage {
     drawLayer(e, t) {
         expect(e, 'RenderClock'), expect(t, 'Function'), t();
     }
-    discoverFeatures(e, t) {
+    discoverFeatures(e, t, o) {
         return null;
     }
 }

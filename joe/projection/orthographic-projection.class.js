@@ -13,12 +13,15 @@ export default class OrthographicProjection {
         this.rwtOrthographicEarth.broadcastMessage('ortho/tangentLongitude', this.longitude0);
     }
     setTangentLatitude(t) {
-        this.latitude0 = parseFloat(t), this.phi0 = t * degreesToRadians, this.allPointsNeedProjection = !0, 
-        this.cos_phi0 = Math.cos(this.phi0), this.sin_phi0 = Math.sin(this.phi0), this.rwtOrthographicEarth.broadcastMessage('ortho/tangentLatitude', this.latitude0);
+        var i = parseFloat(t);
+        Number.isNaN(i) || (this.latitude0 = i, this.phi0 = this.latitude0 * degreesToRadians, 
+        this.allPointsNeedProjection = !0, this.cos_phi0 = Math.cos(this.phi0), this.sin_phi0 = Math.sin(this.phi0), 
+        this.rwtOrthographicEarth.broadcastMessage('ortho/tangentLatitude', this.latitude0));
     }
     setTangentLongitude(t) {
-        this.longitude0 = parseFloat(t), this.lambda0 = t * degreesToRadians, this.allPointsNeedProjection = !0, 
-        this.rwtOrthographicEarth.broadcastMessage('ortho/tangentLongitude', this.longitude0);
+        var i = parseFloat(t);
+        Number.isNaN(i) || (this.longitude0 = i, this.lambda0 = this.longitude0 * degreesToRadians, 
+        this.allPointsNeedProjection = !0, this.rwtOrthographicEarth.broadcastMessage('ortho/tangentLongitude', this.longitude0));
     }
     toEastingNorthing(t) {
         t.easting = this.radius * Math.cos(t.phi) * Math.sin(t.lambda - this.lambda0), t.northing = -1 * this.radius * (this.cos_phi0 * Math.sin(t.phi) - this.sin_phi0 * Math.cos(t.phi) * Math.cos(t.lambda - this.lambda0));
@@ -40,11 +43,11 @@ export default class OrthographicProjection {
         if (e > this.radius) return t.isOnEarth = !1, t.phi = null, t.latitude = null, t.lambda = null, 
         void (t.longitude = null);
         t.isOnEarth = !0;
-        var n = Math.asin(e / this.radius), o = Math.sin(n), r = Math.cos(n), d = a * o * this.cos_phi0;
-        t.phi = Math.asin(r * this.sin_phi0 + d / e), t.latitude = t.phi / degreesToRadians;
-        d = i * o;
-        var p = e * this.cos_phi0 * r - a * this.sin_phi0 * o;
-        t.lambda = this.lambda0 + Math.atan2(d, p), t.longitude = t.lambda / degreesToRadians, 
+        var n = Math.asin(e / this.radius), r = Math.sin(n), o = Math.cos(n), d = a * r * this.cos_phi0;
+        t.phi = Math.asin(o * this.sin_phi0 + d / e), t.latitude = t.phi / degreesToRadians;
+        d = i * r;
+        var l = e * this.cos_phi0 * o - a * this.sin_phi0 * r;
+        t.lambda = this.lambda0 + Math.atan2(d, l), t.longitude = t.lambda / degreesToRadians, 
         t.longitude > 180 && (t.longitude -= 360), t.longitude < -180 && (t.longitude += 360);
     }
 }

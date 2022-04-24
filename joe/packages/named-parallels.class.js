@@ -20,7 +20,7 @@ export default class NamedParallels extends BasePackage {
             this.parallels.push(s);
         }
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/namedParallels', null), 
+        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/named-parallels', null), 
         Object.seal(this);
     }
     recomputeStyles(e, t, r, a) {

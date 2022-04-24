@@ -40,6 +40,20 @@ polygon {
 	fill-type: source-over;
 }
 
+point["selected"] {
+	stroke-color: #FFBE6A;
+	fill-color: #FFFF00;
+}
+
+line["selected"] {
+	stroke-color: #FFBE6A;
+}
+
+polygon["selected"] {
+	stroke-color: #FFBE6A;
+	fill-color: #FFFF00;
+}
+
 /*------------------------------- night -------------------------------------*/
 .night {
 	fill-color: #33333377;
@@ -78,10 +92,12 @@ polygon {
 	sunrise-outer-color: #093640;
 }
 
+/*------------------------------- sphere ------------------------------------*/
 .sphere { 
 	fill-color: #cccccc20;
 }
 
+/*------------- named-meridians, named-parallels, crosshairs ----------------*/
 .named-meridians["Prime Meridian"],
 .named-meridians["Intl. Dateline"] {
 	stroke-width: 1.5;
@@ -108,42 +124,55 @@ polygon {
 	size: 1;
 }
 
-.great-circle[type="embarkation"],
-.great-circle[type="destination"] {
+/*---------------------------- great-circles ---------------------------------*/
+.great-circles[type="embarkation"] {
 	symbol-type: star;
-	size: 5;
+	size: 4;
 	fill-color: #f00;
 	stroke-width: 1;
 	stroke-color: #777;
 }
-.great-circle[type="embarkation antipode"],
-.great-circle[type="destination antipode"] {
+.great-circles[type="destination"] {
 	symbol-type: shuriken;
-	size: 5;
-	fill-color: #777;
-	stroke-width: 1;
-	stroke-color: #eee;
-}
-.great-circle[type="waypoint"] {
-	symbol-type: circle;
-	size: 3;
+	size: 4;
 	fill-color: #f00;
 	stroke-width: 1;
 	stroke-color: #777;
 }
-.great-circle[type="alt waypoint"] {
-	symbol-type: circle;
-	size: 3;
+.great-circles[type="embarkation antipode"] {
+	symbol-type: star;
+	size: 4;
 	fill-color: #777;
 	stroke-width: 1;
 	stroke-color: #eee;
 }
-.great-circle[type="arc"] {
+.great-circles[type="destination antipode"] {
+	symbol-type: shuriken;
+	size: 4;
+	fill-color: #777;
+	stroke-width: 1;
+	stroke-color: #eee;
+}
+.great-circles[type="short waypoint"] {
+	symbol-type: circle;
+	size: 2;
+	fill-color: #f00;
+	stroke-width: 1;
+	stroke-color: #777;
+}
+.great-circles[type="long waypoint"] {
+	symbol-type: circle;
+	size: 2;
+	fill-color: #777;
+	stroke-width: 1;
+	stroke-color: #eee;
+}
+.great-circles[type="short route"] {
 	stroke-width: 3;
 	stroke-type: solid;
 	stroke-color: #fcc;
 }
-.great-circle[type="great circle"] {
+.great-circles[type="long route"] {
 	stroke-width: 2;
 	stroke-type: short-dash;
 	stroke-color: #999;

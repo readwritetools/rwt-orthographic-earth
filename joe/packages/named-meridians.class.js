@@ -20,7 +20,7 @@ export default class NamedMeridians extends BasePackage {
             this.meridians.push(i);
         }
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/NamedMeridians', null), 
+        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/named-meridians', null), 
         Object.seal(this);
     }
     recomputeStyles(e, t, r, s) {

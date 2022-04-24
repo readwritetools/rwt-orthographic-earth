@@ -17,7 +17,7 @@ import NamedMeridians from './joe/packages/named-meridians.class.js';
 
 import NamedParallels from './joe/packages/named-parallels.class.js';
 
-import GreatCircle from './joe/packages/great-circle.class.js';
+import GreatCircles from './joe/packages/great-circles.class.js';
 
 import PlaceOfInterest from './joe/packages/place-of-interest.class.js';
 
@@ -25,9 +25,9 @@ import TopojsonPackage from './joe/packages/topojson-package.class.js';
 
 import GcsPackage from './joe/packages/gcs-package.class.js';
 
-import Animation from './joe/interaction/animation.class.js';
+import Animation from './joe/render/animation.class.js';
 
-import InteractionHandler from './joe/interaction/interaction-handler.class.js';
+import UserInterface from './joe/interaction/user-interface.class.js';
 
 import Menu from './joe/menu/menu.class.js';
 
@@ -48,7 +48,7 @@ Object.seal(Static);
 export default class rwtOrthographicEarth extends HTMLElement {
     constructor() {
         super(), this.instance = Static.elementInstance++, this.isComponentLoaded = !1, 
-        this.canvas = null, this.menu = null, this.earth = null, this.interactionHandler = null, 
+        this.canvas = null, this.menu = null, this.earth = null, this.userInterface = null, 
         this.explicitMapScale = !1, this.explicitCenterPoint = !1, this.resizeObserver = null, 
         Object.seal(this);
     }
@@ -56,7 +56,7 @@ export default class rwtOrthographicEarth extends HTMLElement {
         if (this.isConnected) try {
             this.determineComponentPath(), this.attachShadow({
                 mode: 'open'
-            }), this.createCanvas(), this.createEarth(), this.createInteractionHandler(), this.addVisualizationStyleSheet(`${Static.componentPath}${Static.vssURL}`), 
+            }), this.createCanvas(), this.createEarth(), this.createUserInterface(), this.addVisualizationStyleSheet(`${Static.componentPath}${Static.vssURL}`), 
             await this.addDockablePanels(), this.registerMenuListeners(), this.registerUserListeners(), 
             this.registerVisualizationListeners(), this.registerEarthPositionListeners(), this.registerResizeListener(), 
             this.resizeCanvas(), this.setupAnimations(), this.initializeEarthValues(), this.reflectValues(), 
@@ -73,13 +73,13 @@ export default class rwtOrthographicEarth extends HTMLElement {
     createCanvas() {
         this.canvas = document.createElement('canvas'), this.canvas.style.position = 'absolute', 
         this.canvas.style.touchAction = 'none', this.canvas.width = 100, this.canvas.height = 100, 
-        this.shadowRoot.appendChild(this.canvas);
+        this.canvas.tabIndex = 0, this.shadowRoot.appendChild(this.canvas);
     }
     createEarth() {
         this.earth = new Earth(this);
     }
-    createInteractionHandler() {
-        this.interactionHandler = new InteractionHandler(this, this.canvas);
+    createUserInterface() {
+        this.userInterface = new UserInterface(this, this.canvas);
     }
     addVisualizationStyleSheet(e) {
         this.earth.addVisualizationStyleSheet(e);
@@ -155,9 +155,9 @@ export default class rwtOrthographicEarth extends HTMLElement {
         this.menu.rwtDockablePanels.setTitlebar(e);
     }
     async addMapItem(e) {
-        e.zOrder = e.zOrder || Static.zOrder++;
+        e.zOrder = e.zOrder ?? Static.zOrder++;
         var t = await this.addPackage(e);
-        return {
+        return !1 !== t && {
             layerId: this.addLayer(t, e),
             packageId: t
         };
@@ -167,45 +167,45 @@ export default class rwtOrthographicEarth extends HTMLElement {
         var t = null;
         switch (e.layerType) {
           case 'space':
-            e.vssClassname = e.vssClassname || 'space', t = this.earth.addPackage(new Space(this));
+            e.vssClassname = e.vssClassname ?? 'space', t = this.earth.addPackage(new Space(this));
             break;
 
           case 'sphere':
-            e.vssClassname = e.vssClassname || 'sphere', t = this.earth.addPackage(new Sphere(this));
+            e.vssClassname = e.vssClassname ?? 'sphere', t = this.earth.addPackage(new Sphere(this));
             break;
 
           case 'night':
-            e.vssClassname = e.vssClassname || 'night', t = this.earth.addPackage(new Night(this));
+            e.vssClassname = e.vssClassname ?? 'night', t = this.earth.addPackage(new Night(this));
             break;
 
           case 'crosshairs':
-            e.vssClassname = e.vssClassname || 'crosshairs';
+            e.vssClassname = e.vssClassname ?? 'crosshairs';
             var a = null == e.parallelFrequency ? 10 : e.parallelFrequency, s = null == e.meridianFrequency ? 10 : e.meridianFrequency;
             t = this.earth.addPackage(new Crosshairs(this, a, s));
             break;
 
           case 'graticule':
-            e.vssClassname = e.vssClassname || 'graticule';
+            e.vssClassname = e.vssClassname ?? 'graticule';
             a = null == e.parallelFrequency ? 10 : e.parallelFrequency, s = null == e.meridianFrequency ? 10 : e.meridianFrequency;
             var i = null != e.drawToPoles && e.drawToPoles;
             t = this.earth.addPackage(new Graticule(this, a, s, i));
             break;
 
           case 'named-meridians':
-            e.vssClassname = e.vssClassname || 'named-meridians';
-            var n = e.namedMeridians || {}, r = e.frequency || 1;
+            e.vssClassname = e.vssClassname ?? 'named-meridians';
+            var n = e.namedMeridians ?? {}, r = e.frequency ?? 1;
             t = this.earth.addPackage(new NamedMeridians(this, n, r));
             break;
 
           case 'named-parallels':
-            e.vssClassname = e.vssClassname || 'named-parallels';
-            var o = e.namedParallels || {};
-            r = e.frequency || 1;
-            t = this.earth.addPackage(new NamedParallels(this, o, r));
+            e.vssClassname = e.vssClassname ?? 'named-parallels';
+            var h = e.namedParallels ?? {};
+            r = e.frequency ?? 1;
+            t = this.earth.addPackage(new NamedParallels(this, h, r));
             break;
 
-          case 'great-circle':
-            e.vssClassname = e.vssClassname || 'great-circle', t = this.earth.addPackage(new GreatCircle(this, e.embarkation, e.destination));
+          case 'great-circles':
+            e.vssClassname = e.vssClassname ?? 'great-circles', e.routes = e.routes ?? [], t = this.earth.addPackage(new GreatCircles(this, e.routes));
             break;
 
           case 'place-of-interest':
@@ -214,29 +214,29 @@ export default class rwtOrthographicEarth extends HTMLElement {
             break;
 
           case 'topojson-package':
-            var h = new TopojsonPackage(this);
-            t = this.retreiveExternalFile(h, e);
+            var o = new TopojsonPackage(this);
+            t = await this.retreiveExternalFile(o, e);
             break;
 
           case 'gcs-package':
             var c = new GcsPackage(this);
-            t = this.retreiveExternalFile(c, e);
+            t = await this.retreiveExternalFile(c, e);
             break;
 
           default:
-            terminal.abnormal(`Unrecognized layerType ${e.layerType}`);
+            terminal.abnormal(`Unrecognized layerType ${e.layerType}`), t = !1;
         }
         return t;
     }
     async retreiveExternalFile(e, t) {
         expect(e, [ 'TopojsonPackage', 'GcsPackage' ]), expect(t, 'Object');
-        var a = t.url || '', s = this.earth.addPackage(e);
+        var a = t.url ?? '', s = this.earth.addPackage(e);
         return await e.retrieveData('replace', a, t), this.invalidateCanvas(), s;
     }
     addLayer(e, t) {
         expect(e, 'Number');
-        var a = t.zOrder || Static.zOrder++, s = t.layerName || '', i = t.vssIdentifier || '', n = t.vssClassname || '', r = t.featureKey || '', o = t.identifiable || 'disallow', h = t.identifyCallback || null;
-        return this.earth.addLayer(new Layer(this, e, a, s, i, n, r, o, h));
+        var a = t.zOrder ?? Static.zOrder++, s = t.layerName ?? '', i = t.vssIdentifier ?? '', n = t.vssClassname ?? '', r = t.featureKey ?? '', h = t.identifiable ?? 'disallow', o = t.identifyCallback ?? null, c = t.selectable ?? 'disallow';
+        return this.earth.addLayer(new Layer(this, e, a, s, i, n, r, h, o, c));
     }
     getPackage(e) {
         return expect(e, 'Number'), this.earth.getPackage(e);
@@ -316,6 +316,15 @@ export default class rwtOrthographicEarth extends HTMLElement {
         })), this.addEventListener('user/requestFeatureIdentification', (e => {
             var t = e.detail;
             this.earth.requestFeatureIdentification(t.x, t.y);
+        })), this.addEventListener('user/requestFeatureSelection', (e => {
+            var t = e.detail;
+            this.earth.requestFeatureSelection(t.x, t.y);
+        })), this.addEventListener('user/setPointA', (e => {
+            var t = e.detail;
+            this.earth.setPointA(t.x, t.y);
+        })), this.addEventListener('user/setPointB', (e => {
+            var t = e.detail;
+            this.earth.setPointB(t.x, t.y);
         })), this.addEventListener('user/changePlaceOfInterest', (e => {
             var t = e.detail;
             this.earth.changePlaceOfInterest(t.x, t.y), this.earth.recalculatePlaceOfInterestDependants();
@@ -352,11 +361,11 @@ export default class rwtOrthographicEarth extends HTMLElement {
             s.setUTCMonth(0, 1);
             var i = (Math.floor((Date.now() - s) / 864e5) + 1) % 26, n = window.location.hostname, r = `Unregistered ${Static.componentName} component.`;
             try {
-                var o = (await import('../../rwt-registration-keys.js')).default;
-                for (let e = 0; e < o.length; e++) {
-                    var h = o[e];
-                    if (h.hasOwnProperty('product-key') && h['product-key'] == Static.componentName) return n != h.registration && terminal.warning(`${r} See https://readwritetools.com/licensing.blue to learn more.`), 
-                    void (i == t && window.setTimeout(this.authenticate.bind(this, h), 1e3));
+                var h = (await import('../../rwt-registration-keys.js')).default;
+                for (let e = 0; e < h.length; e++) {
+                    var o = h[e];
+                    if (o.hasOwnProperty('product-key') && o['product-key'] == Static.componentName) return n != o.registration && terminal.warning(`${r} See https://readwritetools.com/licensing.blue to learn more.`), 
+                    void (i == t && window.setTimeout(this.authenticate.bind(this, o), 1e3));
                 }
                 terminal.warning(`${r} rwt-registration-key.js file missing "product-key": "${Static.componentName}"`);
             } catch (e) {
@@ -376,8 +385,8 @@ export default class rwtOrthographicEarth extends HTMLElement {
             body: `product-name=${Static.componentName}&hostname=${t}&href=${a}&registration=${s}&customer-number=${i}&access-key=${n}`
         };
         try {
-            var o = await fetch('https://validation.readwritetools.com/v1/genuine/component', r);
-            if (200 == o.status) await o.json();
+            var h = await fetch('https://validation.readwritetools.com/v1/genuine/component', r);
+            if (200 == h.status) await h.json();
         } catch (e) {
             terminal.caught(e);
         }

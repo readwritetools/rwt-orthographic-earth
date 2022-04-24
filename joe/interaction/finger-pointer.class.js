@@ -1,5 +1,4 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 export default class FingerPointer {
     constructor(t) {
         this.pointerId = t.pointerId, this.pointerType = t.pointerType, this.epsilonX = t.width, 

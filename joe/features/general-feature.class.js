@@ -10,7 +10,7 @@ export default class GeneralFeature extends BaseFeature {
     computeFeatureStyle(e, t, r, a, s, o) {
         expect(t, 'vssStyleSheet'), expect(r, 'String'), expect(a, 'String'), expect(s, 'Number'), 
         expect(o, 'Number');
-        let c = t.computeStyle(this.generalFeatureType, r, a, '', this.kvPairs, s);
+        let c = t.computeStyle(this.generalFeatureType, r, a, !1, '', this.kvPairs, s);
         expect(c, 'vssCanvasParameters'), this.canvasParams.set(o, c);
     }
     runCourtesyValidator(e, t, r, a, s) {

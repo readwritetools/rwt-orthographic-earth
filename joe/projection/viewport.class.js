@@ -13,6 +13,12 @@ export default class Viewport {
     syncCanvasDimensions(t, e) {
         expect(t, 'Number'), expect(e, 'Number'), this.canvasWidth = t, this.canvasHeight = e;
     }
+    getCanvasWidth() {
+        return this.canvasWidth;
+    }
+    getCanvasHeight() {
+        return this.canvasHeight;
+    }
     setCenterPoint(t) {
         var e = parseFloat(t.x), a = parseFloat(t.y);
         this.centerPoint.x = Math.round(e), this.centerPoint.y = Math.round(a), this.allPointsNeedPlacement = !0, 
@@ -29,6 +35,12 @@ export default class Viewport {
     }
     getCenterPoint() {
         return this.centerPoint;
+    }
+    getCenterPointX() {
+        return this.centerPoint.x;
+    }
+    getCenterPointY() {
+        return this.centerPoint.y;
     }
     toCanvasXY(t) {
         t.canvasX = t.earthX + this.centerPoint.x, t.canvasY = t.earthY + this.centerPoint.y, 

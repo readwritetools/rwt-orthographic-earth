@@ -1,6 +1,8 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
+import * as st from '../spherical-earth/spherical-trigonometry.js';
+
 import RS from '../enum/rendering-state.enum.js';
 
 import expect from '../dev/expect.js';
@@ -19,7 +21,7 @@ export default class LineFeature extends BaseFeature {
         if (expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(s, 'String'), expect(a, 'String'), 
         expect(i, 'Number'), expect(n, 'Number'), 0 == this.featureIsOnNearSide(e.renderingState)) return;
         if (0 == this.featureIsOnCanvas(e.renderingState)) return;
-        let r = t.computeStyle('line', s, a, this.featureName, this.kvPairs, i);
+        let r = t.computeStyle('line', s, a, this.isSelected, this.featureName, this.kvPairs, i);
         expect(r, 'vssCanvasParameters'), this.canvasParams.set(n, r);
         let o = Number(r['stroke-width']);
         isNaN(o) || (this.mouseEpsilon = Math.max(this.mouseEpsilon, o));
@@ -137,5 +139,9 @@ export default class LineFeature extends BaseFeature {
     }
     distance(e, t, s, a) {
         return Math.sqrt(Math.pow(e - s, 2) + Math.pow(t - a, 2));
+    }
+    roughAndReadyPoint() {
+        var e = this.lineSegment[0], t = Math.round(this.lineSegment.length / 2), s = this.lineSegment[t];
+        return st.sphericalMidpoint(e.latitude, e.longitude, s.latitude, s.longitude);
     }
 }

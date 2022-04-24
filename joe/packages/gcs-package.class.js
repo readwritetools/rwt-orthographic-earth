@@ -29,23 +29,23 @@ export default class GcsPackage extends ExternalPackage {
         'replace' == this.replaceAppend && (this.featurePolygons = [], this.featureLines = [], 
         this.featurePoints = []);
         try {
-            var i = await fetch(t, {
+            var a = await fetch(t, {
                 cache: 'no-cache',
                 referrerPolicy: 'no-referrer'
             });
-            if (200 != i.status && 304 != i.status) throw new Error(`Request for ${t} returned with ${i.status}`);
+            if (200 != a.status && 304 != a.status) throw new Error(`Request for ${t} returned with ${a.status}`);
             if ([ 'geojson', 'gfe', 'ice', 'tae' ].includes(this.format)) {
-                const e = await i.text();
+                const e = await a.text();
                 this.handleTextData(e, r);
             } else if ([ 'gfebin', 'icebin', 'taebin' ].includes(this.format)) {
-                const e = await i.arrayBuffer();
+                const e = await a.arrayBuffer();
                 this.handleBinaryData(e, r);
             } else terminal.abnormal('format must be one of \'geojson\', \'gfe\', \'gfebin\', \'ice\', \'icebin\', \'tae\', \'taebin\'');
         } catch (e) {
             terminal.caught(e);
         }
         this.packagePointsNeedGeoCoords = !0, this.packagePointsNeedProjection = !0, this.packagePointsNeedTransformation = !0, 
-        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/external', this.url);
+        this.packagePointsNeedPlacement = !0, this.rwtOrthographicEarth.broadcastMessage('package/gcs-package', this.url);
     }
     impliedFormat(e) {
         return expect(e, 'String'), -1 != e.indexOf('.geojson') ? 'geojson' : -1 != e.indexOf('.gfebin') ? 'gfebin' : -1 != e.indexOf('.gfe') ? 'gfe' : -1 != e.indexOf('.icebin') ? 'icebin' : -1 != e.indexOf('.ice') ? 'ice' : -1 != e.indexOf('.taebin') ? 'taebin' : -1 != e.indexOf('.tae') ? 'tae' : '';
@@ -69,33 +69,33 @@ export default class GcsPackage extends ExternalPackage {
     bridgePolygons(e, t) {
         expect(e, 'Array');
         for (let n = 0; n < e.length; n++) {
-            var r = e[n], i = new PolygonFeature;
-            for (let e = 0; e < r.outerRing.length; e++) i.outerRing.push(new ProjectedPoint(r.outerRing[e].latitude, r.outerRing[e].longitude));
+            var r = e[n], a = new PolygonFeature;
+            for (let e = 0; e < r.outerRing.length; e++) a.outerRing.push(new ProjectedPoint(r.outerRing[e].latitude, r.outerRing[e].longitude));
             for (let e = 0; e < r.innerRings.length; e++) {
-                var a = r.innerRings[e], s = new PolygonFeature;
-                for (let e = 0; e < a.length; e++) s.outerRing.push(new ProjectedPoint(a[e].latitude, a[e].longitude));
-                i.innerRings.push(s);
+                var i = r.innerRings[e], s = new PolygonFeature;
+                for (let e = 0; e < i.length; e++) s.outerRing.push(new ProjectedPoint(i[e].latitude, i[e].longitude));
+                a.innerRings.push(s);
             }
-            Object.assign(i.kvPairs, r.kvPairs), t && null != i.kvPairs[t] && (i.featureName = i.kvPairs[t]), 
-            this.featurePolygons.push(i);
+            Object.assign(a.kvPairs, r.kvPairs), t && null != a.kvPairs[t] && (a.featureName = a.kvPairs[t]), 
+            this.featurePolygons.push(a);
         }
     }
     bridgeLines(e, t) {
         expect(e, 'Array');
-        for (let a = 0; a < e.length; a++) {
-            var r = e[a], i = new LineFeature;
-            for (let e = 0; e < r.lineSegment.length; e++) i.lineSegment.push(new ProjectedPoint(r.lineSegment[e].latitude, r.lineSegment[e].longitude));
-            Object.assign(i.kvPairs, r.kvPairs), t && null != i.kvPairs[t] && (i.featureName = i.kvPairs[t]), 
-            this.featureLines.push(i);
+        for (let i = 0; i < e.length; i++) {
+            var r = e[i], a = new LineFeature;
+            for (let e = 0; e < r.lineSegment.length; e++) a.lineSegment.push(new ProjectedPoint(r.lineSegment[e].latitude, r.lineSegment[e].longitude));
+            Object.assign(a.kvPairs, r.kvPairs), t && null != a.kvPairs[t] && (a.featureName = a.kvPairs[t]), 
+            this.featureLines.push(a);
         }
     }
     bridgePoints(e, t) {
         expect(e, 'Array');
-        for (let a = 0; a < e.length; a++) {
-            var r = e[a], i = new PointFeature;
-            i.discretePoint = new ProjectedPoint(r.discretePoint.latitude, r.discretePoint.longitude), 
-            Object.assign(i.kvPairs, r.kvPairs), t && null != i.kvPairs[t] && (i.featureName = i.kvPairs[t]), 
-            this.featurePoints.push(i);
+        for (let i = 0; i < e.length; i++) {
+            var r = e[i], a = new PointFeature;
+            a.discretePoint = new ProjectedPoint(r.discretePoint.latitude, r.discretePoint.longitude), 
+            Object.assign(a.kvPairs, r.kvPairs), t && null != a.kvPairs[t] && (a.featureName = a.kvPairs[t]), 
+            this.featurePoints.push(a);
         }
     }
 }

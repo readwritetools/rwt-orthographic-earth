@@ -1,6 +1,8 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import BaseFeature from './base-feature.class.js';
 
+import * as st from '../spherical-earth/spherical-trigonometry.js';
+
 import RS from '../enum/rendering-state.enum.js';
 
 import expect from '../dev/expect.js';
@@ -19,7 +21,7 @@ export default class PolygonFeature extends BaseFeature {
         if (expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(i, 'String'), expect(r, 'String'), 
         expect(n, 'Number'), expect(s, 'Number'), 0 == this.featureIsOnNearSide(e.renderingState)) return;
         if (0 == this.featureIsOnCanvas(e.renderingState)) return;
-        let a = t.computeStyle('polygon', i, r, this.featureName, this.kvPairs, n);
+        let a = t.computeStyle('polygon', i, r, this.isSelected, this.featureName, this.kvPairs, n);
         expect(a, 'vssCanvasParameters'), this.canvasParams.set(s, a);
     }
     runCourtesyValidator(e, t, i, r, n) {
@@ -143,17 +145,17 @@ export default class PolygonFeature extends BaseFeature {
         }
     }
     drawRing(e, t, i) {
-        for (var r = e.carte.translate.a * e.carte.multiplier, n = e.carte.translate.b * e.carte.multiplier, s = e.viewport.centerPoint.x + r, a = e.viewport.centerPoint.y + n, o = e.getVisualizedRadius(), h = !1, l = !1, c = !0, u = null, g = null, d = null, f = 0; f < this.outerRing.length; f++) {
-            var p = this.outerRing[f], v = this.outerRing[f - 1];
-            if (l = p.isOnNearSide, 1 == c) 1 == l && (t.moveTo(p.canvasX, p.canvasY), f > 0 && (u = p.projectedTheta), 
-            c = !1); else if (1 == l && 1 == h) t.lineTo(p.canvasX, p.canvasY); else if (0 == l && 1 == h) {
-                g = v.projectedTheta;
+        for (var r = e.carte.translate.a * e.carte.multiplier, n = e.carte.translate.b * e.carte.multiplier, s = e.viewport.centerPoint.x + r, a = e.viewport.centerPoint.y + n, o = e.getVisualizedRadius(), h = !1, l = !1, u = !0, c = null, g = null, d = null, f = 0; f < this.outerRing.length; f++) {
+            var p = this.outerRing[f], R = this.outerRing[f - 1];
+            if (l = p.isOnNearSide, 1 == u) 1 == l && (t.moveTo(p.canvasX, p.canvasY), f > 0 && (c = p.projectedTheta), 
+            u = !1); else if (1 == l && 1 == h) t.lineTo(p.canvasX, p.canvasY); else if (0 == l && 1 == h) {
+                g = R.projectedTheta;
                 let e = s + o * Math.cos(g), i = a + o * Math.sin(g);
                 t.lineTo(e, i);
             } else if (1 == l && 0 == h) {
                 if (g != (d = p.projectedTheta)) {
-                    var R = g, S = d;
-                    'night' == this.featureName ? t.arc(s, a, o, R, S, !0) : this.drawArc(t, s, a, o, R, S, i);
+                    var v = g, S = d;
+                    'night' == this.featureName ? t.arc(s, a, o, v, S, !0) : this.drawArc(t, s, a, o, v, S, i);
                     let e = s + o * Math.cos(d), r = a + o * Math.sin(d);
                     t.lineTo(e, r);
                 }
@@ -161,14 +163,14 @@ export default class PolygonFeature extends BaseFeature {
             }
             h = p.isOnNearSide;
         }
-        if (null != g && null != u) {
-            if (g != u) {
-                R = g, S = u;
-                'night' == this.featureName ? t.arc(s, a, o, R, S, !0) : this.drawArc(t, s, a, o, R, S, i);
-                let e = s + o * Math.cos(u), r = a + o * Math.sin(u);
+        if (null != g && null != c) {
+            if (g != c) {
+                v = g, S = c;
+                'night' == this.featureName ? t.arc(s, a, o, v, S, !0) : this.drawArc(t, s, a, o, v, S, i);
+                let e = s + o * Math.cos(c), r = a + o * Math.sin(c);
                 t.lineTo(e, r);
             }
-            g = null, u = null;
+            g = null, c = null;
         }
     }
     drawArc(e, t, i, r, n, s, a) {
@@ -188,12 +190,16 @@ export default class PolygonFeature extends BaseFeature {
             if (0 == this.outerRing[n].isOnNearSide) continue;
             let i = a;
             var o = this.outerRing[n].canvasX, h = this.outerRing[n].canvasY, l = this.outerRing[i].canvasX;
-            if (h > t != (c = this.outerRing[i].canvasY) > t) e < (l - o) * (t - h) / (c - h) + o && (r = !r);
+            if (h > t != (u = this.outerRing[i].canvasY) > t) e < (l - o) * (t - h) / (u - h) + o && (r = !r);
             a = n;
         }
-        var c;
+        var u;
         o = this.outerRing[s].canvasX, h = this.outerRing[s].canvasY, l = this.outerRing[a].canvasX;
-        h > t != (c = this.outerRing[a].canvasY) > t && (e < (l - o) * (t - h) / (c - h) + o && (r = !r));
+        h > t != (u = this.outerRing[a].canvasY) > t && (e < (l - o) * (t - h) / (u - h) + o && (r = !r));
         return r;
+    }
+    roughAndReadyPoint() {
+        var e = this.outerRing[0], t = Math.round(this.outerRing.length / 2), i = this.outerRing[t];
+        return st.sphericalMidpoint(e.latitude, e.longitude, i.latitude, i.longitude);
     }
 }

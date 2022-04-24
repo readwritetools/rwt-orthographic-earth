@@ -19,10 +19,12 @@ export default class RenderLoop {
         var e = t - this.renderClock.mostRecentRender;
         if (e > 16.67) {
             1 == this.earth.canvasCoordsPending && this.canvasCoordsChanged();
-            for (let t = 0; t < this.animations.length; t++) this.animations[t].fire(e);
+            for (let t = 0; t < this.animations.length; t++) {
+                let i = this.animations[t];
+                i.isPaused || (i.fire(e), this.earth.canvasCoordsPending = !0);
+            }
             this.renderClock.renderingState == RS.NOT_RENDERING && (1 != this.pendingProjection && 1 != this.pendingFinalPaint || (this.preRender(), 
-            this.earth.renderAllInOne(this.renderClock), this.postRender()), this.renderClock.mostRecentRender = t, 
-            this.earth.canvasCoordsPending = !0);
+            this.earth.renderAllInOne(this.renderClock), this.postRender()), this.renderClock.mostRecentRender = t);
         }
         window.requestAnimationFrame(this.continuous.bind(this));
     }
@@ -50,9 +52,8 @@ export default class RenderLoop {
     }
     canvasCoordsChanged() {
         var t = this.earth.canvasCoordsToProjectedPoint();
-        this.rwtOrthographicEarth.broadcastMessage('user/latitudeLongitude', t);
-        var e = this.earth.discoverFeatures();
-        this.rwtOrthographicEarth.broadcastMessage('user/discoveredFeatures', e), this.earth.canvasCoordsPending = !1;
+        this.rwtOrthographicEarth.userInterface.setRestingStateCursor(t), this.rwtOrthographicEarth.broadcastMessage('user/latitudeLongitude', t), 
+        t.isOnEarth && this.earth.requestFeatureDiscovery(), this.earth.canvasCoordsPending = !1;
     }
     addAnimation(t) {
         this.animations.push(t);

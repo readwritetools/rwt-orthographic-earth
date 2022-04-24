@@ -1,10 +1,9 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 export default class Animation {
     constructor(s, h, e, t, i) {
         this.name = s, this.earth = h, this.getCallback = e, this.setCallback = t, this.deltaPerSecond = i.deltaPerSecond || null, 
         this.maxThreshold = i.maxThreshold || null, this.minThreshold = i.minThreshold || null, 
-        this.thresholdWrap = void 0 != i.thresholdWrap && i.thresholdWrap, this.isPaused = !0;
+        this.thresholdWrap = null != i.thresholdWrap && i.thresholdWrap, this.isPaused = !0;
     }
     setDeltaPerSecond(s) {
         'String' == s.constructor.name && (s = parseFloat(s)), isNaN(s) && (s = 0), this.deltaPerSecond = s, 
@@ -24,4 +23,4 @@ export default class Animation {
             this.isPaused = !0)), this.setCallback(e), e != h && this.earth.invalidateCanvas();
         }
     }
-};
+}

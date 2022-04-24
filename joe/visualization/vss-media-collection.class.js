@@ -25,20 +25,20 @@ export default class vssMediaCollection {
     static assembleMediaKey(e, a) {
         return 'min' != e && isNaN(parseFloat(e)) || 'max' != a && isNaN(parseFloat(a)) || 'min' != e && 'max' != a && e > a ? 'invalid' : `${e}_${a}`;
     }
-    computeStyle(e, a, s, i, l, t, r) {
-        if ('point' == a) (n = new vssCanvasParameters).initializePointFeature(); else if ('line' == a) {
-            (n = new vssCanvasParameters).initializeLineFeature();
+    computeStyle(e, a, s, i, l, t, r, n) {
+        if ('point' == a) (m = new vssCanvasParameters).initializePointFeature(); else if ('line' == a) {
+            (m = new vssCanvasParameters).initializeLineFeature();
         } else if ('polygon' == a) {
-            (n = new vssCanvasParameters).initializePolygonFeature();
+            (m = new vssCanvasParameters).initializePolygonFeature();
         } else if ('space' == a || 'sphere' == a) {
-            (n = new vssCanvasParameters).initializeGeneralFeature(t), t = void 0;
-        } else var n = new vssCanvasParameters;
-        var m = this.getAllMediaRule();
-        for (var v in m.computeMediaRuleStyle(n, a, s, i, l, t, r), this.vssMediaRules) if (this.vssMediaRules.hasOwnProperty(v)) {
-            var u = this.vssMediaRules[v];
-            'min' == u.minScale && 'max' == u.maxScale || ('min' == u.minScale && e <= u.maxScale || e > u.minScale && 'max' == u.maxScale || e > u.minScale && e <= u.maxScale) && u.computeMediaRuleStyle(n, a, s, i, l, t, r);
+            (m = new vssCanvasParameters).initializeGeneralFeature(r), r = void 0;
+        } else var m = new vssCanvasParameters;
+        var v = this.getAllMediaRule();
+        for (var u in v.computeMediaRuleStyle(m, a, s, i, l, t, r, n), this.vssMediaRules) if (this.vssMediaRules.hasOwnProperty(u)) {
+            var o = this.vssMediaRules[u];
+            'min' == o.minScale && 'max' == o.maxScale || ('min' == o.minScale && e <= o.maxScale || e > o.minScale && 'max' == o.maxScale || e > o.minScale && e <= o.maxScale) && o.computeMediaRuleStyle(m, a, s, i, l, t, r, n);
         }
-        return n;
+        return m;
     }
     runCourtesyValidator(e, a, s, i, l, t, r) {
         var n = this.getAllMediaRule();

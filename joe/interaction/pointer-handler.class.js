@@ -1,12 +1,9 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-import Gestures from './gestures.class.js';
+import GestureBroadcaster from './gesture-broadcaster.class.js';
 
-import EarthProxy from './earth-proxy.class.js';
-
-export default class InteractionHandler {
+export default class PointerHandler {
     constructor(e, t) {
-        this.canvas = t, this.earthProxy = new EarthProxy(e, t), this.gestures = new Gestures(t), 
+        this.rwtOrthographicEarth = e, this.canvas = t, this.gestureBroadcaster = new GestureBroadcaster(t), 
         this.registerEventListeners();
     }
     registerEventListeners() {
@@ -18,19 +15,21 @@ export default class InteractionHandler {
         this.canvas.addEventListener('lostpointercapture', this.onReleased.bind(this));
     }
     onDown(e) {
-        this.gestures.addFinger(e), this.gestures.sendInitialGesture(), this.earthProxy.captureEarthState(), 
-        this.canvas.setPointerCapture(e.pointerId), e.preventDefault();
+        this.gestureBroadcaster.addFinger(e), this.gestureBroadcaster.sendInitialGesture(), 
+        this.rwtOrthographicEarth.userInterface.captureEarthState(), this.canvas.setPointerCapture(e.pointerId), 
+        e.preventDefault();
     }
     onMove(e) {
-        this.gestures.updateFinger(e), this.gestures.sendIntermediateGesture(), e.preventDefault();
+        this.gestureBroadcaster.updateFinger(e), this.gestureBroadcaster.sendIntermediateGesture(), 
+        e.preventDefault();
     }
     onUp(e) {
-        this.gestures.updateFinger(e), this.gestures.sendFinalGesture(), this.gestures.removeFinger(e), 
-        this.canvas.style.cursor = 'default', this.canvas.releasePointerCapture(e.pointerId), 
+        this.gestureBroadcaster.updateFinger(e), this.gestureBroadcaster.sendFinalGesture(), 
+        this.gestureBroadcaster.removeFinger(e), this.canvas.releasePointerCapture(e.pointerId), 
         e.preventDefault();
     }
     onCancel(e) {
-        this.gestures.cancelFingers(), e.preventDefault();
+        this.gestureBroadcaster.cancelFingers(), e.preventDefault();
     }
     onMouseMove(e) {
         var t = {

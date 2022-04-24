@@ -124,8 +124,8 @@ export default class vssStyleSheet {
         return terminal.abnormal(`VSS style sheet unhandled function ${t} for property ${e}`), 
         null;
     }
-    computeStyle(e, t, r, a, n, l) {
-        return this.vssMediaCollection.computeStyle(this.mapScale, e, t, r, a, n, l);
+    computeStyle(e, t, r, a, n, l, i) {
+        return this.vssMediaCollection.computeStyle(this.mapScale, e, t, r, a, n, l, i);
     }
     runCourtesyValidator(e, t, r, a, n, l) {
         this.vssMediaCollection.runCourtesyValidator(this.mapScale, e, t, r, a, n, l);

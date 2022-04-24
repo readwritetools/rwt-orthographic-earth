@@ -65,6 +65,9 @@ export default class Menu {
     }
     changeNotifiers(t) {
         switch (t) {
+          case 'interaction':
+            return;
+
           case 'season':
             return (o = this.rwtDockablePanels.shadowRoot.getElementById('season-dmy-utc')).addEventListener('change', (() => {
                 var t = CB.fromUserDayMonthYear(o.value), e = CB.toUserDayMonthYear(t);
@@ -150,6 +153,14 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/centerPointY', n.value);
             }));
 
+          case 'layers':
+          case 'locate':
+          case 'discover':
+          case 'identify':
+          case 'select':
+          case 'distance':
+            return;
+
           case 'time-lapse':
             var l = this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation');
             return void l.addEventListener('change', (() => {
@@ -157,15 +168,12 @@ export default class Menu {
                 this.rwtOrthographicEarth.broadcastMessage('menu/timeLapseRotation', t);
             }));
 
-          case 'locate':
-          case 'layers':
-          case 'identify':
-          case 'discover':
-          case 'interaction':
           case 'hello-world':
-          case 'earth-orbit':
+            return;
+
           case 'telescope':
           case 'flyby':
+          case 'earth-orbit':
             return;
 
           default:
@@ -174,6 +182,9 @@ export default class Menu {
     }
     registerListeners(t) {
         switch (t) {
+          case 'interaction':
+            return;
+
           case 'season':
             return this.rwtOrthographicEarth.addEventListener('earthPosition/civilDate', (t => {
                 var e = t.detail, a = e.getUTCFullYear();
@@ -272,14 +283,14 @@ export default class Menu {
           case 'zoom':
             return void this.rwtOrthographicEarth.addEventListener('carte/mapScale', (t => {
                 var e = parseFloat(t.detail);
-                e <= .1 ? e = (.025 * Math.round(e / .025)).toFixed(3) : e <= 1 ? e = (.01 * Math.round(e / .01)).toFixed(2) : e <= 10 ? e = (.1 * Math.round(e / .1)).toFixed(1) : (e > 20 && (e = 2 * Math.round(e / 2)), 
+                e <= .2 ? e = (.001 * Math.round(e / .001)).toFixed(3) : e <= 1 ? e = (.01 * Math.round(e / .01)).toFixed(2) : e <= 12 ? e = (.1 * Math.round(e / .1)).toFixed(1) : (e > 20 && (e = 2 * Math.round(e / 2)), 
                 e > 40 && (e = 5 * Math.round(e / 5)), e > 100 && (e = 10 * Math.round(e / 10)), 
                 e = e.toFixed(0)), this.rwtDockablePanels.shadowRoot.getElementById('map-scale').value = e, 
-                this.rwtDockablePanels.shadowRoot.getElementById('map-scale-slider').value = this.valueToSliderPosition(1, 100, 1, 1e3, t.detail);
-                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), h = Math.round(2 * n / 100), d = Math.round(2 * l / 100);
+                this.rwtDockablePanels.shadowRoot.getElementById('map-scale-slider').value = CB.mapScaleToSlider(t.detail);
+                var a = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-x-slider'), r = this.rwtDockablePanels.shadowRoot.getElementById('adjust-km-y-slider'), o = this.rwtOrthographicEarth.canvas.width, s = this.rwtOrthographicEarth.canvas.height, i = this.rwtOrthographicEarth.earth.getVisualizedRadius(), n = Math.round(e * (o + i) / 2), l = Math.round(e * (s + i) / 2), d = Math.round(2 * n / 100), h = Math.round(2 * l / 100);
                 null != a && null != r && (a.setAttribute('min', -1 * n), a.setAttribute('max', n), 
-                a.setAttribute('step', h), r.setAttribute('min', -1 * l), r.setAttribute('max', l), 
-                r.setAttribute('step', d));
+                a.setAttribute('step', d), r.setAttribute('min', -1 * l), r.setAttribute('max', l), 
+                r.setAttribute('step', h));
             }));
 
           case 'space':
@@ -300,6 +311,47 @@ export default class Menu {
                 this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y').value = e, this.rwtDockablePanels.shadowRoot.getElementById('adjust-px-y-slider').value = e;
             }));
 
+          case 'layers':
+            return void this.rwtOrthographicEarth.addEventListener('catalog/layerAdded', (t => {
+                var e = t.detail, a = e.layerId, r = e.layerName, o = e.identifiable, s = e.selectable, i = e.zOrder;
+                if ('disallow' == o) var n = ''; else n = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == o ? 'checked' : ''} />`;
+                if ('disallow' == s) var l = ''; else l = `<input id=layers-${a}-selectable type=checkbox data-layer-id=${a} ${'yes' == s ? 'checked' : ''} />`;
+                var d = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), h = document.createElement('tr');
+                h.id = `layers-${a}`, h['data-z-order'] = i, h.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${n}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${l}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${r}</td>`;
+                let c = !1;
+                for (let t = 0; t < d.childNodes.length; t++) if (d.childNodes[t]['data-z-order'] < i) {
+                    d.insertBefore(h, d.childNodes[t]), c = !0;
+                    break;
+                }
+                c || d.appendChild(h), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
+                    var e = t.currentTarget.attributes['data-layer-id'].value;
+                    e = parseInt(e, 10);
+                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
+                    expect(r, 'Layer'), r.changeVisibility(a);
+                    var o = this.rwtOrthographicEarth.getPackage(r.packageId);
+                    expect(o, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircles', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
+                    o.changeVisibility(a);
+                    var s = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${e}-identifiable`);
+                    null != s && (s.disabled = !a);
+                    var i = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${e}-selectable`);
+                    null != i && (i.disabled = !a);
+                }));
+                var u = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
+                null != u && u.addEventListener('change', (t => {
+                    var e = t.currentTarget.attributes['data-layer-id'].value;
+                    e = parseInt(e, 10);
+                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
+                    expect(r, 'Layer'), r.changeIdentifiability(a);
+                }));
+                var g = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-selectable`);
+                null != g && g.addEventListener('change', (t => {
+                    var e = t.currentTarget.attributes['data-layer-id'].value;
+                    e = parseInt(e, 10);
+                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
+                    expect(r, 'Layer'), r.changeSelectability(a);
+                }));
+            }));
+
           case 'locate':
             return void this.rwtOrthographicEarth.addEventListener('user/latitudeLongitude', (t => {
                 var e = t.detail;
@@ -307,37 +359,6 @@ export default class Menu {
                     var a = Math.abs(e.longitude.toFixed(2)), r = e.longitude < 0 ? a + '° W' : a + '° E', o = Math.abs(e.latitude.toFixed(2)), s = `longitude: ${r}<br />latitude: ${e.latitude < 0 ? o + '° S' : o + '° N'}`;
                     this.rwtDockablePanels.shadowRoot.getElementById('locate-position').innerHTML = s;
                 }
-            }));
-
-          case 'layers':
-            return void this.rwtOrthographicEarth.addEventListener('catalog/layerAdded', (t => {
-                var e = t.detail, a = e.layerId, r = e.layerName, o = e.identifiable, s = e.zOrder;
-                if ('disallow' == o) var i = ''; else i = `<input id=layers-${a}-identifiable type=checkbox data-layer-id=${a} ${'yes' == o ? 'checked' : ''} />`;
-                var n = this.rwtDockablePanels.shadowRoot.getElementById('layers-table-body'), l = document.createElement('tr');
-                l.id = `layers-${a}`, l['data-z-order'] = s, l.innerHTML = `\n\t\t\t\t\t\t<td class='chef-center'><input id=layers-${a}-visible type=checkbox data-layer-id=${a} checked /></td>\t\t\t\t\t\n\t\t\t\t\t\t<td class='chef-center'>${i}</td>\t\t\t\t\t\n\t\t\t\t\t\t<td style='padding: 0 10px'>${r}</td>`;
-                let h = !1;
-                for (let t = 0; t < n.childNodes.length; t++) if (n.childNodes[t]['data-z-order'] < s) {
-                    n.insertBefore(l, n.childNodes[t]), h = !0;
-                    break;
-                }
-                h || n.appendChild(l), this.rwtOrthographicEarth.invalidateCanvas(), this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-visible`).addEventListener('change', (t => {
-                    var e = t.currentTarget.attributes['data-layer-id'].value;
-                    e = parseInt(e, 10);
-                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
-                    expect(r, 'Layer'), r.changeVisibility(a);
-                    var o = this.rwtOrthographicEarth.getPackage(r.packageId);
-                    expect(o, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircle', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
-                    o.changeVisibility(a);
-                    var s = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${e}-identifiable`);
-                    null != s && (s.disabled = !a);
-                }));
-                var d = this.rwtDockablePanels.shadowRoot.getElementById(`layers-${a}-identifiable`);
-                null != d && d.addEventListener('change', (t => {
-                    var e = t.currentTarget.attributes['data-layer-id'].value;
-                    e = parseInt(e, 10);
-                    var a = t.currentTarget.checked, r = this.rwtOrthographicEarth.getLayer(e);
-                    expect(r, 'Layer'), r.changeIdentifiability(a);
-                }));
             }));
 
           case 'discover':
@@ -364,17 +385,57 @@ export default class Menu {
                 this.rwtDockablePanels.shadowRoot.getElementById('identify-table').innerHTML = a.join('');
             }));
 
+          case 'select':
+            return void this.rwtOrthographicEarth.addEventListener('user/selectedFeatures', (t => {
+                var e = this.rwtDockablePanels.shadowRoot.querySelector('#select-table tbody'), a = t.detail;
+                for (let t of a) {
+                    var r = t.featureId;
+                    if (1 == e.children.length) 'TR' == (s = e.children[0]).tagName && s.hasAttribute('data-instructions') && (s.remove(), 
+                    e.innerHTML = '<tr><th>Layer</th><th>Feature</th><th>Reorient</th></tr>');
+                    var o = !1;
+                    for (let t = 0; t < e.children.length; t++) {
+                        if ('TR' == (s = e.children[t]).tagName && s.hasAttribute('data-feature-id') && s.getAttribute('data-feature-id') == r) {
+                            o = !0, s.remove();
+                            break;
+                        }
+                    }
+                    if (0 == o) {
+                        var s;
+                        (s = document.createElement('tr')).setAttribute('data-feature-id', r);
+                        var i = `reorient to ${CB.toUserLatitude(t.latitude)}, ${CB.toUserLongitude(t.longitude)}`;
+                        s.innerHTML = `<td class='chef-center'>${t.layerName}</td><td class='chef-center'>${t.featureName}</td><td class='chef-center'><kbd class='chef-kbd' tabindex=0 id=feature-${r} title='${i}'>▶</kbd></td>`, 
+                        e.append(s), this.rwtDockablePanels.shadowRoot.getElementById(`feature-${r}`).addEventListener('click', (e => {
+                            this.rwtOrthographicEarth.setTangentLatitude(t.latitude), this.rwtOrthographicEarth.setTangentLongitude(t.longitude);
+                        }));
+                    }
+                }
+                1 == e.children.length && (e.innerHTML = '<tr data-instructions=true><th class=\'chef-center\'>&lt;Ctrl&gt; \'n Click —➤ Highlight underlying features</th></tr>');
+            }));
+
+          case 'distance':
+            return void this.rwtOrthographicEarth.addEventListener('greatCircles/distanceFeatureAdded', (t => {
+                var e, a = this.rwtDockablePanels.shadowRoot.querySelector('#distance-table tbody'), r = t.detail.featureId, o = t.detail.embarkationName, s = t.detail.destinationName, i = `${Math.round(t.detail.distance)} km`;
+                1 == a.children.length && ('TR' == (e = a.children[0]).tagName && e.hasAttribute('data-instructions') && (e.remove(), 
+                a.innerHTML = '<tr><th>Point A</th><th>Point B</th><th>Distance</th><th>Clear</th></tr>'));
+                (e = document.createElement('tr')).setAttribute('data-feature-id', r), e.innerHTML = `<td class='chef-center'>${o}</td><td class='chef-center'>${s}</td><td class='chef-center'>${i}</td><td class='chef-center'><kbd class='chef-kbd' tabindex=0 id=feature-${r} title='remove distance line'>✗</kbd></td>`, 
+                a.append(e), this.rwtDockablePanels.shadowRoot.getElementById(`feature-${r}`).addEventListener('click', (t => {
+                    this.rwtOrthographicEarth.earth.catalog.getDistancePackage().removeFeature(r), this.rwtOrthographicEarth.invalidateCanvas(), 
+                    this.rwtDockablePanels.shadowRoot.querySelector(`#distance-table tr[data-feature-id="${r}"]`).remove();
+                }));
+            }));
+
           case 'time-lapse':
             return void this.rwtOrthographicEarth.addEventListener('animation/rotationDegreesPerSecond', (t => {
                 var e = t.detail;
                 this.rwtDockablePanels.shadowRoot.getElementById('time-lapse-rotation').value = e;
             }));
 
-          case 'interaction':
           case 'hello-world':
-          case 'earth-orbit':
+            return;
+
           case 'telescope':
           case 'flyby':
+          case 'earth-orbit':
             return;
 
           default:
@@ -385,10 +446,5 @@ export default class Menu {
         if (void 0 === t) return '0.00';
         var e = parseFloat(t);
         return isNaN(e) ? '0.00' : e.toFixed(2);
-    }
-    valueToSliderPosition(t, e, a, r, o) {
-        a = Math.log(a);
-        var s = ((r = Math.log(r)) - a) / (e - t);
-        return (Math.log(o) - a) / s + t;
     }
 }

@@ -1,5 +1,5 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-import RenderLoop from './projection/render-loop.class.js';
+import RenderLoop from './render/render-loop.class.js';
 
 import GeocentricCoordinates from './projection/geocentric-coordinates.class.js';
 
@@ -124,6 +124,18 @@ export default class Earth {
     getCenterPoint() {
         return this.viewport.getCenterPoint();
     }
+    getCenterPointX() {
+        return this.viewport.getCenterPointX();
+    }
+    getCenterPointY() {
+        return this.viewport.getCenterPointY();
+    }
+    getCanvasWidth() {
+        return this.viewport.canvasWidth;
+    }
+    getCanvasHeight() {
+        return this.viewport.canvasHeight;
+    }
     recalculateJulianDateDependants() {
         this.earthPosition.recalculateJulianDateDependants();
     }
@@ -161,7 +173,7 @@ export default class Earth {
         this.earthPosition.changeTimezoneOffset(t);
     }
     addPackage(t) {
-        return expect(t, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircle', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
+        return expect(t, [ 'Space', 'Sphere', 'Night', 'Crosshairs', 'Graticule', 'NamedMeridians', 'NamedParallels', 'GreatCircles', 'PlaceOfInterest', 'TopojsonPackage', 'GcsPackage' ]), 
         this.catalog.addPackage(t);
     }
     addLayer(t) {
@@ -185,13 +197,6 @@ export default class Earth {
     supressCanvasCoords(t, e) {
         this.canvasCoords.x = null, this.canvasCoords.y = null, this.canvasCoordsPending = !1;
     }
-    changePlaceOfInterest(t, e) {
-        var a = this.getCoordinatesFromCanvasXY(t, e);
-        this.earthPosition.setPlaceOfInterest(a.longitude, a.latitude);
-    }
-    setPlaceOfInterest(t, e) {
-        this.earthPosition.setPlaceOfInterest(t, e);
-    }
     canvasCoordsToProjectedPoint() {
         return this.getCoordinatesFromCanvasXY(this.canvasCoords.x, this.canvasCoords.y);
     }
@@ -200,18 +205,36 @@ export default class Earth {
         return a.canvasX = t, a.canvasY = e, this.viewport.inverseViewport(a), this.carte.inverseTransformation(a), 
         this.ortho.inverseProjection(a), this.coords.inverse(a), a;
     }
-    discoverFeatures() {
-        return this.getCoordinatesFromCanvasXY(this.canvasCoords.x, this.canvasCoords.y).isOnEarth ? this.catalog.discoverFeatures(this.canvasCoords.x, this.canvasCoords.y) : [];
+    changePlaceOfInterest(t, e) {
+        var a = this.getCoordinatesFromCanvasXY(t, e);
+        this.earthPosition.setPlaceOfInterest(a.longitude, a.latitude);
+    }
+    setPlaceOfInterest(t, e) {
+        this.earthPosition.setPlaceOfInterest(t, e);
+    }
+    requestFeatureDiscovery() {
+        var t = this.catalog.discoverFeatures(this.canvasCoords.x, this.canvasCoords.y);
+        this.rwtOrthographicEarth.broadcastMessage('user/discoveredFeatures', t);
     }
     requestFeatureIdentification(t, e) {
-        if (!this.getCoordinatesFromCanvasXY(t, e).isOnEarth) return [];
-        var a = this.catalog.requestFeatureIdentification(t, e);
+        var a = this.catalog.discoverFeatures(t, e);
         this.rwtOrthographicEarth.broadcastMessage('user/identifiedFeatures', a);
     }
-    renderArbitraryPoint(t, e) {
-        var a = new ProjectedPoint(t, e);
-        return this.coords.toPhiLambda(a), this.ortho.toEastingNorthing(a), this.carte.toEarthXY(a, !0, !0, !0), 
-        this.viewport.toCanvasXY(a), a;
+    requestFeatureSelection(t, e) {
+        var a = this.catalog.selectFeatures(t, e);
+        this.rwtOrthographicEarth.broadcastMessage('user/selectedFeatures', a);
+    }
+    setPointA(t, e) {
+        var a = this.catalog.discoverFeatures(t, e), i = a.length > 0 ? a[0].featureValue : 'A', s = this.getCoordinatesFromCanvasXY(t, e), r = this.catalog.getDistancePackage();
+        r.setPointA(i, s.latitude, s.longitude), r.packagePointsNeedGeoCoords = !0, r.packagePointsNeedProjection = !0, 
+        r.packagePointsNeedTransformation = !0, r.packagePointsNeedPlacement = !0, this.catalog.getDistanceLayer().layerNeedsRestyling = !0, 
+        this.invalidateCanvas();
+    }
+    setPointB(t, e) {
+        var a = this.catalog.discoverFeatures(t, e), i = a.length > 0 ? a[0].featureValue : 'B', s = this.getCoordinatesFromCanvasXY(t, e), r = this.catalog.getDistancePackage();
+        r.setPointB(i, s.latitude, s.longitude), r.packagePointsNeedGeoCoords = !0, r.packagePointsNeedProjection = !0, 
+        r.packagePointsNeedTransformation = !0, r.packagePointsNeedPlacement = !0, this.catalog.getDistanceLayer().layerNeedsRestyling = !0, 
+        this.invalidateCanvas();
     }
     getVisualizedRadius() {
         return Math.round(this.ortho.radius * this.carte.multiplier);

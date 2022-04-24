@@ -1,18 +1,22 @@
 /* Copyright (c) 2022 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
-/* Copyright (c) 2021 Read Write Tools. Legal use subject to the JavaScript Orthographic Earth Software License Agreement. */
 import FingerPointer from './finger-pointer.class.js';
 
-export default class Gestures {
-    static intermediateThrottle=30;
-    static tapThreshold=500;
-    static doubleTapThreshold=1e3;
-    static stationTrackThreshold=1e3;
-    static flickThreshold=500;
-    static flickDistance=100;
-    static pinchSpreadDistance=20;
-    static panDistance=20;
-    static tandemDistance=30;
-    static sweepThreshold=30;
+const Static = {
+    intermediateThrottle: 30,
+    tapThreshold: 500,
+    doubleTapThreshold: 1e3,
+    stationTrackThreshold: 1e3,
+    flickThreshold: 500,
+    flickDistance: 100,
+    pinchSpreadDistance: 20,
+    panDistance: 20,
+    tandemDistance: 30,
+    sweepThreshold: 30
+};
+
+Object.seal(Static);
+
+export default class GestureBroadcaster {
     constructor(t) {
         this.canvas = t, this.fingerPointers = [], this.mostRecentTap = 0, this.mostRecentIntermediate = 0;
     }
@@ -110,7 +114,7 @@ export default class Gestures {
         }
     }
     sendIntermediateGesture() {
-        if (!(Date.now() - this.mostRecentIntermediate < Gestures.intermediateThrottle)) {
+        if (!(Date.now() - this.mostRecentIntermediate < Static.intermediateThrottle)) {
             if (this.mostRecentIntermediate = Date.now(), 0 == this.stationaryCount && 1 == this.travelerCount) if ((t = this.getTraveler()).leftButtonDown) return void (t.ctrlKey ? this.broadcastGesture('gesture/track/ctrlkey', {
                 pointerId: t.pointerId,
                 initialX: t.initial.x,
@@ -136,14 +140,14 @@ export default class Gestures {
                 x: t.latest.x,
                 y: t.latest.y
             }));
-            if (1 == this.stationaryCount && 1 == this.travelerCount && this.getStationary().deltaT > Gestures.stationTrackThreshold) {
+            if (1 == this.stationaryCount && 1 == this.travelerCount && this.getStationary().deltaT > Static.stationTrackThreshold) {
                 var t = this.getTraveler();
                 this.broadcastGesture('gesture/stationtrack', {
                     pointerId: t.pointerId,
                     x: t.latest.x,
                     y: t.latest.y
                 });
-            } else if (2 == this.stationaryCount && 1 == this.travelerCount && this.getStationary().deltaT > Gestures.stationTrackThreshold) {
+            } else if (2 == this.stationaryCount && 1 == this.travelerCount && this.getStationary().deltaT > Static.stationTrackThreshold) {
                 t = this.getTraveler();
                 this.broadcastGesture('gesture/twostationtrack', {
                     pointerId: t.pointerId,
@@ -151,41 +155,41 @@ export default class Gestures {
                     y: t.latest.y
                 });
             } else if (2 == this.fingerCount) {
-                var e = this.fingerPointers[0], i = this.fingerPointers[1], s = e.initial.y - i.initial.y, r = e.initial.x - i.initial.x, a = Math.hypot(s, r), n = 180 - 180 * Math.atan2(s, r) / Math.PI;
+                var e = this.fingerPointers[0], i = this.fingerPointers[1], r = e.initial.y - i.initial.y, a = e.initial.x - i.initial.x, s = Math.hypot(r, a), n = 180 - 180 * Math.atan2(r, a) / Math.PI;
                 n < 0 && (n += 180);
                 var l = e.latest.y - i.latest.y, o = e.latest.x - i.latest.x, h = Math.hypot(l, o), d = 180 - 180 * Math.atan2(l, o) / Math.PI;
                 d < 0 && (d += 180);
-                var u = Math.abs(n - d);
-                if (u > Gestures.sweepThreshold) return n < d ? void this.broadcastGesture('gesture/counterclockwise', {
-                    deltaSweep: u,
+                var c = Math.abs(n - d);
+                if (c > Static.sweepThreshold) return n < d ? void this.broadcastGesture('gesture/counterclockwise', {
+                    deltaSweep: c,
                     initialAngle: n,
                     latestAngle: d
                 }) : void this.broadcastGesture('gesture/clockwise', {
-                    deltaSweep: u,
+                    deltaSweep: c,
                     initialAngle: n,
                     latestAngle: d
                 });
-                var c = Math.abs(h - a);
-                if (c < Gestures.tandemDistance) {
-                    if (e.deltaXY > Gestures.panDistance && i.deltaXY > Gestures.panDistance) return void this.broadcastGesture('gesture/xypan', {
+                var u = Math.abs(h - s);
+                if (u < Static.tandemDistance) {
+                    if (e.deltaXY > Static.panDistance && i.deltaXY > Static.panDistance) return void this.broadcastGesture('gesture/xypan', {
                         deltaX: (e.deltaX + i.deltaX) / 2,
                         directionX: e.directionX,
                         deltaY: (e.deltaY + i.deltaY) / 2,
                         directionY: e.directionY
                     });
-                    if (e.deltaX > Gestures.panDistance && i.deltaX > Gestures.panDistance) return void this.broadcastGesture('gesture/horizontalpan', {
+                    if (e.deltaX > Static.panDistance && i.deltaX > Static.panDistance) return void this.broadcastGesture('gesture/horizontalpan', {
                         deltaX: (e.deltaX + i.deltaX) / 2,
                         directionX: e.directionX
                     });
-                    if (e.deltaY > Gestures.panDistance && i.deltaY > Gestures.panDistance) return void this.broadcastGesture('gesture/verticalpan', {
+                    if (e.deltaY > Static.panDistance && i.deltaY > Static.panDistance) return void this.broadcastGesture('gesture/verticalpan', {
                         deltaY: (e.deltaY + i.deltaY) / 2,
                         directionY: e.directionY
                     });
                 }
-                if (c > Gestures.pinchSpreadDistance) return h > a ? void this.broadcastGesture('gesture/spread', {
-                    deltaDistance: c
+                if (u > Static.pinchSpreadDistance) return h > s ? void this.broadcastGesture('gesture/spread', {
+                    deltaDistance: u
                 }) : void this.broadcastGesture('gesture/pinch', {
-                    deltaDistance: c
+                    deltaDistance: u
                 });
             }
         }
@@ -193,7 +197,7 @@ export default class Gestures {
     sendFinalGesture() {
         if (1 == this.fingerCount) {
             var t = this.fingerPointers[0];
-            t.isStationary() ? t.deltaT < Gestures.tapThreshold ? Date.now() - this.mostRecentTap < Gestures.doubleTapThreshold ? (this.mostRecentTap = 0, 
+            t.isStationary() ? t.deltaT < Static.tapThreshold ? Date.now() - this.mostRecentTap < Static.doubleTapThreshold ? (this.mostRecentTap = 0, 
             t.ctrlKey ? this.broadcastGesture('gesture/doubletap/ctrlkey', {
                 x: t.latest.x,
                 y: t.latest.y
@@ -230,7 +234,7 @@ export default class Gestures {
             }) : this.broadcastGesture('gesture/press/nokey', {
                 x: t.latest.x,
                 y: t.latest.y
-            }) : t.deltaT < Gestures.flickThreshold && t.deltaXY > Gestures.flickDistance && (t.deltaX > t.deltaY ? this.broadcastGesture('gesture/horizontalflick', {
+            }) : t.deltaT < Static.flickThreshold && t.deltaXY > Static.flickDistance && (t.deltaX > t.deltaY ? this.broadcastGesture('gesture/horizontalflick', {
                 deltaX: t.deltaX,
                 directionX: t.directionX
             }) : this.broadcastGesture('gesture/verticalflick', {
@@ -239,14 +243,14 @@ export default class Gestures {
             }));
         } else if (2 == this.fingerCount) {
             var e = this.fingerPointers[0], i = this.fingerPointers[1];
-            e.isStationary() && i.isStationary() && e.deltaT < Gestures.tapThreshold && i.deltaT < Gestures.tapThreshold && this.broadcastGesture('gesture/twofingertap', {
+            e.isStationary() && i.isStationary() && e.deltaT < Static.tapThreshold && i.deltaT < Static.tapThreshold && this.broadcastGesture('gesture/twofingertap', {
                 x: e.latest.x,
                 y: e.latest.y
             });
         } else if (3 == this.fingerCount) {
             e = this.fingerPointers[0], i = this.fingerPointers[1];
-            var s = this.fingerPointers[2];
-            e.isStationary() && i.isStationary() && s.isStationary() && e.deltaT < Gestures.tapThreshold && i.deltaT < Gestures.tapThreshold && s.deltaT < Gestures.tapThreshold && this.broadcastGesture('gesture/threefingertap', {
+            var r = this.fingerPointers[2];
+            e.isStationary() && i.isStationary() && r.isStationary() && e.deltaT < Static.tapThreshold && i.deltaT < Static.tapThreshold && r.deltaT < Static.tapThreshold && this.broadcastGesture('gesture/threefingertap', {
                 x: e.latest.x,
                 y: e.latest.y
             });

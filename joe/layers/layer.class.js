@@ -2,13 +2,13 @@
 import expect from '../dev/expect.js';
 
 export default class Layer {
-    constructor(e, i, t, s, r, a, h, n, l) {
-        expect(e, 'rwtOrthographicEarth'), expect(i, 'Number'), expect(t, 'Number'), expect(s, 'String'), 
-        expect(r, 'String'), expect(a, 'String'), expect(h, 'String'), expect(n, 'String'), 
-        expect(l, [ 'Function', 'null' ]), this.rwtOrthographicEarth = e, this.packageId = i, 
-        this.zOrder = t, this.layerName = s, this.vssIdentifier = r, this.vssClassname = a, 
-        this.featureKey = h, this.identifiable = n, this.identifyCallback = l, this.visible = !0, 
-        this.layerNeedsRestyling = !0, Object.seal(this);
+    constructor(e, t, i, s, a, l, r, h, n, c) {
+        expect(e, 'rwtOrthographicEarth'), expect(t, 'Number'), expect(i, 'Number'), expect(s, 'String'), 
+        expect(a, 'String'), expect(l, 'String'), expect(r, 'String'), expect(h, 'String'), 
+        expect(n, [ 'Function', 'null' ]), expect(c, 'String'), this.rwtOrthographicEarth = e, 
+        this.packageId = t, this.zOrder = i, this.layerName = s, this.vssIdentifier = a, 
+        this.vssClassname = l, this.featureKey = r, this.identifiable = h, this.identifyCallback = n, 
+        this.selectable = c, this.visible = !0, this.layerNeedsRestyling = !0, Object.seal(this);
     }
     isVisible() {
         return this.visible;
@@ -24,5 +24,14 @@ export default class Layer {
     }
     changeIdentifiability(e) {
         expect(e, 'Boolean'), this.identifiable = 1 == e ? 'yes' : 'no';
+    }
+    getSelectable() {
+        return this.selectable;
+    }
+    isSelectable() {
+        return 1 == this.visible && 'yes' == this.selectable;
+    }
+    changeSelectability(e) {
+        expect(e, 'Boolean'), this.selectable = 1 == e ? 'yes' : 'no';
     }
 }

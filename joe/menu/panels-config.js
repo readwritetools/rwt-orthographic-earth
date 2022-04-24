@@ -7,6 +7,18 @@ export default {
     },
     panels: [ {
         options: {
+            id: 'interaction',
+            titlebar: 'Pointer interaction',
+            tooltip: 'Mouse gestures for manipulation and interaction'
+        },
+        panelLines: [ {
+            lineType: 'table',
+            id: 'interaction-table',
+            maxHeightInPx: '400px',
+            innerHTML: '\n\t\t\t\t<tr><th class=\'chef-center\'>Cursor</th><th class=\'chef-center\'>Keyboard</th><th class=\'chef-center\'>Action</th></tr>\t            \n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAYElEQVRYw+2WQQrAIBADk/7/z/HQWy1UsbAsTM5BBzSblTorSU7PuP7gqAYQAAC0BlB1DFHzx7+7oPco9kqr2fZXC6543vzeiNPkTaLHvd6MqMv/AIMIsZSykAAAAF0wAKyaKQpq4jOcAAAAAElFTkSuQmCC\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'>- none -</td>\n\t\t\t\t\t<td class=\'chef-center\'>Hover to discover features and location</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAnUlEQVRYw+2VwQ6AIAxDV8P//3I9GIkSkIGwXdaz0LfROZFQKBQKDYokRYSr7ju8C8Jg5e/DAMwA7raTlMIXte+0nmkClh/wGbJ6wQXO59nZFrJVecu8gMjeWDUcGvMCAkunoGYOQHo53TaG2gFJ1oa7ADCbi11PwK9cmGSgYw7zXVAz91hG+LMLhjOgAXBfx8kqhK3/hHsHAsB9Ck7xMjAzGwQtsgAAAABJRU5ErkJggg==\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Shift</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Identify underlying<br>feature details</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAe0lEQVRYw+1WQQ7AIAiThf9/ubvMi0M3RSXL2qNJa2kATYn4O8Q4wyDvDffGU1MFbR0R+/4Wr8ap6AAzY770TM0jugdogAbCDSwbr88kII7Ky00n2wzk2AGUK7ZbT53JwVnInF5c0dx8jGiABrZBe9bt09odGd/wbzlBnBGZNQ4RBhTBAAAAAElFTkSuQmCC\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Ctrl</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Select underlying<br>features</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFUlEQVRYw91W0RKDMAgznv//y9mD9sbYSlOo5936ZrUlhhDAllt0zxjsd9exZRHwHQsAW7C2D0C6Z9/WLWYOLQFg2XgEQAVEGYDNdQbESg08lwJV8f/LQIWFVQBQOajYKgZmg6wR4aweeiphN9ue/dbsDeyBYdr2CVsNL7teTrNwNCQVOy2IFHtEYzvkwTn3Y6OGZEyT0o4nzsODNMDof+zXvQAozwMBMF8hSDGg6qBnODhfMKOBTdGBaDxIVcENUxCUFH5pwKbBmk8UvFMhVNmAMO0yMwGpzekQcoiIeh/IAcMsAxNVyaxQ17TRqDcYQPcxMNKE2C3zA8nl+x8BM1NReSKqdtFSCp7UQFeIau6XAaje+wLo8I5BQUpGKwAAAABJRU5ErkJggg==\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Reorient point of observation</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACsUlEQVRYw+2XQWsTQRTH/7vT7KyBapOSQHYLpQXrpYHetiS72SB4tbdKD/UD1JNID6aUBRFEv4AehKIg6Em/QUKlIIIiBa2gveihUMk2NjWJcZPnZVs36bZp6W5O/mEOA8O8H+//5s0M8F//RD3G85mZmetEJAcZVOwgIPIdpmkCwLW9vb0GACe0DPioTUQ0MTHxLRqNvgEQC9UCP83Pz78VRXEVQD6MoGKvBYqiXEomk3HG2I/Qi9DVHyJqerOQzWabiqJ8YoxF+mLB3Nzc2tLSUsMLkclkfo+MjHwGEBoELS8vO6qqbjDG7oyOjn4xDKPVDaEoygqAc6EATE1NlQcHB++58wtjY2MPdV2vddthmubjMIpQYIxdrFarD9z5T9u2b21tbb02DKMFAKVSCY7jOPV6nQcFIHgKQALQFgSho9HE4/FoLBZ7qarqlUajUdvc3PxaqVRutlqtIhGRIAgd+5xWAwckgtD0W2Dbdo0xdnV8fPzF7u6uXS6XnwIoBZ6B0x6XQxu5qegLgHs5gYjQFVcIvBMeAy74zPOc84LX2n5d4wCQHxoaegeAUqnUq7B6xVHKJxKJdV3XHcuyKJfLtROJxOoxECLnXDyDA53BVVXdyOVy7WKxeNCwXIj1IyBE1ybpzNE553cBkGVZh65ywzBaw8PDH7oDJZPJJ56X1pk1wDlf0TTtl997wgMRASBJknQ7k8lUTdMMDAAAIpzzBU3TdvwgdF13YrHYewCldDq9vW9VkAAAIMqy/EzTtJofRKFQqM/Ozq566yRogH2IG5qmVegECgNgH+LRUZnoBwAASLIs319cXLR7AYghAbSJ6HytVtvp9++KAVhIpVIfs9ls01tw/bBAkCRpLZ1Ob1uWRb2CBw4wOTkZBbA9PT39nU6ooDMQAXD5BJ/cjvEXdZyYDo2qEJUAAAAASUVORK5CYII=\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Z</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Zoom in / Zoom out</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA7UlEQVRYw9VXWxLFEBTD2BaLZ2G5P3VH9Xi/z1dbIwmpgLGbSykFpRS2kbtaLsInXy6CIl8mIkU+XUQJeYsIWSNCa/16N8aQ369aBWJ3lojZIdOE46Z3lIAUlqA6uJ9rZBljGCVC9JADAGMMPSJkjtzvYK3lpdOeEqG1xgurNGT8kcfaYu2xsJItfnLOHdH/+bGCV2OlLAgTLrQAAB4BPGUBhUvaGVpRuAxRs4eEmCIcYUOuF087NfJPDjSKaCLvitDSzSiHE10FVWoTlcPZvhvKGktq2kfN4PQj2T2H0iOO5UdcTI64mh1xOR1VP15vH3cdOtO+AAAAAElFTkSuQmCC\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>X</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Earth\'s position in space (km)</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA2UlEQVRYw+1XQRLEIAgjTP//5exhOztqW1HB6mE5YxJQiUJEKHZAxsLEPkREyOc8YJT7VGBga7XsL7lHAawCdCJ5kwiVxaHG3jGAg7VzoGXb03YFiMjIS/xMQLLnCBJxIb/DRwKORgAP+WVGIADItQZB1UR0zRTBxrPQkxs71wdz3XeMUwbRW4Go0YZB23T5PMlysnXjHc7O0VnI67djv2uoneeOwbnrR/EWZrTUjvXh0eF1NetR88PXm6QoS30SkePXHo1Bfl7F//8L9voXTBBRJS/nwJLv+QdJO7cIafBehwAAAABJRU5ErkJggg==\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>C</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'> Earth\'s position on viewport (px)</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAkElEQVRYw+1VWw7AIAwqxvtfmX3NuEbNtKlmWfm3DygoEggEAoHAl0GSIkJLjXR6CRg2fxYCsG2Am3aSovpO18tG5mhcZP2hYgMtht70gq9Byn10+6VNdt1qQx7PgcHG3CpBbdHeUMmb/kY+0dMFHB1cNRA8GFj6lLLX8WnqFTMlvLxzAFpmLRGcJcBsNP8PF3m/Mg840tlhAAAAAElFTkSuQmCC\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>A</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Set great circle<br>embarkation point</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAeUlEQVRYw+2USw6AQAhDYTL3v3JdmShxiMoIUfv2/JpSEUIIIeTNAICIINKjVR+hgcv3jVQ1bYFVdgBi5l7u14PKIXjI/UKjhp40oz6xgGeNrUcOZ7bEl53qAV9n8xCeMuU50LPkHsUEPfAfD5QrMDLh1CRMiv6PsQCxoCcckE3CggAAAABJRU5ErkJggg==\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>B</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Set great circle<br>destination point</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABAElEQVRYw+1Wuw7CMAyMoy4sLVQq6sKAYABV/P93wQ8cS4EQ5WG76VApJ3Wq7bMvjmNjKiq2BACDMQapD8C0BvHNIwnCs+lLkXc54lgiAPZLyXcx8oBtLIlRSz6FyBl+oSQOMXtKxZoD/oyJiJk8HJ8kl40EeGjJfdtPjLmX2Ar8VS8hDymRUsEmnLkEnL6I/rMSOaXg+DZLpHWqgzbRRlnZl9ztt8ytKpeAQwTGdU7CSuSWnjFncNmczAI1jCZWbBCN0kpy1QM4b2cUz0GOvnzcxyhwW07aF7Et8BwPixoIQEtET+549irviOhVYivqFSvZZY3d8M5YSq91fa/YFN4zXXhLKb8COQAAAABJRU5ErkJggg==\' /></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>D</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'>Set place of interest</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd><kbd class=\'chef-kbd\'>X</kbd><kbd class=\'chef-kbd\'>C</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>⬆</kbd><br>North</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd><kbd class=\'chef-kbd\'>X</kbd><kbd class=\'chef-kbd\'>C</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>⬇</kbd><br>South</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd><kbd class=\'chef-kbd\'>X</kbd><kbd class=\'chef-kbd\'>C</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>➡</kbd><br>East</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd><kbd class=\'chef-kbd\'>X</kbd><kbd class=\'chef-kbd\'>C</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>⬅</kbd><br>West</td>\n\t\t\t\t</tr>\n\t\t\t\t\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Z</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>⬆</kbd><br>Zoom out</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Z</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>⬇</kbd><br>Zoom in</td>\n\t\t\t\t</tr>\n\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Z</kbd><kbd class=\'chef-kbd\'>X</kbd><kbd class=\'chef-kbd\'>C</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Home</kbd><br>Reset position</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Page Up</kbd><br>North Pole</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Page Down</kbd><br>South Pole</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>End</kbd><br>Dateline</td>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td colspan=2 class=\'chef-center\'><kbd class=\'chef-kbd\'>Alt</kbd></td>\n\t\t\t\t\t<td class=\'chef-center\'><kbd class=\'chef-kbd\'>Home</kbd><br>Prime Meridian</td>\n\t\t\t\t</tr>\n\t\t\t\t'
+        } ]
+    }, {
+        options: {
             id: 'season',
             titlebar: 'Season',
             tooltip: 'Change the reference date'
@@ -416,14 +428,13 @@ export default {
             id: 'map-scale',
             labelText: 'Map Scale',
             textAfter: 'km / pixel',
-            minPosition: '0',
-            maxPosition: '100',
-            stepPosition: '0.25',
-            minValue: '0.025',
-            maxValue: '1000',
-            curve: 'log',
-            numDecimals: 3,
-            tooltip: 'Map scale (1:100,000 - 1:10,000,000)'
+            minPosition: '1',
+            maxPosition: '27',
+            stepPosition: '1',
+            curve: 'callback',
+            toUser: CB.sliderToMapScale,
+            fromUser: CB.mapScaleToSlider,
+            tooltip: 'Map scale (25m/px —➤ 1000km/px'
         } ]
     }, {
         options: {
@@ -489,8 +500,20 @@ export default {
         } ]
     }, {
         options: {
+            id: 'layers',
+            titlebar: 'Layers',
+            tooltip: 'Choose which layers to display'
+        },
+        panelLines: [ {
+            lineType: 'table',
+            id: 'layers-table',
+            maxHeightInPx: '320px',
+            innerHTML: '<thead>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<th class=\'chef-center\'>Show</th>\n\t\t\t\t\t\t\t<th class=\'chef-center\'>Identify</th>\n\t\t\t\t\t\t\t<th class=\'chef-center\'>Select</th>\n\t\t\t\t\t\t\t<th class=\'chef-center\'>Layer</th>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</thead>\n\t\t\t\t\t<tbody id=\'layers-table-body\'>\n\t\t\t\t\t</tbody>'
+        } ]
+    }, {
+        options: {
             id: 'locate',
-            titlebar: 'Locate',
+            titlebar: 'Location',
             tooltip: 'Hover pointer —➤ Display longitude and latitude of mouse position'
         },
         panelLines: [ {
@@ -501,20 +524,8 @@ export default {
         } ]
     }, {
         options: {
-            id: 'layers',
-            titlebar: 'Layers',
-            tooltip: 'Choose which layers to display'
-        },
-        panelLines: [ {
-            lineType: 'table',
-            id: 'layers-table',
-            innerHTML: '<thead><tr><th class=\'chef-center\'>Show</th><th class=\'chef-center\'>Identify</th><th class=\'chef-center\'>Layer</th></tr></thead><tbody id=\'layers-table-body\'></tbody>',
-            maxHeightInPx: '320px'
-        } ]
-    }, {
-        options: {
             id: 'discover',
-            titlebar: 'Discover',
+            titlebar: 'Feature discovery',
             tooltip: 'Hover pointer —➤ Discover features at pointer position'
         },
         panelLines: [ {
@@ -526,8 +537,8 @@ export default {
     }, {
         options: {
             id: 'identify',
-            titlebar: 'Identify',
-            tooltip: '<Ctrl> \'n Click —➤ Identify underlying feature details'
+            titlebar: 'Feature identification',
+            tooltip: '<Shift> \'n Click —➤ Identify underlying feature details'
         },
         panelLines: [ {
             lineType: 'table',
@@ -535,7 +546,35 @@ export default {
             minHeightInPx: '300px',
             maxHeightInPx: '600px',
             overflowY: 'auto',
-            innerHTML: '<tr><th class=\'chef-center\'>&lt;Ctrl&gt; \'n Click —➤ Identify underlying feature details</th></tr>'
+            innerHTML: '<tr><th class=\'chef-center\'>&lt;Shift&gt; \'n Click —➤ Identify underlying feature details</th></tr>'
+        } ]
+    }, {
+        options: {
+            id: 'select',
+            titlebar: 'Feature selection',
+            tooltip: '<Ctrl> \'n Click —➤ Highlight underlying features'
+        },
+        panelLines: [ {
+            lineType: 'table',
+            id: 'select-table',
+            minHeightInPx: '300px',
+            maxHeightInPx: '600px',
+            overflowY: 'auto',
+            innerHTML: '<tbody><tr data-instructions=true><th class=\'chef-center\'>&lt;Ctrl&gt; \'n Click —➤ Highlight underlying features</th></tr><tbody>'
+        } ]
+    }, {
+        options: {
+            id: 'distance',
+            titlebar: 'Measure distance',
+            tooltip: '"A" \'n Click —➤ Embarkation  "B" \'n Click —➤ Destination'
+        },
+        panelLines: [ {
+            lineType: 'table',
+            id: 'distance-table',
+            minHeightInPx: '200px',
+            maxHeightInPx: '300px',
+            overflowY: 'auto',
+            innerHTML: '<tbody><tr data-instructions=true><th class=\'chef-center\'>"A" \'n Click —➤ Set embarkation point <br>"B" \'n Click —➤ Set destination point</th></tr><tbody>'
         } ]
     }, {
         options: {
@@ -573,18 +612,6 @@ export default {
                 v: -8,
                 t: 'spin'
             } ]
-        } ]
-    }, {
-        options: {
-            id: 'interaction',
-            titlebar: 'Pointer Interaction',
-            tooltip: 'Mouse gestures for manipulation and interaction'
-        },
-        panelLines: [ {
-            lineType: 'table',
-            id: 'interaction-table',
-            innerHTML: '\n<tr><th class=\'chef-center\'>Cursor</th><th class=\'chef-center\'>Mouse</th><th class=\'chef-center\'>Action</th></tr>\t            \n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABFUlEQVRYw91W0RKDMAgznv//y9mD9sbYSlOo5936ZrUlhhDAllt0zxjsd9exZRHwHQsAW7C2D0C6Z9/WLWYOLQFg2XgEQAVEGYDNdQbESg08lwJV8f/LQIWFVQBQOajYKgZmg6wR4aweeiphN9ue/dbsDeyBYdr2CVsNL7teTrNwNCQVOy2IFHtEYzvkwTn3Y6OGZEyT0o4nzsODNMDof+zXvQAozwMBMF8hSDGg6qBnODhfMKOBTdGBaDxIVcENUxCUFH5pwKbBmk8UvFMhVNmAMO0yMwGpzekQcoiIeh/IAcMsAxNVyaxQ17TRqDcYQPcxMNKE2C3zA8nl+x8BM1NReSKqdtFSCp7UQFeIau6XAaje+wLo8I5BQUpGKwAAAABJRU5ErkJggg==\' /></td>\n\t<td class=\'chef-center\'>Press<br>\'n Drag</td>\n\t<td class=\'chef-center\'>Change the point of observation</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACsUlEQVRYw+2XQWsTQRTH/7vT7KyBapOSQHYLpQXrpYHetiS72SB4tbdKD/UD1JNID6aUBRFEv4AehKIg6Em/QUKlIIIiBa2gveihUMk2NjWJcZPnZVs36bZp6W5O/mEOA8O8H+//5s0M8F//RD3G85mZmetEJAcZVOwgIPIdpmkCwLW9vb0GACe0DPioTUQ0MTHxLRqNvgEQC9UCP83Pz78VRXEVQD6MoGKvBYqiXEomk3HG2I/Qi9DVHyJqerOQzWabiqJ8YoxF+mLB3Nzc2tLSUsMLkclkfo+MjHwGEBoELS8vO6qqbjDG7oyOjn4xDKPVDaEoygqAc6EATE1NlQcHB++58wtjY2MPdV2vddthmubjMIpQYIxdrFarD9z5T9u2b21tbb02DKMFAKVSCY7jOPV6nQcFIHgKQALQFgSho9HE4/FoLBZ7qarqlUajUdvc3PxaqVRutlqtIhGRIAgd+5xWAwckgtD0W2Dbdo0xdnV8fPzF7u6uXS6XnwIoBZ6B0x6XQxu5qegLgHs5gYjQFVcIvBMeAy74zPOc84LX2n5d4wCQHxoaegeAUqnUq7B6xVHKJxKJdV3XHcuyKJfLtROJxOoxECLnXDyDA53BVVXdyOVy7WKxeNCwXIj1IyBE1ybpzNE553cBkGVZh65ywzBaw8PDH7oDJZPJJ56X1pk1wDlf0TTtl997wgMRASBJknQ7k8lUTdMMDAAAIpzzBU3TdvwgdF13YrHYewCldDq9vW9VkAAAIMqy/EzTtJofRKFQqM/Ozq566yRogH2IG5qmVegECgNgH+LRUZnoBwAASLIs319cXLR7AYghAbSJ6HytVtvp9++KAVhIpVIfs9ls01tw/bBAkCRpLZ1Ob1uWRb2CBw4wOTkZBbA9PT39nU6ooDMQAXD5BJ/cjvEXdZyYDo2qEJUAAAAASUVORK5CYII=\' /></td>\n\t<td class=\'chef-center\'>&lt;Alt&gt;<br>\'n Drag</td>\n\t<td class=\'chef-center\'>Zoom in / Zoom out</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA7UlEQVRYw9VXWxLFEBTD2BaLZ2G5P3VH9Xi/z1dbIwmpgLGbSykFpRS2kbtaLsInXy6CIl8mIkU+XUQJeYsIWSNCa/16N8aQ369aBWJ3lojZIdOE46Z3lIAUlqA6uJ9rZBljGCVC9JADAGMMPSJkjtzvYK3lpdOeEqG1xgurNGT8kcfaYu2xsJItfnLOHdH/+bGCV2OlLAgTLrQAAB4BPGUBhUvaGVpRuAxRs4eEmCIcYUOuF087NfJPDjSKaCLvitDSzSiHE10FVWoTlcPZvhvKGktq2kfN4PQj2T2H0iOO5UdcTI64mh1xOR1VP15vH3cdOtO+AAAAAElFTkSuQmCC\' /></td>\n\t<td class=\'chef-center\'>&lt;Shift&gt;<br>\'n Drag </td>\n\t<td class=\'chef-center\'>Change position in space</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAACeElEQVRIx81WsU7jQBB9u3ZYHIsQBVIgW4pikeaOhioNBVVEQ4MQn5CGir+gS0nNV6BraPiF01FECiABTZBAyM5iA/uuOGwhCMRKwomprN31vpk3b2YH+MZGpZQBYKSU3Nvbq38Z0urqKkulkjk4OODOzg4BmC8NbWFhgdvb20xNKcVx75J5DgkhQHIqzucGnJbJ/628iQEbjYYCgFarpYIgcDc2NtypAL7NoWVZDIKAURQdAyjd3Nwca63D+/v7EMBkJVOtVrm1tfVWpZyfn6fjOARAAFxaWiIA4zgO2+12a9hd9rhOKKVwd3c3TMVCCIGTk5NfAMTUVGrbn/t6enqKNPKJRUNyZF2mZ17OEcCPsUVjWRYsyxorFUN5KRQKfHx8RJoDkhmtcRyj3+9DCIE4jmGMQRiG2b9aa0RRhMFggGKxmAswBUupEIPBgCm4ECLLX+qIbdt4eHjI8i2l/JDyd5R6npdxX6vVAIBRFAkp5Yc5fHv5Z/l9B5gkSfZ9fn6OlZWVqba2YV2Z9XodvV7vdftCt9vNHDIm33M4Ozv7uqx+AvgzTKXi6uoKy8vL2UIK9mXNO0kScXFxAc/z3u3ljU4IAa01dnd3s870aR0+PT2J6+trVCqVbC1VYq5IpITjODg6OoLruiiXy7l6qbi9vaXv+7i8vIRt23h+fs71+htj0Ol0cHZ2BgAiiqL8vM/MzND3fUOSYRjSGMM4jqm1ptaary1JEpLk4eEhATAIgvFmk0qlwn8lNtr29/fpOA5d1x1/EFpbW9tUSv0eBdpsNgmALw5OZouLix4Azs3NpbMpAbBQKKTPkAHA9fV1FotF/1uM738BSieHRE75uvAAAAAASUVORK5CYII=\' /></td>\n\t<td class=\'chef-center\'>&lt;Ctrl&gt;<br>\'n Click</td>\n\t<td class=\'chef-center\'>Identify underlying<br>feature details</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAWCAYAAADJqhx8AAACfElEQVQ4y53TP0gbYRgG8Cc5z1zuDyStgaoXQxPpYMDB0iaQQhQEF0GqIDh0cKk4d3JRwcmpix2bDqVVaGkpnRyUGtSlpRQqNUKDKDqUnGjMnzvlck+XRtporemzft/7g+/h/RCLxX4AuIf/jd/vZzgcJoCHAMS6gXA4zGw2y0QiQQDPADTUBYRCIZqmyXK5zMHBwVNN0x4DaLoy0NbWxuPjY5KkbducmJigpmmvAdy6EqDrOguFAquxLIuTk5OUZfkTgLt1AyRZKpU4NzfHzs7ObwCSlwKtra0sFousjeM4XFlZYSKR2APwoG6gms3NTfb09JgAHgFw1w2Q5NHREUdHRx1RFJ8CkOsGqhkZGaEgCJ8B+C4t8bKMjY1RluWMqqrXAQDBYPCvgG3bzOfzNAyDhmEwl8vRtm3OzMzQ6/VuKIrS3uByuc71UqlUIAgCdnZ2MDU1hXQ6XXK73ackXY7jQBRFViqVm7Ztv/8DIIn19XVks1kMDw9D13UEAgHs7u6mAbzTNO3U4/G4T05OoOt6g+M4XxAKhSrVVV5aWmJHR8e+x+P5mEqlSJJbW1vs6+v7CiB24R60tLSUTdPk8vIyo9HoPoBuAPf7+/vPupmenqaiKC8BBM4BwWCwuLi4yHg8vvFrGAD8zc3NqdnZWZKkYRgcGhrKAYifAxRFKXV1dX0HcLvmqHtgYGAvk8mQJOfn5xmJRF4AuFYLfPD5fHcueJ0UiUSeVLs4ODhgMpmkJEm9giCcNS94vd634+Pj26urq7WAfXh4aMmyHM/n800LCwtYW1srlMvlV4qibFuWxX9+9Wg0qkqS9FyW5TeqqvY2NjbekCRJ+P3OT156AYCdO5fkAAAAAElFTkSuQmCC\' /></td>\n\t<td class=\'chef-center\'>Hover Pointer</td>\n\t<td class=\'chef-center\'>Discover features and location at pointer</td>\n</tr>\n<tr><td class=\'chef-center\' style=\'padding-top:4px\'><img src=\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAA9ElEQVQoz6WSMWrDQBBF3yzGhSpjjCCFg0HdqjP4AME3CAR0jBzFt9CCwTcIPoDB3aoTGKcwCBNUqXDhdWEWpEiRSfK7Hf6fmf3zhQ6sNmc3Cq4AlJXi/XUi3zmNwnp7cvPnqqsX+2PA28uTtIQfu083G1/ow+FryHIxFQDlJz0SAczGF9bbkwMYANTXK4qCNE3JsgwRQWtNkiSEYUidq1abs6t39SIA5xzWWowxLfOUd8/Di/pqo+B6/+NfoMqqqY3juEXSWjfeZaXu58jz3NXNMcZgre00ByCKIpFHh/8pCP8LAMByMZX9Meid5EWtrP4m5DdDwW587eQWhQAAAABJRU5ErkJggg==\' /></td>\n\t<td class=\'chef-center\'>Long Click</td>\n\t<td class=\'chef-center\'>Set place of interest</td>\n</tr>\n',
-            maxHeightInPx: '400px'
         } ]
     }, {
         options: {

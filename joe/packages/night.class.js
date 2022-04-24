@@ -3,6 +3,8 @@ import BasePackage from './base-package.class.js';
 
 import HemisphereFeature from '../features/hemisphere-feature.class.js';
 
+import RS from '../enum/rendering-state.enum.js';
+
 import * as CB from '../menu/panel-callbacks.js';
 
 import expect from '../dev/expect.js';

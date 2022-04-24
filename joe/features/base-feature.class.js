@@ -6,13 +6,18 @@ import expect from '../dev/expect.js';
 import terminal from 'softlib/terminal.js';
 
 export default class BaseFeature {
+    static nextFeatureId=0;
     constructor() {
-        this.featureName = '', this.kvPairs = {}, this.canvasParams = new Map, this.pointsOnNearSide = 0, 
-        this.pointsOnFarSide = 0, this.pointsOnCanvas = 0, this.pointsOffCanvas = 0;
+        this.featureId = BaseFeature.nextFeatureId++, this.featureName = '', this.kvPairs = {}, 
+        this.isSelected = !1, this.canvasParams = new Map, this.pointsOnNearSide = 0, this.pointsOnFarSide = 0, 
+        this.pointsOnCanvas = 0, this.pointsOffCanvas = 0;
     }
-    computeFeatureStyle(e, t, s, a, r, i) {
+    toggleSelectedState() {
+        this.isSelected = !this.isSelected;
+    }
+    computeFeatureStyle(e, t, s, a, i, r) {
         expect(e, 'RenderClock'), expect(t, 'vssStyleSheet'), expect(s, 'String'), expect(a, 'String'), 
-        expect(r, 'Number'), expect(i, 'Number'), terminal.logic('Feature subclass must provide a computeFeatureStyle() function');
+        expect(i, 'Number'), expect(r, 'Number'), terminal.logic('Feature subclass must provide a computeFeatureStyle() function');
     }
     toGeoCoords(e, t) {
         terminal.logic('Feature subclass must provide a toGeoCoords() function');
@@ -35,7 +40,18 @@ export default class BaseFeature {
     featureIsOnCanvas(e) {
         return expect(e, 'Number'), !(this.pointsOffCanvas > 0 && e == RS.SKETCHING);
     }
+    featureIsVisible(e) {
+        expect(e, 'Number');
+        let t = this.canvasParams.get(e);
+        return null != t && 'hidden' != t.visibility;
+    }
     hasSomethingToDraw(e) {
-        return expect(e, 'vssCanvasParameters'), 'hidden' != e.visibility && (0 != this.pointsOnNearSide && 0 != this.pointsOnCanvas);
+        return expect(e, [ 'vssCanvasParameters', 'undefined' ]), null != e && ('hidden' != e.visibility && (0 != this.pointsOnNearSide && 0 != this.pointsOnCanvas));
+    }
+    roughAndReadyPoint() {
+        return {
+            latitude: 0,
+            longitude: 0
+        };
     }
 }
